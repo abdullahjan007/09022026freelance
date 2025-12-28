@@ -185,18 +185,33 @@ export default function Home() {
     }
   };
 
-  const downloadAsPdf = () => {
-    if (messages.length === 0) return;
-
+  const downloadResponseAsPdf = (content: string) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
     const maxWidth = pageWidth - margin * 2;
     let yPosition = 20;
 
+    const cleanContent = content
+      .replace(/---GUIDANCE_COMPLETE---/g, "")
+      .replace(/---EXECUTION_START---/g, "")
+      .replace(/\[TITLE\]/g, "")
+      .replace(/\[\/TITLE\]/g, "")
+      .replace(/\[INTRO\]/g, "")
+      .replace(/\[\/INTRO\]/g, "")
+      .replace(/\[STEPS\]/g, "")
+      .replace(/\[\/STEPS\]/g, "")
+      .replace(/\[STEP\]/g, "")
+      .replace(/\[\/STEP\]/g, "")
+      .replace(/\[SECTION\]/g, "")
+      .replace(/\[\/SECTION\]/g, "")
+      .replace(/\*/g, "")
+      .replace(/#/g, "")
+      .trim();
+
     doc.setFontSize(18);
     doc.setTextColor(20, 184, 166);
-    doc.text("TaskMaster Conversation", margin, yPosition);
+    doc.text("TaskMaster Response", margin, yPosition);
     yPosition += 15;
 
     doc.setFontSize(10);
@@ -204,41 +219,23 @@ export default function Home() {
     doc.text(new Date().toLocaleDateString(), margin, yPosition);
     yPosition += 15;
 
-    messages.forEach((message) => {
-      const cleanContent = message.content
-        .replace(/---GUIDANCE_COMPLETE---/g, "")
-        .replace(/---EXECUTION_START---/g, "")
-        .trim();
-
-      if (yPosition > 270) {
+    doc.setFontSize(10);
+    doc.setTextColor(50, 50, 50);
+    const lines = doc.splitTextToSize(cleanContent, maxWidth);
+    
+    for (const line of lines) {
+      if (yPosition > 280) {
         doc.addPage();
         yPosition = 20;
       }
+      doc.text(line, margin, yPosition);
+      yPosition += 5;
+    }
 
-      doc.setFontSize(11);
-      doc.setTextColor(message.role === "user" ? 20 : 100, message.role === "user" ? 184 : 100, message.role === "user" ? 166 : 100);
-      doc.text(message.role === "user" ? "You:" : "TaskMaster:", margin, yPosition);
-      yPosition += 7;
-
-      doc.setFontSize(10);
-      doc.setTextColor(50, 50, 50);
-      const lines = doc.splitTextToSize(cleanContent, maxWidth);
-      
-      for (const line of lines) {
-        if (yPosition > 280) {
-          doc.addPage();
-          yPosition = 20;
-        }
-        doc.text(line, margin, yPosition);
-        yPosition += 5;
-      }
-      yPosition += 10;
-    });
-
-    doc.save("taskmaster-conversation.pdf");
+    doc.save("taskmaster-response.pdf");
     toast({
       title: "Downloaded!",
-      description: "PDF saved to your device",
+      description: "Response saved as PDF",
     });
   };
 
@@ -808,7 +805,7 @@ export default function Home() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={downloadAsPdf}
+                            onClick={() => downloadResponseAsPdf(message.content)}
                             className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
                             data-testid={`button-download-${index}`}
                           >
