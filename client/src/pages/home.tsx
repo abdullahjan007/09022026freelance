@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
+import { TMBuddy } from "@/components/tm-buddy";
 
 interface Message {
   role: "user" | "assistant";
@@ -1004,6 +1005,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+      
+      {/* TM Buddy Navigation Helper */}
+      <TMBuddy />
     </div>
   );
 }
