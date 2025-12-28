@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
+import introVideo from "@assets/TASKMASTER_INTRO_VID_1766952634014.mp4";
 
 interface Message {
   role: "user" | "assistant";
@@ -727,6 +728,19 @@ export default function Home() {
               <p className="text-xl text-muted-foreground">
                 Focus on your students. Let TaskMaster handle other details.
               </p>
+            </div>
+
+            {/* Intro Video */}
+            <div className="w-full max-w-2xl rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
+              <video
+                src={introVideo}
+                controls
+                className="w-full"
+                poster=""
+                data-testid="video-intro"
+              >
+                Your browser does not support the video tag.
+              </video>
             </div>
 
             {/* Call to Action */}
