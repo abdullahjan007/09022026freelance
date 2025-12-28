@@ -592,28 +592,16 @@ export default function Home() {
               )}
             </Button>
             {messages.length > 0 && (
-              <>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={downloadAsPdf}
-                  className="text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                  data-testid="button-download-pdf"
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  PDF
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleNewChat}
-                  className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
-                  data-testid="button-new-chat"
-                >
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  New Chat
-                </Button>
-              </>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleNewChat}
+                className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
+                data-testid="button-new-chat"
+              >
+                <RotateCcw className="h-4 w-4 mr-1" />
+                New Chat
+              </Button>
             )}
           </div>
         </div>
@@ -816,6 +804,15 @@ export default function Home() {
                             ) : (
                               <Copy className="h-4 w-4" />
                             )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={downloadAsPdf}
+                            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                            data-testid={`button-download-${index}`}
+                          >
+                            <Download className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
