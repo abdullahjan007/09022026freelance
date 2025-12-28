@@ -1,25 +1,27 @@
-# TaskMaster - Productivity Application for Educators
+# TaskMaster - AI-Powered Teacher Support Agent
 
 ## Overview
 
-TaskMaster is a comprehensive web-based productivity application designed specifically for teachers and educators. It provides tools for:
-- **Lesson Planning**: Create, organize, and manage lesson plans with objectives, content, and materials
-- **Task Management**: Track teaching tasks with priority levels and due dates (list and kanban views)
-- **Class Organization**: Manage student groups, schedules, and room assignments
-- **Communication Templates**: Reusable templates for parent, student, admin, and colleague communications
+TaskMaster is an AI-powered support agent built specifically for teachers and educators. It provides a conversational chat interface where teachers can describe their biggest challenges and receive practical, actionable solutions.
 
-The application follows a clean, system-based design inspired by Linear, Notion, and Asana to reduce cognitive load and maximize teacher productivity.
+The application helps with:
+- **Lesson Planning**: Create engaging, interactive lesson plans
+- **Parent Communications**: Draft professional, diplomatic emails to parents
+- **Behavior Tracking**: Implement effective classroom behavior management systems
+- **Grading Rubrics**: Develop fair, comprehensive grading rubrics
+
+The design follows a clean, teal/green aesthetic with hero messaging focused on relieving teacher pressure.
 
 ## Current Status
 
 **Completed Features:**
-- Dashboard with quick stats, recent items, and quick actions
-- Lesson Planner with full CRUD operations
-- Task Manager with list/kanban view modes and status transitions
-- Class Management with student counts and scheduling
-- Communication Hub with categorized templates
-- Dark/light theme toggle
-- Responsive sidebar navigation
+- Single-page AI chat interface with hero section
+- "The TaskMaster Formula" guide (toggle to show/hide)
+- Streaming AI responses with teacher-focused system prompt
+- Quick action chips that send prompts directly to the AI
+- New Chat button to start fresh conversations
+- Dark/light theme support
+- Responsive design
 
 ## User Preferences
 
@@ -29,8 +31,8 @@ Preferred communication style: Simple, everyday language.
 
 ### Frontend Architecture
 - **Framework**: React 18 with TypeScript
-- **Routing**: Wouter (lightweight React router)
-- **State Management**: TanStack React Query for server state caching
+- **Routing**: Wouter (single page for now)
+- **State Management**: Local React state for chat messages
 - **Styling**: Tailwind CSS with CSS variables (light/dark mode)
 - **UI Components**: shadcn/ui built on Radix UI primitives
 - **Build Tool**: Vite with hot module replacement
@@ -38,23 +40,14 @@ Preferred communication style: Simple, everyday language.
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js
 - **Language**: TypeScript (ES modules)
-- **API Style**: RESTful endpoints under `/api/*` prefix
-- **Storage**: In-memory storage (MemStorage) with sample data
+- **AI**: OpenAI GPT via Replit AI Integrations (streaming)
+- **Storage**: In-memory for chat history
 
 ### API Endpoints
 
-| Resource | Endpoints |
-|----------|-----------|
-| Lessons | GET, POST `/api/lessons`, GET, PUT, DELETE `/api/lessons/:id` |
-| Tasks | GET, POST `/api/tasks`, GET, PUT, DELETE `/api/tasks/:id` |
-| Classes | GET, POST `/api/classes`, GET, PUT, DELETE `/api/classes/:id` |
-| Templates | GET, POST `/api/templates`, GET, PUT, DELETE `/api/templates/:id` |
-
-### Core Data Models
-- **Lessons**: title, subject, grade, duration, objectives, content, materials, status (draft/ready/completed)
-- **Tasks**: title, description, priority (low/medium/high), status (todo/in_progress/done), dueDate, subject
-- **Classes**: name, subject, grade, studentCount, room, schedule
-- **Templates**: name, category (parent/student/admin/colleague), subject, content
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/chat` | POST | Send message and receive streaming AI response |
 
 ### Project Structure
 ```
@@ -62,14 +55,18 @@ Preferred communication style: Simple, everyday language.
 │   └── src/
 │       ├── components/   # Reusable UI components
 │       ├── pages/        # Route-level page components
+│       │   └── home.tsx  # Main chat interface
 │       ├── hooks/        # Custom React hooks
 │       └── lib/          # Utilities and query client
 ├── server/               # Backend Express application
 │   ├── index.ts          # Server entry point
-│   ├── routes.ts         # API route definitions
-│   └── storage.ts        # In-memory data storage
+│   ├── routes.ts         # Main API routes
+│   └── replit_integrations/
+│       └── chat/         # AI chat integration
+│           ├── routes.ts # Chat API endpoint
+│           └── storage.ts# In-memory chat storage
 ├── shared/               # Shared code
-│   └── schema.ts         # TypeScript types and Zod schemas
+│   └── schema.ts         # TypeScript types
 └── design_guidelines.md  # UI/UX design specifications
 ```
 
@@ -79,15 +76,15 @@ Preferred communication style: Simple, everyday language.
 The app runs on port 5000 via `npm run dev` which starts both the Express backend and Vite dev server.
 
 ### Key Technologies
-- React Hook Form + Zod for form validation
-- TanStack Query for data fetching and caching
+- OpenAI GPT (via Replit AI Integrations)
+- TanStack Query for data fetching
 - Lucide React for icons
 - Inter font family for typography
 
 ## Design Guidelines
 
 The app follows design_guidelines.md specifications:
-- Clean, minimal aesthetic inspired by Linear/Notion/Asana
+- Clean, minimal aesthetic with teal/green color scheme
 - Inter font for readability
 - Card-based layouts with consistent spacing
 - Subtle hover/active elevations
