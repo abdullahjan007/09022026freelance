@@ -1,0 +1,342 @@
+import { useState, useRef, useEffect } from "react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
+const QUICK_ACTIONS = [
+  { label: "Lesson planning", prompt: "I need help creating an engaging lesson plan. My problem is that I struggle to make my lessons interactive and keep students engaged. I need help to design a lesson that captures students' attention from start to finish." },
+  { label: "Parent emails", prompt: "I need help writing a professional email to parents. My problem is that I find it difficult to communicate student progress diplomatically. I need help to write an email that is both honest and supportive." },
+  { label: "Behavior tracking", prompt: "I need help with classroom behavior management. My problem is that some students are frequently disruptive and it's affecting the whole class. I need help to implement an effective behavior tracking system." },
+  { label: "Grading rubrics", prompt: "I need help creating a fair grading rubric. My problem is that my current grading feels inconsistent and students question the fairness. I need help to develop a clear, comprehensive rubric that students can understand." },
+];
+
+export default function Home() {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFormula, setShowFormula] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim() || isLoading) return;
+
+    setInput("");
+    setMessages((prev) => [...prev, { role: "user", content: messageText }]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: messageText,
+          history: messages,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to send message");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = "";
+
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.content) {
+                assistantMessage += data.content;
+                setMessages((prev) => {
+                  const newMessages = [...prev];
+                  newMessages[newMessages.length - 1] = {
+                    role: "assistant",
+                    content: assistantMessage,
+                  };
+                  return newMessages;
+                });
+              }
+            } catch {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Sorry, I encountered an error. Please try again.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    await sendMessage(input);
+  };
+
+  const handleQuickAction = (action: typeof QUICK_ACTIONS[0]) => {
+    sendMessage(action.prompt);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setInput("");
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-teal-50/50 to-white dark:from-slate-900 dark:to-slate-950">
+      {/* Header */}
+      <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600">
+              <Check className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-teal-700 dark:text-teal-400">
+                TaskMaster
+              </h1>
+              <p className="text-xs text-teal-600/70 dark:text-teal-500/70 uppercase tracking-wide">
+                The Teacher's Booster
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {messages.length > 0 && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleNewChat}
+                className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
+                data-testid="button-new-chat"
+              >
+                <RotateCcw className="h-4 w-4 mr-1" />
+                New Chat
+              </Button>
+            )}
+          </div>
+        </div>
+        <div className="text-center py-1 text-sm text-muted-foreground border-t bg-muted/30">
+          TaskMaster - Teacher Support Agent
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-8">
+        {messages.length === 0 ? (
+          /* Landing View */
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
+            {/* Hero Icon */}
+            <div className="relative">
+              <div className="w-20 h-20 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                <Check className="h-12 w-12 text-teal-500" />
+              </div>
+              <Sparkles className="absolute -top-1 -right-1 h-6 w-6 text-amber-400" />
+            </div>
+
+            {/* Hero Text */}
+            <div className="space-y-4 max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100">
+                Today's teacher works under tremendous pressure.
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Time is limited and expectations are high.
+              </p>
+              <p className="text-lg text-muted-foreground">
+                TaskMaster was built by teachers, for teachers.
+              </p>
+            </div>
+
+            {/* Call to Action */}
+            <p className="text-teal-600 dark:text-teal-400 font-medium text-lg italic">
+              Write your biggest challenge here. TaskMaster will give you a solution.
+            </p>
+
+            {/* The TaskMaster Formula Card */}
+            <Card className="w-full max-w-3xl bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Info className="h-4 w-4" />
+                    <span className="uppercase tracking-wide font-medium">The TaskMaster Formula</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowFormula(!showFormula)}
+                    data-testid="button-preview"
+                  >
+                    {showFormula ? (
+                      <>
+                        <EyeOff className="h-4 w-4 mr-1" />
+                        Hide
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="h-4 w-4 mr-1" />
+                        Show
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {showFormula && (
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Problem + Solution */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-teal-500 hover:bg-teal-500 text-white">1</Badge>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">Problem + Solution</span>
+                      </div>
+                      <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-4 space-y-2">
+                        <p className="text-slate-700 dark:text-slate-300">"My problem is ___."</p>
+                        <p className="text-slate-700 dark:text-slate-300">"I need help to ___."</p>
+                      </div>
+                    </div>
+
+                    {/* Example */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-amber-500 hover:bg-amber-500 text-white">2</Badge>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">Example</span>
+                      </div>
+                      <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4">
+                        <p className="text-slate-700 dark:text-slate-300 text-sm">
+                          "My problem is that my grade 9 students of Biology don't understand my feedback comments. I need help rewriting it in simple, friendly English."
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          /* Chat View */
+          <div className="flex-1 overflow-y-auto space-y-4 pb-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                    message.role === "user"
+                      ? "bg-teal-500 text-white"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
+                  }`}
+                  data-testid={`message-${message.role}-${index}`}
+                >
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                </div>
+              </div>
+            ))}
+            {isLoading && messages[messages.length - 1]?.role === "user" && (
+              <div className="flex justify-start">
+                <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+
+        {/* Input Area */}
+        <div className="mt-auto pt-4 space-y-3">
+          {/* Chat Input */}
+          <div className="relative">
+            <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
+              <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g., 'My problem is... I need help to...'"
+                className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
+                rows={1}
+                data-testid="input-chat-message"
+              />
+              <Button
+                onClick={() => handleSubmit()}
+                disabled={!input.trim() || isLoading}
+                className="mr-2 bg-teal-500 hover:bg-teal-600 text-white rounded-xl px-4"
+                data-testid="button-send-message"
+              >
+                <Send className="h-4 w-4 mr-1" />
+                Fix It
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            {QUICK_ACTIONS.map((action) => (
+              <Button
+                key={action.label}
+                variant="outline"
+                size="sm"
+                onClick={() => handleQuickAction(action)}
+                disabled={isLoading}
+                className="rounded-full text-sm border-slate-300 dark:border-slate-600 hover:border-teal-400 hover:text-teal-600 dark:hover:border-teal-500 dark:hover:text-teal-400"
+                data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                {action.label}
+              </Button>
+            ))}
+          </div>
+
+          {/* Status Footer */}
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="font-medium">TaskMaster Agent Online</span>
+            <span className="text-slate-400 dark:text-slate-600">|</span>
+            <span className="italic">Helping you focus on what matters: your students.</span>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
