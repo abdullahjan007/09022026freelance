@@ -16,6 +16,9 @@ The design follows a clean, teal/green aesthetic with hero messaging focused on 
 
 **Completed Features:**
 - Single-page AI chat interface with hero section
+- Two-step interaction flow: Guidance first, then Execution with permission
+  - Step 1: AI provides tips and strategies (Guidance badge)
+  - Step 2: AI creates ready-to-use materials after user confirms (Execute button)
 - "The TaskMaster Formula" guide (toggle to show/hide)
 - Streaming AI responses with teacher-focused system prompt
 - Quick action chips that send prompts directly to the AI
