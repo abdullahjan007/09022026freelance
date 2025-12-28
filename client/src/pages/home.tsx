@@ -120,7 +120,7 @@ export default function Home() {
   };
 
   const handleExecute = () => {
-    sendMessage("Yes, please! Create the materials for me.");
+    sendMessage("Yes, please provide assistance beyond suggestions. Create the materials for me.");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -371,7 +371,7 @@ export default function Home() {
               data-testid="button-execute"
             >
               <Zap className="h-5 w-5" />
-              Yes, Create Materials for Me!
+              Would You Like Assistance Beyond Suggestions?
             </Button>
           </div>
         )}
