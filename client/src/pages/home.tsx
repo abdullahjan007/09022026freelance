@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import jsPDF from "jspdf";
 
 interface Message {
   role: "user" | "assistant";
@@ -65,8 +67,90 @@ export default function Home() {
   const [awaitingExecution, setAwaitingExecution] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { toast } = useToast();
+
+  const copyToClipboard = async (text: string, index: number) => {
+    const cleanText = text
+      .replace(/---GUIDANCE_COMPLETE---/g, "")
+      .replace(/---EXECUTION_START---/g, "")
+      .trim();
+    
+    try {
+      await navigator.clipboard.writeText(cleanText);
+      setCopiedIndex(index);
+      toast({
+        title: "Copied!",
+        description: "Content copied to clipboard",
+      });
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch {
+      toast({
+        title: "Failed to copy",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const downloadAsPdf = () => {
+    if (messages.length === 0) return;
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const maxWidth = pageWidth - margin * 2;
+    let yPosition = 20;
+
+    doc.setFontSize(18);
+    doc.setTextColor(20, 184, 166);
+    doc.text("TaskMaster Conversation", margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(10);
+    doc.setTextColor(128, 128, 128);
+    doc.text(new Date().toLocaleDateString(), margin, yPosition);
+    yPosition += 15;
+
+    messages.forEach((message) => {
+      const cleanContent = message.content
+        .replace(/---GUIDANCE_COMPLETE---/g, "")
+        .replace(/---EXECUTION_START---/g, "")
+        .trim();
+
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
+
+      doc.setFontSize(11);
+      doc.setTextColor(message.role === "user" ? 20 : 100, message.role === "user" ? 184 : 100, message.role === "user" ? 166 : 100);
+      doc.text(message.role === "user" ? "You:" : "TaskMaster:", margin, yPosition);
+      yPosition += 7;
+
+      doc.setFontSize(10);
+      doc.setTextColor(50, 50, 50);
+      const lines = doc.splitTextToSize(cleanContent, maxWidth);
+      
+      for (const line of lines) {
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(line, margin, yPosition);
+        yPosition += 5;
+      }
+      yPosition += 10;
+    });
+
+    doc.save("taskmaster-conversation.pdf");
+    toast({
+      title: "Downloaded!",
+      description: "PDF saved to your device",
+    });
+  };
 
   useEffect(() => {
     setConversationHistory(getStoredHistory());
@@ -296,16 +380,28 @@ export default function Home() {
               )}
             </Button>
             {messages.length > 0 && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleNewChat}
-                className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
-                data-testid="button-new-chat"
-              >
-                <RotateCcw className="h-4 w-4 mr-1" />
-                New Chat
-              </Button>
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={downloadAsPdf}
+                  className="text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                  data-testid="button-download-pdf"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  PDF
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleNewChat}
+                  className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
+                  data-testid="button-new-chat"
+                >
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  New Chat
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -482,8 +578,8 @@ export default function Home() {
                   >
                     {message.role === "assistant" ? (
                       <div className="space-y-3">
-                        {/* Badge for message type */}
-                        {(isGuidance || isExecution) && (
+                        {/* Badge for message type and copy button */}
+                        <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2">
                             {isGuidance && (
                               <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 gap-1">
@@ -498,7 +594,21 @@ export default function Home() {
                               </Badge>
                             )}
                           </div>
-                        )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(message.content, index)}
+                            className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                            data-testid={`button-copy-${index}`}
+                          >
+                            {copiedIndex === index ? (
+                              <CheckCircle className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                            <span className="ml-1 text-xs">{copiedIndex === index ? "Copied" : "Copy"}</span>
+                          </Button>
+                        </div>
                         {/* Message content */}
                         <div className={`rounded-2xl px-4 py-3 ${
                           isExecution 
