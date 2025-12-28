@@ -109,7 +109,7 @@ export function TMBuddy() {
       {/* Floating Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 z-50 rounded-full w-14 h-14 shadow-lg bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+        className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
         size="icon"
         data-testid="button-tm-buddy-toggle"
       >
@@ -122,7 +122,7 @@ export function TMBuddy() {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 left-6 z-50 w-80 sm:w-96 shadow-2xl border-indigo-200 dark:border-indigo-800 overflow-hidden">
+        <Card className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 shadow-2xl border-indigo-200 dark:border-indigo-800 overflow-hidden">
           {/* Header */}
           <div className="bg-indigo-600 dark:bg-indigo-700 p-3 flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
