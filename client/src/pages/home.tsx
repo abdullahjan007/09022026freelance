@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -415,6 +415,7 @@ export default function Home() {
     const titleMatch = content.match(/\[TITLE\]([\s\S]*?)\[\/TITLE\]/);
     const introMatch = content.match(/\[INTRO\]([\s\S]*?)\[\/INTRO\]/);
     const stepsMatch = content.match(/\[STEPS\]([\s\S]*?)\[\/STEPS\]/);
+    const websitesMatch = content.match(/\[WEBSITES\]([\s\S]*?)\[\/WEBSITES\]/);
     
     const steps: string[] = [];
     if (stepsMatch) {
@@ -423,6 +424,19 @@ export default function Home() {
       let match;
       while ((match = stepRegex.exec(stepsContent)) !== null) {
         steps.push(match[1].trim());
+      }
+    }
+
+    const websites: { name: string; url: string }[] = [];
+    if (websitesMatch) {
+      const websitesContent = websitesMatch[1];
+      const websiteRegex = /\[WEBSITE\]([\s\S]*?)\[\/WEBSITE\]/g;
+      let match;
+      while ((match = websiteRegex.exec(websitesContent)) !== null) {
+        const parts = match[1].trim().split('|');
+        if (parts.length >= 2) {
+          websites.push({ name: parts[0].trim(), url: parts[1].trim() });
+        }
       }
     }
 
@@ -451,6 +465,7 @@ export default function Home() {
       title: titleMatch ? titleMatch[1].trim() : null,
       intro: introMatch ? introMatch[1].trim() : null,
       steps,
+      websites,
       sections
     };
   };
@@ -465,11 +480,12 @@ export default function Home() {
       .replace(/\[TITLE\][\s\S]*?\[\/TITLE\]/g, "")
       .replace(/\[INTRO\][\s\S]*?\[\/INTRO\]/g, "")
       .replace(/\[STEPS\][\s\S]*?\[\/STEPS\]/g, "")
+      .replace(/\[WEBSITES\][\s\S]*?\[\/WEBSITES\]/g, "")
       .replace(/\[SECTION\][\s\S]*?\[\/SECTION\]/g, "")
       .trim();
 
     const structured = parseStructuredContent(content);
-    const hasStructuredContent = structured.title || structured.intro || structured.steps.length > 0 || structured.sections.length > 0;
+    const hasStructuredContent = structured.title || structured.intro || structured.steps.length > 0 || structured.websites.length > 0 || structured.sections.length > 0;
 
     return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker, structured, hasStructuredContent };
   };
@@ -514,6 +530,29 @@ export default function Home() {
                     {step}
                   </p>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {structured.websites.length > 0 && (
+          <div className="space-y-3 pt-2">
+            <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Suggested Websites
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {structured.websites.map((website, i) => (
+                <a
+                  key={i}
+                  href={website.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                  data-testid={`link-website-${i}`}
+                >
+                  {website.name}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               ))}
             </div>
           </div>
