@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,10 +10,10 @@ interface Message {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Lesson planning", prompt: "I need help creating an engaging lesson plan. My problem is that I struggle to make my lessons interactive and keep students engaged. I need help to design a lesson that captures students' attention from start to finish." },
-  { label: "Parent emails", prompt: "I need help writing a professional email to parents. My problem is that I find it difficult to communicate student progress diplomatically. I need help to write an email that is both honest and supportive." },
-  { label: "Behavior tracking", prompt: "I need help with classroom behavior management. My problem is that some students are frequently disruptive and it's affecting the whole class. I need help to implement an effective behavior tracking system." },
-  { label: "Grading rubrics", prompt: "I need help creating a fair grading rubric. My problem is that my current grading feels inconsistent and students question the fairness. I need help to develop a clear, comprehensive rubric that students can understand." },
+  { label: "Lesson planning", prompt: "My problem is that I struggle to create engaging lesson plans that keep all my students interested. I need help to design interactive lessons that work for different learning styles." },
+  { label: "Parent emails", prompt: "My problem is that I find it difficult to write professional emails to parents about sensitive topics. I need help to communicate student concerns diplomatically while maintaining a positive relationship." },
+  { label: "Behavior tracking", prompt: "My problem is that some students are frequently disruptive and it's affecting the whole class. I need help to implement an effective behavior tracking and management system." },
+  { label: "Grading rubrics", prompt: "My problem is that my current grading feels inconsistent and students question the fairness. I need help to develop clear, comprehensive rubrics that students can understand." },
 ];
 
 export default function Home() {
@@ -21,6 +21,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showFormula, setShowFormula] = useState(true);
+  const [awaitingExecution, setAwaitingExecution] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -32,10 +33,20 @@ export default function Home() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.role === "assistant" && lastMessage.content.includes("---GUIDANCE_COMPLETE---")) {
+      setAwaitingExecution(true);
+    } else if (lastMessage?.role === "assistant" && lastMessage.content.includes("---EXECUTION_START---")) {
+      setAwaitingExecution(false);
+    }
+  }, [messages]);
+
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
 
     setInput("");
+    setAwaitingExecution(false);
     setMessages((prev) => [...prev, { role: "user", content: messageText }]);
     setIsLoading(true);
 
@@ -108,6 +119,10 @@ export default function Home() {
     sendMessage(action.prompt);
   };
 
+  const handleExecute = () => {
+    sendMessage("Yes, please! Create the materials for me.");
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -118,6 +133,19 @@ export default function Home() {
   const handleNewChat = () => {
     setMessages([]);
     setInput("");
+    setAwaitingExecution(false);
+  };
+
+  const formatMessage = (content: string) => {
+    const hasGuidanceMarker = content.includes("---GUIDANCE_COMPLETE---");
+    const hasExecutionMarker = content.includes("---EXECUTION_START---");
+    
+    let cleanContent = content
+      .replace(/---GUIDANCE_COMPLETE---/g, "")
+      .replace(/---EXECUTION_START---/g, "")
+      .trim();
+
+    return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker };
   };
 
   return (
@@ -184,9 +212,26 @@ export default function Home() {
               </p>
             </div>
 
+            {/* Two-Step Process */}
+            <div className="flex items-center justify-center gap-6 flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Step 1: Get Guidance</span>
+              </div>
+              <div className="text-muted-foreground">then</div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                  <Package className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                </div>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Step 2: Get Materials</span>
+              </div>
+            </div>
+
             {/* Call to Action */}
             <p className="text-teal-600 dark:text-teal-400 font-medium text-lg italic">
-              Write your biggest challenge here. TaskMaster will give you a solution.
+              Write your biggest challenge here. TaskMaster will guide you, then create materials.
             </p>
 
             {/* The TaskMaster Formula Card */}
@@ -251,23 +296,57 @@ export default function Home() {
         ) : (
           /* Chat View */
           <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-              >
+            {messages.map((message, index) => {
+              const { cleanContent, isGuidance, isExecution } = formatMessage(message.content);
+              
+              return (
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    message.role === "user"
-                      ? "bg-teal-500 text-white"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
-                  }`}
-                  data-testid={`message-${message.role}-${index}`}
+                  key={index}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div
+                    className={`max-w-[85%] ${
+                      message.role === "user"
+                        ? "bg-teal-500 text-white rounded-2xl px-4 py-3"
+                        : ""
+                    }`}
+                    data-testid={`message-${message.role}-${index}`}
+                  >
+                    {message.role === "assistant" ? (
+                      <div className="space-y-3">
+                        {/* Badge for message type */}
+                        {(isGuidance || isExecution) && (
+                          <div className="flex items-center gap-2">
+                            {isGuidance && (
+                              <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 gap-1">
+                                <Lightbulb className="h-3 w-3" />
+                                Guidance
+                              </Badge>
+                            )}
+                            {isExecution && (
+                              <Badge className="bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400 gap-1">
+                                <Package className="h-3 w-3" />
+                                Ready-to-Use Materials
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                        {/* Message content */}
+                        <div className={`rounded-2xl px-4 py-3 ${
+                          isExecution 
+                            ? "bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800" 
+                            : "bg-slate-100 dark:bg-slate-800"
+                        } text-slate-800 dark:text-slate-200`}>
+                          <div className="whitespace-pre-wrap">{cleanContent}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="whitespace-pre-wrap">{message.content}</div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
                 <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-3">
@@ -280,6 +359,20 @@ export default function Home() {
               </div>
             )}
             <div ref={messagesEndRef} />
+          </div>
+        )}
+
+        {/* Execute Button - shown when awaiting execution */}
+        {awaitingExecution && !isLoading && (
+          <div className="mb-4 flex justify-center">
+            <Button
+              onClick={handleExecute}
+              className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg px-6 py-3 text-lg gap-2"
+              data-testid="button-execute"
+            >
+              <Zap className="h-5 w-5" />
+              Yes, Create Materials for Me!
+            </Button>
           </div>
         )}
 
@@ -306,7 +399,7 @@ export default function Home() {
                 data-testid="button-send-message"
               >
                 <Send className="h-4 w-4 mr-1" />
-                Fix It
+                Send
               </Button>
             </div>
           </div>
@@ -320,7 +413,7 @@ export default function Home() {
                 size="sm"
                 onClick={() => handleQuickAction(action)}
                 disabled={isLoading}
-                className="rounded-full text-sm border-slate-300 dark:border-slate-600 hover:border-teal-400 hover:text-teal-600 dark:hover:border-teal-500 dark:hover:text-teal-400"
+                className="rounded-full text-sm border-slate-300 dark:border-slate-600"
                 data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 {action.label}
