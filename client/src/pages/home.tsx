@@ -414,6 +414,50 @@ export default function Home() {
     }
   };
 
+  const parseStructuredContent = (content: string) => {
+    const titleMatch = content.match(/\[TITLE\]([\s\S]*?)\[\/TITLE\]/);
+    const introMatch = content.match(/\[INTRO\]([\s\S]*?)\[\/INTRO\]/);
+    const stepsMatch = content.match(/\[STEPS\]([\s\S]*?)\[\/STEPS\]/);
+    
+    const steps: string[] = [];
+    if (stepsMatch) {
+      const stepsContent = stepsMatch[1];
+      const stepRegex = /\[STEP\]([\s\S]*?)\[\/STEP\]/g;
+      let match;
+      while ((match = stepRegex.exec(stepsContent)) !== null) {
+        steps.push(match[1].trim());
+      }
+    }
+
+    const sections: { title: string; content: string }[] = [];
+    const sectionRegex = /\[SECTION\]([\s\S]*?)\[\/SECTION\]/g;
+    let sectionMatch;
+    const sectionTitles: { title: string; index: number }[] = [];
+    
+    while ((sectionMatch = sectionRegex.exec(content)) !== null) {
+      sectionTitles.push({ title: sectionMatch[1].trim(), index: sectionMatch.index + sectionMatch[0].length });
+    }
+    
+    for (let i = 0; i < sectionTitles.length; i++) {
+      const start = sectionTitles[i].index;
+      const end = i + 1 < sectionTitles.length 
+        ? content.indexOf('[SECTION]', start) 
+        : content.length;
+      const sectionContent = content.slice(start, end === -1 ? undefined : end).trim();
+      sections.push({
+        title: sectionTitles[i].title,
+        content: sectionContent
+      });
+    }
+
+    return {
+      title: titleMatch ? titleMatch[1].trim() : null,
+      intro: introMatch ? introMatch[1].trim() : null,
+      steps,
+      sections
+    };
+  };
+
   const formatMessage = (content: string) => {
     const hasGuidanceMarker = content.includes("---GUIDANCE_COMPLETE---");
     const hasExecutionMarker = content.includes("---EXECUTION_START---");
@@ -421,9 +465,85 @@ export default function Home() {
     let cleanContent = content
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
+      .replace(/\[TITLE\][\s\S]*?\[\/TITLE\]/g, "")
+      .replace(/\[INTRO\][\s\S]*?\[\/INTRO\]/g, "")
+      .replace(/\[STEPS\][\s\S]*?\[\/STEPS\]/g, "")
+      .replace(/\[SECTION\][\s\S]*?\[\/SECTION\]/g, "")
       .trim();
 
-    return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker };
+    const structured = parseStructuredContent(content);
+    const hasStructuredContent = structured.title || structured.intro || structured.steps.length > 0 || structured.sections.length > 0;
+
+    return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker, structured, hasStructuredContent };
+  };
+
+  const renderStructuredContent = (structured: ReturnType<typeof parseStructuredContent>, isExecution: boolean, remainingContent: string) => {
+    return (
+      <div className="space-y-4">
+        {structured.title && (
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 mt-1">
+              {isExecution ? (
+                <Package className="h-5 w-5 text-teal-500" />
+              ) : (
+                <Lightbulb className="h-5 w-5 text-amber-500" />
+              )}
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              {structured.title}
+            </h3>
+          </div>
+        )}
+        
+        {structured.intro && (
+          <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+            {structured.intro}
+          </p>
+        )}
+        
+        {structured.steps.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
+              <Sparkles className="h-4 w-4" />
+              <span className="font-semibold text-sm uppercase tracking-wide">Recommended Steps</span>
+            </div>
+            <div className="space-y-3 pl-1">
+              {structured.steps.map((step, i) => (
+                <div key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex items-center justify-center text-sm font-medium">
+                    {i + 1}
+                  </span>
+                  <p className="text-slate-700 dark:text-slate-300 flex-1 pt-0.5">
+                    {step}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {structured.sections.length > 0 && (
+          <div className="space-y-4">
+            {structured.sections.map((section, i) => (
+              <div key={i} className="space-y-2">
+                <h4 className="font-semibold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-1">
+                  {section.title}
+                </h4>
+                <div className="text-slate-600 dark:text-slate-300 whitespace-pre-wrap pl-2">
+                  {section.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {remainingContent && !structured.title && !structured.steps.length && (
+          <div className="whitespace-pre-wrap text-slate-700 dark:text-slate-300">
+            {remainingContent}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -653,7 +773,7 @@ export default function Home() {
           /* Chat View */
           <div className="flex-1 overflow-y-auto space-y-4 pb-4">
             {messages.map((message, index) => {
-              const { cleanContent, isGuidance, isExecution } = formatMessage(message.content);
+              const { cleanContent, isGuidance, isExecution, structured, hasStructuredContent } = formatMessage(message.content);
               
               return (
                 <div
@@ -670,30 +790,17 @@ export default function Home() {
                   >
                     {message.role === "assistant" ? (
                       <div className="space-y-3">
-                        {/* Badge for message type */}
-                        {(isGuidance || isExecution) && (
-                          <div className="flex items-center gap-2">
-                            {isGuidance && (
-                              <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 gap-1">
-                                <Lightbulb className="h-3 w-3" />
-                                Guidance
-                              </Badge>
-                            )}
-                            {isExecution && (
-                              <Badge className="bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400 gap-1">
-                                <Package className="h-3 w-3" />
-                                Ready-to-Use Materials
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-                        {/* Message content */}
-                        <div className={`rounded-2xl px-4 py-3 ${
+                        {/* Message content card */}
+                        <div className={`rounded-2xl px-5 py-4 ${
                           isExecution 
                             ? "bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800" 
-                            : "bg-slate-100 dark:bg-slate-800"
-                        } text-slate-800 dark:text-slate-200`}>
-                          <div className="whitespace-pre-wrap">{cleanContent}</div>
+                            : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                        }`}>
+                          {hasStructuredContent ? (
+                            renderStructuredContent(structured, isExecution, cleanContent)
+                          ) : (
+                            <div className="whitespace-pre-wrap text-slate-700 dark:text-slate-300">{cleanContent}</div>
+                          )}
                         </div>
                         {/* Action buttons row */}
                         <div className="flex items-center gap-1 pt-1">
