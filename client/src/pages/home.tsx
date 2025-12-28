@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
-import introVideo from "@assets/compress_TASKMASTER_INTRO_VID_1766953579256.mp4";
 
 interface Message {
   role: "user" | "assistant";
@@ -733,7 +732,7 @@ export default function Home() {
             {/* Intro Video */}
             <div className="w-full max-w-2xl rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
               <video
-                src={introVideo}
+                src="/intro-video.mp4"
                 controls
                 className="w-full"
                 data-testid="video-intro"
