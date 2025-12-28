@@ -1,9 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 
 interface Message {
@@ -68,9 +74,93 @@ export default function Home() {
   const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [likedMessages, setLikedMessages] = useState<Set<number>>(new Set());
+  const [dislikedMessages, setDislikedMessages] = useState<Set<number>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+
+  const handleLike = (index: number) => {
+    setLikedMessages(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+        setDislikedMessages(prevDislikes => {
+          const newDislikes = new Set(prevDislikes);
+          newDislikes.delete(index);
+          return newDislikes;
+        });
+      }
+      return newSet;
+    });
+    toast({
+      title: likedMessages.has(index) ? "Feedback removed" : "Thanks for your feedback!",
+      description: likedMessages.has(index) ? "" : "We appreciate you letting us know this was helpful.",
+    });
+  };
+
+  const handleDislike = (index: number) => {
+    setDislikedMessages(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+        setLikedMessages(prevLikes => {
+          const newLikes = new Set(prevLikes);
+          newLikes.delete(index);
+          return newLikes;
+        });
+      }
+      return newSet;
+    });
+    toast({
+      title: dislikedMessages.has(index) ? "Feedback removed" : "Thanks for your feedback!",
+      description: dislikedMessages.has(index) ? "" : "We'll work on improving our responses.",
+    });
+  };
+
+  const handleShare = async (text: string) => {
+    const cleanText = text
+      .replace(/---GUIDANCE_COMPLETE---/g, "")
+      .replace(/---EXECUTION_START---/g, "")
+      .trim();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "TaskMaster Response",
+          text: cleanText,
+        });
+      } catch {
+        await navigator.clipboard.writeText(cleanText);
+        toast({
+          title: "Copied to clipboard!",
+          description: "Ready to share",
+        });
+      }
+    } else {
+      await navigator.clipboard.writeText(cleanText);
+      toast({
+        title: "Copied to clipboard!",
+        description: "Ready to share",
+      });
+    }
+  };
+
+  const handleRegenerate = async (messageIndex: number) => {
+    const userMessageIndex = messageIndex - 1;
+    if (userMessageIndex >= 0 && messages[userMessageIndex]?.role === "user") {
+      const userMessage = messages[userMessageIndex].content;
+      const trimmedMessages = messages.slice(0, userMessageIndex);
+      setMessages(trimmedMessages);
+      setTimeout(() => {
+        sendMessage(userMessage, trimmedMessages);
+      }, 100);
+    }
+  };
 
   const copyToClipboard = async (text: string, index: number) => {
     const cleanText = text
@@ -201,16 +291,18 @@ export default function Home() {
     }
   }, [messages, currentConversationId, isLoading]);
 
-  const sendMessage = async (messageText: string) => {
+  const sendMessage = async (messageText: string, existingMessages?: Message[]) => {
     if (!messageText.trim() || isLoading) return;
 
     if (!currentConversationId) {
       setCurrentConversationId(generateId());
     }
 
+    const baseMessages = existingMessages ?? messages;
+
     setInput("");
     setAwaitingExecution(false);
-    setMessages((prev) => [...prev, { role: "user", content: messageText }]);
+    setMessages([...baseMessages, { role: "user", content: messageText }]);
     setIsLoading(true);
 
     try {
@@ -219,7 +311,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: messageText,
-          history: messages,
+          history: baseMessages,
         }),
       });
 
@@ -578,8 +670,8 @@ export default function Home() {
                   >
                     {message.role === "assistant" ? (
                       <div className="space-y-3">
-                        {/* Badge for message type and copy button */}
-                        <div className="flex items-center justify-between gap-2">
+                        {/* Badge for message type */}
+                        {(isGuidance || isExecution) && (
                           <div className="flex items-center gap-2">
                             {isGuidance && (
                               <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 gap-1">
@@ -594,21 +686,7 @@ export default function Home() {
                               </Badge>
                             )}
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(message.content, index)}
-                            className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-                            data-testid={`button-copy-${index}`}
-                          >
-                            {copiedIndex === index ? (
-                              <CheckCircle className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                            <span className="ml-1 text-xs">{copiedIndex === index ? "Copied" : "Copy"}</span>
-                          </Button>
-                        </div>
+                        )}
                         {/* Message content */}
                         <div className={`rounded-2xl px-4 py-3 ${
                           isExecution 
@@ -616,6 +694,85 @@ export default function Home() {
                             : "bg-slate-100 dark:bg-slate-800"
                         } text-slate-800 dark:text-slate-200`}>
                           <div className="whitespace-pre-wrap">{cleanContent}</div>
+                        </div>
+                        {/* Action buttons row */}
+                        <div className="flex items-center gap-1 pt-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => copyToClipboard(message.content, index)}
+                            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                            data-testid={`button-copy-${index}`}
+                          >
+                            {copiedIndex === index ? (
+                              <CheckCircle className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleLike(index)}
+                            className={`${likedMessages.has(index) ? 'text-teal-500' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'}`}
+                            data-testid={`button-like-${index}`}
+                          >
+                            <ThumbsUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDislike(index)}
+                            className={`${dislikedMessages.has(index) ? 'text-red-500' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'}`}
+                            data-testid={`button-dislike-${index}`}
+                          >
+                            <ThumbsDown className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleShare(message.content)}
+                            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                            data-testid={`button-share-${index}`}
+                          >
+                            <Share2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRegenerate(index)}
+                            disabled={isLoading}
+                            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                            data-testid={`button-regenerate-${index}`}
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+                                data-testid={`button-more-${index}`}
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                              <DropdownMenuItem onClick={() => copyToClipboard(message.content, index)}>
+                                <Copy className="h-4 w-4 mr-2" />
+                                Copy text
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare(message.content)}>
+                                <Share2 className="h-4 w-4 mr-2" />
+                                Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleRegenerate(index)} disabled={isLoading}>
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Regenerate
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     ) : (
