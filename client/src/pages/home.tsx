@@ -725,7 +725,7 @@ export default function Home() {
                 Dear Busy Teacher,
               </h2>
               <p className="text-xl text-muted-foreground">
-                Focus on the classroom. Let AI handle the prep.
+                Focus on your students. Let TaskMaster handle other details.
               </p>
             </div>
 
