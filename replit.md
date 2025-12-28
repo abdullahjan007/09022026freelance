@@ -2,7 +2,24 @@
 
 ## Overview
 
-TaskMaster is a web-based productivity application designed specifically for teachers and educators. It provides tools for lesson planning, task management, class organization, and communication templates. The application follows a clean, system-based design inspired by Linear, Notion, and Asana to reduce cognitive load and maximize teacher productivity.
+TaskMaster is a comprehensive web-based productivity application designed specifically for teachers and educators. It provides tools for:
+- **Lesson Planning**: Create, organize, and manage lesson plans with objectives, content, and materials
+- **Task Management**: Track teaching tasks with priority levels and due dates (list and kanban views)
+- **Class Organization**: Manage student groups, schedules, and room assignments
+- **Communication Templates**: Reusable templates for parent, student, admin, and colleague communications
+
+The application follows a clean, system-based design inspired by Linear, Notion, and Asana to reduce cognitive load and maximize teacher productivity.
+
+## Current Status
+
+**Completed Features:**
+- Dashboard with quick stats, recent items, and quick actions
+- Lesson Planner with full CRUD operations
+- Task Manager with list/kanban view modes and status transitions
+- Class Management with student counts and scheduling
+- Communication Hub with categorized templates
+- Dark/light theme toggle
+- Responsive sidebar navigation
 
 ## User Preferences
 
@@ -13,71 +30,66 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **Framework**: React 18 with TypeScript
 - **Routing**: Wouter (lightweight React router)
-- **State Management**: TanStack React Query for server state caching and synchronization
-- **Styling**: Tailwind CSS with CSS variables for theming (light/dark mode support)
-- **UI Components**: shadcn/ui component library built on Radix UI primitives
+- **State Management**: TanStack React Query for server state caching
+- **Styling**: Tailwind CSS with CSS variables (light/dark mode)
+- **UI Components**: shadcn/ui built on Radix UI primitives
 - **Build Tool**: Vite with hot module replacement
-
-The frontend follows a page-based structure with shared components:
-- Pages: Dashboard, Lessons, Tasks, Classes, Communication
-- Layout: Collapsible sidebar navigation with main content area
-- Forms: React Hook Form with Zod validation
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js
 - **Language**: TypeScript (ES modules)
 - **API Style**: RESTful endpoints under `/api/*` prefix
-- **Development**: Vite dev server with HMR proxied through Express
+- **Storage**: In-memory storage (MemStorage) with sample data
 
-The backend serves both the API and static frontend assets in production. Development mode uses Vite middleware for hot reloading.
+### API Endpoints
 
-### Data Layer
-- **ORM**: Drizzle ORM with PostgreSQL dialect
-- **Schema Location**: `shared/schema.ts` (shared between frontend and backend)
-- **Validation**: Zod schemas generated from Drizzle schemas via `drizzle-zod`
-- **Current Storage**: In-memory storage implementation (`MemStorage` class) with interface ready for database migration
+| Resource | Endpoints |
+|----------|-----------|
+| Lessons | GET, POST `/api/lessons`, GET, PUT, DELETE `/api/lessons/:id` |
+| Tasks | GET, POST `/api/tasks`, GET, PUT, DELETE `/api/tasks/:id` |
+| Classes | GET, POST `/api/classes`, GET, PUT, DELETE `/api/classes/:id` |
+| Templates | GET, POST `/api/templates`, GET, PUT, DELETE `/api/templates/:id` |
 
 ### Core Data Models
-- **Users**: Basic authentication with username/password
-- **Lessons**: Lesson planning with title, subject, grade, duration, objectives, content, materials, status
-- **Tasks**: Task management with priority levels, status tracking, due dates
-- **Classes**: Class/student group organization
-- **Templates**: Reusable communication templates
+- **Lessons**: title, subject, grade, duration, objectives, content, materials, status (draft/ready/completed)
+- **Tasks**: title, description, priority (low/medium/high), status (todo/in_progress/done), dueDate, subject
+- **Classes**: name, subject, grade, studentCount, room, schedule
+- **Templates**: name, category (parent/student/admin/colleague), subject, content
 
 ### Project Structure
 ```
-├── client/           # Frontend React application
+├── client/               # Frontend React application
 │   └── src/
-│       ├── components/  # Reusable UI components
-│       ├── pages/       # Route-level page components
-│       ├── hooks/       # Custom React hooks
-│       └── lib/         # Utilities and query client
-├── server/           # Backend Express application
-│   ├── index.ts      # Server entry point
-│   ├── routes.ts     # API route definitions
-│   └── storage.ts    # Data storage interface
-├── shared/           # Shared code between frontend/backend
-│   └── schema.ts     # Drizzle schema definitions
-└── migrations/       # Database migrations (Drizzle Kit)
+│       ├── components/   # Reusable UI components
+│       ├── pages/        # Route-level page components
+│       ├── hooks/        # Custom React hooks
+│       └── lib/          # Utilities and query client
+├── server/               # Backend Express application
+│   ├── index.ts          # Server entry point
+│   ├── routes.ts         # API route definitions
+│   └── storage.ts        # In-memory data storage
+├── shared/               # Shared code
+│   └── schema.ts         # TypeScript types and Zod schemas
+└── design_guidelines.md  # UI/UX design specifications
 ```
 
-## External Dependencies
+## Development
 
-### Database
-- **PostgreSQL**: Primary database (configured via `DATABASE_URL` environment variable)
-- **Drizzle Kit**: Database migration management (`npm run db:push`)
+### Running the Application
+The app runs on port 5000 via `npm run dev` which starts both the Express backend and Vite dev server.
 
-### UI Framework
-- **Radix UI**: Accessible component primitives (dialogs, dropdowns, forms, etc.)
-- **Tailwind CSS**: Utility-first CSS framework
-- **Lucide React**: Icon library
+### Key Technologies
+- React Hook Form + Zod for form validation
+- TanStack Query for data fetching and caching
+- Lucide React for icons
+- Inter font family for typography
 
-### Form Handling
-- **React Hook Form**: Form state management
-- **Zod**: Schema validation
-- **@hookform/resolvers**: Zod integration for React Hook Form
+## Design Guidelines
 
-### Development Tools
-- **Vite**: Frontend build tool and dev server
-- **tsx**: TypeScript execution for Node.js
-- **esbuild**: Production server bundling
+The app follows design_guidelines.md specifications:
+- Clean, minimal aesthetic inspired by Linear/Notion/Asana
+- Inter font for readability
+- Card-based layouts with consistent spacing
+- Subtle hover/active elevations
+- Three-tier text color hierarchy
+- Accessible components via Radix UI
