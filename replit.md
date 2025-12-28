@@ -24,6 +24,8 @@ The design follows a clean, teal/green aesthetic with hero messaging focused on 
 - Quick action chips that send prompts directly to the AI
 - New Chat button to start fresh conversations
 - Your Activity History - view, resume, and delete past conversations (localStorage)
+- Copy to clipboard: Copy AI response content with visual feedback
+- Download as PDF: Export entire conversations as formatted PDF documents
 - Dark/light theme support
 - Responsive design
 
