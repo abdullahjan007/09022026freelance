@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,13 @@ interface Message {
   content: string;
 }
 
+interface Conversation {
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: string;
+}
+
 const QUICK_ACTIONS = [
   { label: "Lesson planning", prompt: "My problem is that I struggle to create engaging lesson plans that keep all my students interested. I need help to design interactive lessons that work for different learning styles." },
   { label: "Parent emails", prompt: "My problem is that I find it difficult to write professional emails to parents about sensitive topics. I need help to communicate student concerns diplomatically while maintaining a positive relationship." },
@@ -16,14 +23,54 @@ const QUICK_ACTIONS = [
   { label: "Grading rubrics", prompt: "My problem is that my current grading feels inconsistent and students question the fairness. I need help to develop clear, comprehensive rubrics that students can understand." },
 ];
 
+const STORAGE_KEY = "taskmaster_history";
+
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+function getStoredHistory(): Conversation[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(conversations: Conversation[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+  } catch {
+    console.error("Failed to save to localStorage");
+  }
+}
+
+function extractTitle(messages: Message[]): string {
+  const firstUserMessage = messages.find(m => m.role === "user");
+  if (firstUserMessage) {
+    const content = firstUserMessage.content;
+    const cleaned = content.replace(/My problem is that /i, "").replace(/I need help to /i, "");
+    return cleaned.length > 50 ? cleaned.substring(0, 50) + "..." : cleaned;
+  }
+  return "New Conversation";
+}
+
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showFormula, setShowFormula] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
   const [awaitingExecution, setAwaitingExecution] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    setConversationHistory(getStoredHistory());
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,8 +89,40 @@ export default function Home() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (messages.length > 0 && currentConversationId && !isLoading) {
+      setConversationHistory(prevHistory => {
+        const existingIndex = prevHistory.findIndex(c => c.id === currentConversationId);
+        let updatedHistory: Conversation[];
+        
+        if (existingIndex >= 0) {
+          updatedHistory = [...prevHistory];
+          updatedHistory[existingIndex] = {
+            ...updatedHistory[existingIndex],
+            messages,
+            title: extractTitle(messages),
+          };
+        } else {
+          updatedHistory = [{
+            id: currentConversationId,
+            title: extractTitle(messages),
+            messages,
+            createdAt: new Date().toISOString(),
+          }, ...prevHistory];
+        }
+        
+        saveToStorage(updatedHistory);
+        return updatedHistory;
+      });
+    }
+  }, [messages, currentConversationId, isLoading]);
+
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
+
+    if (!currentConversationId) {
+      setCurrentConversationId(generateId());
+    }
 
     setInput("");
     setAwaitingExecution(false);
@@ -134,6 +213,29 @@ export default function Home() {
     setMessages([]);
     setInput("");
     setAwaitingExecution(false);
+    setCurrentConversationId(null);
+  };
+
+  const handleLoadConversation = (conversation: Conversation) => {
+    setMessages(conversation.messages);
+    setCurrentConversationId(conversation.id);
+    setShowHistory(false);
+    const lastMessage = conversation.messages[conversation.messages.length - 1];
+    if (lastMessage?.role === "assistant" && lastMessage.content.includes("---GUIDANCE_COMPLETE---")) {
+      setAwaitingExecution(true);
+    } else {
+      setAwaitingExecution(false);
+    }
+  };
+
+  const handleDeleteConversation = (conversationId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = conversationHistory.filter(c => c.id !== conversationId);
+    setConversationHistory(updated);
+    saveToStorage(updated);
+    if (currentConversationId === conversationId) {
+      handleNewChat();
+    }
   };
 
   const formatMessage = (content: string) => {
@@ -146,6 +248,17 @@ export default function Home() {
       .trim();
 
     return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker };
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
   };
 
   return (
@@ -167,6 +280,21 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+              data-testid="button-history"
+            >
+              <History className="h-4 w-4 mr-1" />
+              History
+              {conversationHistory.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs">
+                  {conversationHistory.length}
+                </Badge>
+              )}
+            </Button>
             {messages.length > 0 && (
               <Button 
                 variant="outline" 
@@ -185,6 +313,66 @@ export default function Home() {
           TaskMaster - Teacher Support Agent
         </div>
       </header>
+
+      {/* Activity History Panel */}
+      {showHistory && (
+        <div className="border-b bg-white dark:bg-slate-900 shadow-sm">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <History className="h-4 w-4" />
+                Your Activity History
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHistory(false)}
+                data-testid="button-close-history"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+            </div>
+            {conversationHistory.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-4 text-center">
+                No conversations yet. Start chatting to build your history!
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {conversationHistory.map((conversation) => (
+                  <div
+                    key={conversation.id}
+                    onClick={() => handleLoadConversation(conversation)}
+                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                      currentConversationId === conversation.id
+                        ? "bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800"
+                        : "bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
+                    }`}
+                    data-testid={`history-item-${conversation.id}`}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-800 dark:text-slate-200 truncate">
+                        {conversation.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDate(conversation.createdAt)} - {conversation.messages.length} messages
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => handleDeleteConversation(conversation.id, e)}
+                      className="ml-2 text-slate-400 hover:text-red-500"
+                      data-testid={`button-delete-${conversation.id}`}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-8">
