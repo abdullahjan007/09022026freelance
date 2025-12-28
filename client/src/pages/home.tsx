@@ -497,7 +497,7 @@ export default function Home() {
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 mt-1">
               {isExecution ? (
-                <Package className="h-5 w-5 text-teal-500" />
+                <Package className="h-5 w-5 text-indigo-500" />
               ) : (
                 <Lightbulb className="h-5 w-5 text-amber-500" />
               )}
@@ -516,14 +516,14 @@ export default function Home() {
         
         {structured.steps.length > 0 && (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
+            <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
               <Sparkles className="h-4 w-4" />
               <span className="font-semibold text-sm uppercase tracking-wide">Recommended Steps</span>
             </div>
             <div className="space-y-3 pl-1">
               {structured.steps.map((step, i) => (
                 <div key={i} className="flex gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex items-center justify-center text-sm font-medium">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm font-medium">
                     {i + 1}
                   </span>
                   <p className="text-slate-700 dark:text-slate-300 flex-1 pt-0.5">
@@ -594,19 +594,19 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-teal-50/50 to-white dark:from-slate-900 dark:to-slate-950">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-50/50 to-white dark:from-slate-900 dark:to-slate-950">
       {/* Header */}
       <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600">
               <Check className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-teal-700 dark:text-teal-400">
+              <h1 className="text-xl font-bold text-indigo-700 dark:text-indigo-400">
                 TaskMaster
               </h1>
-              <p className="text-xs text-teal-600/70 dark:text-teal-500/70 uppercase tracking-wide">
+              <p className="text-xs text-indigo-600/70 dark:text-indigo-500/70 uppercase tracking-wide">
                 The Teacher's Booster
               </p>
             </div>
@@ -632,7 +632,7 @@ export default function Home() {
                 variant="outline" 
                 size="sm" 
                 onClick={handleNewChat}
-                className="text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800"
+                className="text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800"
                 data-testid="button-new-chat"
               >
                 <RotateCcw className="h-4 w-4 mr-1" />
@@ -676,7 +676,7 @@ export default function Home() {
                     onClick={() => handleLoadConversation(conversation)}
                     className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
                       currentConversationId === conversation.id
-                        ? "bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800"
+                        ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800"
                         : "bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
                     }`}
                     data-testid={`history-item-${conversation.id}`}
@@ -713,8 +713,8 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
             {/* Hero Icon */}
             <div className="relative">
-              <div className="w-20 h-20 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                <Check className="h-12 w-12 text-teal-500" />
+              <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <Check className="h-12 w-12 text-indigo-500" />
               </div>
               <Sparkles className="absolute -top-1 -right-1 h-6 w-6 text-amber-400" />
             </div>
@@ -730,7 +730,7 @@ export default function Home() {
             </div>
 
             {/* Call to Action */}
-            <p className="text-teal-600 dark:text-teal-400 font-medium text-xl">
+            <p className="text-indigo-600 dark:text-indigo-400 font-medium text-xl">
               What help do you need now?
             </p>
 
@@ -767,10 +767,10 @@ export default function Home() {
                     {/* Problem + Solution */}
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
-                        <Badge className="bg-teal-500 hover:bg-teal-500 text-white">1</Badge>
+                        <Badge className="bg-indigo-500 hover:bg-indigo-500 text-white">1</Badge>
                         <span className="font-semibold text-slate-800 dark:text-slate-200">Problem + Solution</span>
                       </div>
-                      <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-4 space-y-2">
+                      <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 space-y-2">
                         <p className="text-slate-700 dark:text-slate-300">"My problem is ___."</p>
                         <p className="text-slate-700 dark:text-slate-300">"I need help to ___."</p>
                       </div>
@@ -807,7 +807,7 @@ export default function Home() {
                   <div
                     className={`max-w-[85%] ${
                       message.role === "user"
-                        ? "bg-teal-500 text-white rounded-2xl px-4 py-3"
+                        ? "bg-indigo-500 text-white rounded-2xl px-4 py-3"
                         : ""
                     }`}
                     data-testid={`message-${message.role}-${index}`}
@@ -817,7 +817,7 @@ export default function Home() {
                         {/* Message content card */}
                         <div className={`rounded-2xl px-5 py-4 ${
                           isExecution 
-                            ? "bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800" 
+                            ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800" 
                             : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
                         }`}>
                           {hasStructuredContent ? (
@@ -854,7 +854,7 @@ export default function Home() {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleLike(index)}
-                            className={`${likedMessages.has(index) ? 'text-teal-500' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'}`}
+                            className={`${likedMessages.has(index) ? 'text-indigo-500' : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'}`}
                             data-testid={`button-like-${index}`}
                           >
                             <ThumbsUp className="h-4 w-4" />
@@ -924,10 +924,10 @@ export default function Home() {
             })}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
-                <div className="bg-gradient-to-r from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30 border border-teal-200 dark:border-teal-700 rounded-2xl px-5 py-3">
+                <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border border-indigo-200 dark:border-indigo-700 rounded-2xl px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <Loader2 className="h-5 w-5 text-teal-600 dark:text-teal-400 animate-spin" />
-                    <span className="text-teal-700 dark:text-teal-300 font-medium">Working for You...</span>
+                    <Loader2 className="h-5 w-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                    <span className="text-indigo-700 dark:text-indigo-300 font-medium">Working for You...</span>
                   </div>
                 </div>
               </div>
@@ -941,7 +941,7 @@ export default function Home() {
           <div className="mb-4 flex justify-center">
             <Button
               onClick={handleExecute}
-              className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg px-6 py-3 text-lg gap-2"
+              className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg px-6 py-3 text-lg gap-2"
               data-testid="button-execute"
             >
               <Zap className="h-5 w-5" />
@@ -969,7 +969,7 @@ export default function Home() {
               <Button
                 onClick={() => handleSubmit()}
                 disabled={!input.trim() || isLoading}
-                className="mr-2 bg-teal-500 hover:bg-teal-600 text-white rounded-xl px-4"
+                className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
                 data-testid="button-send-message"
               >
                 <Send className="h-4 w-4 mr-1" />
