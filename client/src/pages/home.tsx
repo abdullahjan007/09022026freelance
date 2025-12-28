@@ -729,18 +729,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Intro Video */}
-            <div className="w-full max-w-2xl rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
-              <video
-                src="/intro-video.mp4"
-                controls
-                className="w-full"
-                data-testid="video-intro"
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-
             {/* Call to Action */}
             <p className="text-indigo-600 dark:text-indigo-400 font-medium text-xl">
               What help do you need now?
