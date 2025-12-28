@@ -23,6 +23,7 @@ The design follows a clean, teal/green aesthetic with hero messaging focused on 
 - Streaming AI responses with teacher-focused system prompt
 - Quick action chips that send prompts directly to the AI
 - New Chat button to start fresh conversations
+- Your Activity History - view, resume, and delete past conversations (localStorage)
 - Dark/light theme support
 - Responsive design
 
