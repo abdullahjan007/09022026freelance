@@ -390,36 +390,16 @@ export default function Home() {
             {/* Hero Text */}
             <div className="space-y-4 max-w-2xl">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100">
-                Today's teacher works under tremendous pressure.
+                Dear Busy Teacher,
               </h2>
-              <p className="text-lg text-muted-foreground">
-                Time is limited and expectations are high.
+              <p className="text-xl text-muted-foreground">
+                Focus on the classroom. Let AI handle the prep.
               </p>
-              <p className="text-lg text-muted-foreground">
-                TaskMaster was built by teachers, for teachers.
-              </p>
-            </div>
-
-            {/* Two-Step Process */}
-            <div className="flex items-center justify-center gap-6 flex-wrap">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                </div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Step 1: Get Guidance</span>
-              </div>
-              <div className="text-muted-foreground">then</div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                  <Package className="h-4 w-4 text-teal-600 dark:text-teal-400" />
-                </div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Step 2: Get Materials</span>
-              </div>
             </div>
 
             {/* Call to Action */}
-            <p className="text-teal-600 dark:text-teal-400 font-medium text-lg italic">
-              Write your biggest challenge here. TaskMaster will guide you, then create materials.
+            <p className="text-teal-600 dark:text-teal-400 font-medium text-xl">
+              What help do you need now?
             </p>
 
             {/* The TaskMaster Formula Card */}
