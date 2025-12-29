@@ -1003,6 +1003,11 @@ export default function Home() {
             <span className="text-slate-400 dark:text-slate-600">|</span>
             <span className="italic">Helping you focus on what matters: your students.</span>
           </div>
+
+          {/* Disclaimer */}
+          <p className="text-xs text-muted-foreground text-center" data-testid="text-disclaimer">
+            Disclaimer: TaskMaster is an AI tool and can make errors. Double check facts.
+          </p>
         </div>
       </main>
       
