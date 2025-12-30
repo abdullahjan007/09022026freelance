@@ -600,17 +600,12 @@ export default function Home() {
       <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600">
-              <Check className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-indigo-700 dark:text-indigo-400">
-                TaskMaster
-              </h1>
-              <p className="text-xs text-indigo-600/70 dark:text-indigo-500/70 uppercase tracking-wide">
-                The Teacher's Booster
-              </p>
-            </div>
+            <img 
+              src="/logo.jpg" 
+              alt="TaskMaster" 
+              className="h-10 object-contain"
+              data-testid="img-logo"
+            />
           </div>
           <div className="flex items-center gap-2">
             <Button 
