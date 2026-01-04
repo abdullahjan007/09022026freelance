@@ -818,7 +818,7 @@ export default function Home() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="e.g., 'My problem is... I need help to...'"
+                  placeholder=""
                   className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
                   rows={1}
                   data-testid="input-chat-message-landing"
@@ -1018,7 +1018,7 @@ export default function Home() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="e.g., 'My problem is... I need help to...'"
+                  placeholder=""
                   className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
                   rows={1}
                   data-testid="input-chat-message"
