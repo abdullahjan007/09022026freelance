@@ -756,7 +756,7 @@ export default function Home() {
             {/* Hero Text - Simplified */}
             <div className="space-y-2 max-w-xl">
               <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
-                What can I help you with today?
+                Hi busy teacher, what help do you need?
               </h2>
             </div>
 
