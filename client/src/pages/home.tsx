@@ -973,7 +973,7 @@ export default function Home() {
         )}
 
         {/* Input Area */}
-        <div className="mt-auto pt-2 pb-2 space-y-2">
+        <div className="pt-4 pb-4 space-y-2">
           {/* Chat Input */}
           <div className="relative">
             <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
