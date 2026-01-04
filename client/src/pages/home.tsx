@@ -604,7 +604,7 @@ export default function Home() {
             <img 
               src="/logo.png" 
               alt="TaskMaster" 
-              className="h-20 md:h-24 object-contain drop-shadow-sm"
+              className="h-28 md:h-32 object-contain drop-shadow-sm"
               data-testid="img-logo"
             />
           </div>
