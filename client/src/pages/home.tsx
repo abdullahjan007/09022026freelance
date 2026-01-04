@@ -792,7 +792,7 @@ export default function Home() {
 
             {/* Quick Actions - Inline Prompts */}
             <div className="w-full max-w-2xl space-y-3">
-              <p className="text-sm text-muted-foreground">Try one of these:</p>
+              <p className="text-sm text-muted-foreground">Use one of these prompts. Or edit them as you like:</p>
               <div className="grid grid-cols-2 gap-3">
                 {QUICK_ACTIONS.map((action) => (
                   <Button
@@ -812,7 +812,7 @@ export default function Home() {
             {/* Two-step hint */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground bg-indigo-50 dark:bg-indigo-900/20 px-4 py-2 rounded-full">
               <Zap className="h-4 w-4 text-indigo-500" />
-              <span>Get tips first, then ready-to-use materials with <strong>Execute</strong></span>
+              <span>Get the help you need in 2 direct steps 1: Suggestions and 2: Execution</span>
             </div>
           </div>
         ) : (
