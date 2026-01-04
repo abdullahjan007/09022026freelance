@@ -17,59 +17,82 @@ const BUDDY_RESPONSES: { [key: string]: string } = {
   behavior: "For behavior tracking help, describe what you're dealing with. For example: 'Help me create a behavior tracking system for my classroom.' TaskMaster will provide strategies and can create tracking sheets for you!",
   rubric: "Need a grading rubric? Just ask! For example: 'Create a rubric for a 5th grade science project.' You'll get grading criteria suggestions first, then a complete rubric you can use!",
   how: "Here's how TaskMaster works: 1) Type your challenge in the chat box below. 2) TaskMaster gives you helpful tips and strategies. 3) Click 'Execute' to get ready-to-use materials. 4) Copy or download your materials!",
-  chips: "The quick action chips at the bottom are shortcuts! Click any chip to instantly send that prompt to TaskMaster. They cover common teacher needs like lesson plans, parent emails, and more.",
+  chips: "The quick action buttons are shortcuts! Click any of them to fill in a starter prompt. You can then edit the text before sending, or just hit Send to use it as-is.",
   copy: "To copy any response, click the copy button (clipboard icon) next to the AI's message. You'll see a confirmation when it's copied!",
   download: "To download a conversation as a PDF, click the download button (arrow pointing down) next to any AI response. It creates a nicely formatted document!",
-  history: "Your past conversations are saved! Click 'Your Activity History' in the sidebar to see, resume, or delete previous chats.",
-  new: "To start a fresh conversation, click the 'New Chat' button with the plus icon. This clears the current chat so you can start on a new topic.",
-  dark: "You can switch between light and dark mode using the theme toggle in the top right corner of the app.",
-  formula: "The TaskMaster Formula shows you proven steps for solving common teaching challenges. Toggle it open to see best practices for lesson planning, parent communication, and more!",
+  history: "Your past conversations are saved! Click 'History' in the header to see, resume, or delete previous chats.",
+  new: "To start a fresh conversation, click the 'New Chat' button. This clears the current chat so you can start on a new topic.",
+  dark: "You can switch between light and dark mode using the theme toggle (sun/moon icon) in the top right corner.",
+  formula: "Click 'How It Works' in the header to see a visual guide explaining TaskMaster's two-step process: first you get suggestions, then you can optionally ask TaskMaster to execute and create materials for you.",
+  execute: "The Execute feature is step 2 of TaskMaster! After you receive suggestions, you can click 'Would You Like TaskMaster to Execute?' to have it create ready-to-use materials like lesson plans, emails, or rubrics.",
+  student: "TaskMaster can help with student-related challenges! Just describe your situation in the main chat. For example: 'Help me engage unmotivated students' or 'Help me support struggling readers.'",
+  classroom: "For classroom management help, describe your challenge in the main chat. TaskMaster can help with seating arrangements, routines, transitions, and more!",
+  what: "TaskMaster is an AI assistant designed specifically for teachers. It helps you solve everyday challenges like lesson planning, parent communication, behavior management, and grading. Just type your problem and get practical solutions!",
+  help: "I'd be happy to help! Here's what you can do: Type any teaching challenge in the main chat box, and TaskMaster will give you helpful suggestions. You can also click the quick action buttons for common topics like lesson planning or parent emails.",
+  thanks: "You're welcome! I'm always here if you need help navigating TaskMaster. Good luck with your teaching!",
 };
+
+const KEYWORD_GROUPS: { keywords: string[]; response: string }[] = [
+  { keywords: ["hello", "hi", "hey", "greetings", "good morning", "good afternoon"], response: "greeting" },
+  { keywords: ["lesson", "plan", "curriculum", "unit", "activity", "teach", "instruction"], response: "lesson" },
+  { keywords: ["parent", "email", "letter", "communicate", "message", "mom", "dad", "guardian", "family"], response: "parent" },
+  { keywords: ["behavior", "track", "management", "discipline", "disrupt", "misbehav", "conduct", "reward", "consequence"], response: "behavior" },
+  { keywords: ["rubric", "grad", "assess", "score", "evaluat", "criteria", "mark"], response: "rubric" },
+  { keywords: ["how", "work", "use", "explain", "tutorial", "steps"], response: "how" },
+  { keywords: ["chip", "quick", "button", "prompt", "shortcut", "action"], response: "chips" },
+  { keywords: ["copy", "clipboard", "paste"], response: "copy" },
+  { keywords: ["download", "pdf", "save", "export", "print"], response: "download" },
+  { keywords: ["history", "past", "previous", "conversation", "chat", "session"], response: "history" },
+  { keywords: ["new", "fresh", "clear", "reset", "another"], response: "new" },
+  { keywords: ["dark", "light", "theme", "mode", "color", "night"], response: "dark" },
+  { keywords: ["formula", "guide", "tip", "instruction", "step"], response: "formula" },
+  { keywords: ["execute", "create", "make", "generate", "build", "produce", "material"], response: "execute" },
+  { keywords: ["student", "kid", "child", "learner", "pupil"], response: "student" },
+  { keywords: ["classroom", "class", "room", "seat", "routine"], response: "classroom" },
+  { keywords: ["what", "purpose", "about", "does", "mean"], response: "what" },
+  { keywords: ["help", "assist", "support", "need", "stuck", "confused"], response: "help" },
+  { keywords: ["thank", "thanks", "appreciate", "great", "awesome", "perfect"], response: "thanks" },
+];
 
 function getBuddyResponse(input: string): string {
   const lower = input.toLowerCase();
   
-  if (lower.includes("hello") || lower.includes("hi") || lower.includes("hey")) {
-    return BUDDY_RESPONSES.greeting;
-  }
-  if (lower.includes("lesson") || lower.includes("plan")) {
-    return BUDDY_RESPONSES.lesson;
-  }
-  if (lower.includes("parent") || lower.includes("email") || lower.includes("communication")) {
-    return BUDDY_RESPONSES.parent;
-  }
-  if (lower.includes("behavior") || lower.includes("track") || lower.includes("management")) {
-    return BUDDY_RESPONSES.behavior;
-  }
-  if (lower.includes("rubric") || lower.includes("grad") || lower.includes("assess")) {
-    return BUDDY_RESPONSES.rubric;
-  }
-  if (lower.includes("how") || lower.includes("work") || lower.includes("use")) {
-    return BUDDY_RESPONSES.how;
-  }
-  if (lower.includes("chip") || lower.includes("quick") || lower.includes("button")) {
-    return BUDDY_RESPONSES.chips;
-  }
-  if (lower.includes("copy") || lower.includes("clipboard")) {
-    return BUDDY_RESPONSES.copy;
-  }
-  if (lower.includes("download") || lower.includes("pdf") || lower.includes("save")) {
-    return BUDDY_RESPONSES.download;
-  }
-  if (lower.includes("history") || lower.includes("past") || lower.includes("previous")) {
-    return BUDDY_RESPONSES.history;
-  }
-  if (lower.includes("new") || lower.includes("fresh") || lower.includes("clear") || lower.includes("start")) {
-    return BUDDY_RESPONSES.new;
-  }
-  if (lower.includes("dark") || lower.includes("light") || lower.includes("theme") || lower.includes("mode")) {
-    return BUDDY_RESPONSES.dark;
-  }
-  if (lower.includes("formula") || lower.includes("guide") || lower.includes("tips")) {
-    return BUDDY_RESPONSES.formula;
+  // Check each keyword group for matches
+  let bestMatch: { response: string; score: number } | null = null;
+  
+  for (const group of KEYWORD_GROUPS) {
+    let matchCount = 0;
+    for (const keyword of group.keywords) {
+      if (lower.includes(keyword)) {
+        matchCount++;
+      }
+    }
+    if (matchCount > 0 && (!bestMatch || matchCount > bestMatch.score)) {
+      bestMatch = { response: group.response, score: matchCount };
+    }
   }
   
-  return "I'm not sure about that, but I can help you with: lesson planning, parent emails, behavior tracking, grading rubrics, or how to use TaskMaster features. What would you like to know?";
+  if (bestMatch && BUDDY_RESPONSES[bestMatch.response]) {
+    return BUDDY_RESPONSES[bestMatch.response];
+  }
+  
+  // Smart fallback: detect intent and suggest relevant features
+  const hasQuestion = lower.includes("?") || lower.startsWith("what") || lower.startsWith("how") || lower.startsWith("where") || lower.startsWith("can") || lower.startsWith("do");
+  
+  if (hasQuestion) {
+    return "That's a great question! While I may not have a specific answer for that, here's how I can help: If you're looking to solve a teaching challenge, just type it in the main chat box below. TaskMaster can assist with lesson plans, parent emails, behavior strategies, grading rubrics, and much more. Would you like to know about any of these?";
+  }
+  
+  // Check if they mentioned something teaching-related
+  const teachingWords = ["teach", "school", "class", "grade", "subject", "math", "science", "english", "reading", "writing", "homework", "assignment", "project", "test", "quiz", "exam"];
+  const mentionedTeaching = teachingWords.some(word => lower.includes(word));
+  
+  if (mentionedTeaching) {
+    return "It sounds like you have a teaching-related question! The main chat is the best place to get detailed help. Just describe your challenge there, and TaskMaster will provide suggestions. If you want ready-to-use materials, click the Execute button after receiving suggestions.";
+  }
+  
+  // Friendly general fallback
+  return "I'm here to help you navigate TaskMaster! Here are some things I can assist with: understanding how the app works, finding features like copy or download, learning about the two-step process (Suggestions then Execute), or getting started with quick action prompts. What would you like to explore?";
 }
 
 export function TMBuddy() {
