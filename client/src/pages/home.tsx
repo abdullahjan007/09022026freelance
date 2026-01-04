@@ -785,7 +785,7 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
             {/* Hero Text - Simplified */}
             <div className="space-y-2 max-w-xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
+              <h2 className="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400">
                 Hi busy teacher, what help do you need?
               </h2>
             </div>
