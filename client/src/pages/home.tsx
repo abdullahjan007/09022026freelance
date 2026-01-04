@@ -650,38 +650,68 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Formula Panel */}
+      {/* How It Works Panel */}
       {showFormula && (
-        <div className="border-b bg-indigo-50/50 dark:bg-indigo-900/10 shadow-sm">
-          <div className="max-w-4xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <Lightbulb className="h-4 w-4 text-indigo-500" />
-                The TaskMaster Formula
+        <div className="border-b bg-slate-50 dark:bg-slate-900/50 shadow-sm">
+          <div className="max-w-2xl mx-auto px-4 py-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-indigo-600 dark:text-indigo-400 text-center flex-1">
+                Two Easy Steps to Benefit from TaskMaster
               </h3>
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setShowFormula(false)}
                 data-testid="button-close-formula"
               >
                 <ChevronUp className="h-4 w-4" />
               </Button>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className="bg-indigo-500 hover:bg-indigo-500 text-white">1</Badge>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Problem + Solution</span>
-                </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">"My problem is ___. I need help to ___."</p>
+            
+            {/* Step 1 Flow */}
+            <div className="flex flex-col items-center space-y-3">
+              {/* Step 1 Box */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
+                <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">STEP 1</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You explain the problem + the solution you need</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: My problem is that students don't understand my feedback. I need help to write my feedback more simply.</p>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className="bg-amber-500 hover:bg-amber-500 text-white">2</Badge>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Example</span>
-                </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400">"My problem is students don't understand feedback. I need help rewriting it simply."</p>
+              
+              {/* Arrow Down */}
+              <div className="text-slate-400 dark:text-slate-500">
+                <ChevronUp className="h-5 w-5 rotate-180" />
+              </div>
+              
+              {/* Response 1 Box */}
+              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-xl p-4 border-2 border-teal-200 dark:border-teal-700 w-full max-w-md text-center">
+                <p className="font-bold text-teal-600 dark:text-teal-400 mb-1">Response</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">TaskMaster gives you the response. This includes relevant websites</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Here are the recommended steps you can follow including relevant websites for more information.</p>
+              </div>
+              
+              {/* Optional Divider */}
+              <div className="w-full max-w-md border-t-2 border-dashed border-slate-300 dark:border-slate-600 my-2 relative">
+                <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-50 dark:bg-slate-900/50 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Step 2 is Optional</span>
+              </div>
+              
+              {/* Step 2 Box */}
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
+                <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">STEP 2</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You ask TaskMaster to execute</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Instead of telling you what to do, you can instruct the app to complete the task</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Rewrite this feedback in student-friendly language.</p>
+              </div>
+              
+              {/* Arrow Down */}
+              <div className="text-slate-400 dark:text-slate-500">
+                <ChevronUp className="h-5 w-5 rotate-180" />
+              </div>
+              
+              {/* Response 2 Box */}
+              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-xl p-4 border-2 border-teal-200 dark:border-teal-700 w-full max-w-md text-center">
+                <p className="font-bold text-teal-600 dark:text-teal-400 mb-1">Response</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">TaskMaster quickly executes and you download</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Here is the feedback written in student-friendly language.</p>
               </div>
             </div>
           </div>
