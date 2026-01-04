@@ -69,7 +69,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showFormula, setShowFormula] = useState(true);
+  const [showFormula, setShowFormula] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [awaitingExecution, setAwaitingExecution] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
@@ -609,6 +609,16 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-2">
             <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowFormula(!showFormula)}
+              className="text-slate-600 dark:text-slate-400"
+              data-testid="button-formula"
+            >
+              <Lightbulb className="h-4 w-4 mr-1" />
+              How It Works
+            </Button>
+            <Button 
               variant="outline" 
               size="sm" 
               onClick={() => setShowHistory(!showHistory)}
@@ -637,10 +647,45 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="text-center py-1 text-sm text-muted-foreground border-t bg-muted/30">
-          TaskMaster - Teacher Support Agent
-        </div>
       </header>
+
+      {/* Formula Panel */}
+      {showFormula && (
+        <div className="border-b bg-indigo-50/50 dark:bg-indigo-900/10 shadow-sm">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <Lightbulb className="h-4 w-4 text-indigo-500" />
+                The TaskMaster Formula
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowFormula(false)}
+                data-testid="button-close-formula"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className="bg-indigo-500 hover:bg-indigo-500 text-white">1</Badge>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">Problem + Solution</span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">"My problem is ___. I need help to ___."</p>
+              </div>
+              <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className="bg-amber-500 hover:bg-amber-500 text-white">2</Badge>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">Example</span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">"My problem is students don't understand feedback. I need help rewriting it simply."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Activity History Panel */}
       {showHistory && (
@@ -706,88 +751,38 @@ export default function Home() {
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-8">
         {messages.length === 0 ? (
           /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
-            {/* Hero Icon */}
-            <div className="relative">
-              <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                <Check className="h-12 w-12 text-indigo-500" />
-              </div>
-              <Sparkles className="absolute -top-1 -right-1 h-6 w-6 text-amber-400" />
-            </div>
-
-            {/* Hero Text */}
-            <div className="space-y-4 max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100">
-                Dear Busy Teacher,
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
+            {/* Hero Text - Simplified */}
+            <div className="space-y-2 max-w-xl">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
+                What can I help you with today?
               </h2>
-              <p className="text-xl text-muted-foreground">
-                Focus on your students. Let TaskMaster handle other details.
-              </p>
             </div>
 
-            {/* Call to Action */}
-            <p className="text-indigo-600 dark:text-indigo-400 font-medium text-xl">
-              What help do you need now?
-            </p>
-
-            {/* The TaskMaster Formula Card */}
-            <Card className="w-full max-w-3xl bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Info className="h-4 w-4" />
-                    <span className="uppercase tracking-wide font-medium">The TaskMaster Formula</span>
-                  </div>
+            {/* Quick Actions - Inline Prompts */}
+            <div className="w-full max-w-2xl space-y-3">
+              <p className="text-sm text-muted-foreground">Try one of these:</p>
+              <div className="grid grid-cols-2 gap-3">
+                {QUICK_ACTIONS.map((action) => (
                   <Button
+                    key={action.label}
                     variant="outline"
-                    size="sm"
-                    onClick={() => setShowFormula(!showFormula)}
-                    data-testid="button-preview"
+                    onClick={() => handleQuickAction(action)}
+                    disabled={isLoading}
+                    className="h-auto py-3 px-4 text-left justify-start border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600"
+                    data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
                   >
-                    {showFormula ? (
-                      <>
-                        <EyeOff className="h-4 w-4 mr-1" />
-                        Hide
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="h-4 w-4 mr-1" />
-                        Show
-                      </>
-                    )}
+                    <span className="text-sm">{action.label}</span>
                   </Button>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                {showFormula && (
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Problem + Solution */}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-indigo-500 hover:bg-indigo-500 text-white">1</Badge>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">Problem + Solution</span>
-                      </div>
-                      <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 space-y-2">
-                        <p className="text-slate-700 dark:text-slate-300">"My problem is ___."</p>
-                        <p className="text-slate-700 dark:text-slate-300">"I need help to ___."</p>
-                      </div>
-                    </div>
-
-                    {/* Example */}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-amber-500 hover:bg-amber-500 text-white">2</Badge>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">Example</span>
-                      </div>
-                      <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4">
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          "My problem is that my grade 9 students of Biology don't understand my feedback comments. I need help rewriting it in simple, friendly English."
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Two-step hint */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground bg-indigo-50 dark:bg-indigo-900/20 px-4 py-2 rounded-full">
+              <Zap className="h-4 w-4 text-indigo-500" />
+              <span>Get tips first, then ready-to-use materials with <strong>Execute</strong></span>
+            </div>
           </div>
         ) : (
           /* Chat View */
@@ -809,7 +804,7 @@ export default function Home() {
                     data-testid={`message-${message.role}-${index}`}
                   >
                     {message.role === "assistant" ? (
-                      <div className="space-y-3">
+                      <div className="space-y-3 group">
                         {/* Message content card */}
                         <div className={`rounded-2xl px-5 py-4 ${
                           isExecution 
@@ -822,8 +817,8 @@ export default function Home() {
                             <div className="whitespace-pre-wrap text-slate-700 dark:text-slate-300">{cleanContent}</div>
                           )}
                         </div>
-                        {/* Action buttons row */}
-                        <div className="flex items-center gap-1 pt-1">
+                        {/* Action buttons row - subtle by default, prominent on hover */}
+                        <div className="flex items-center gap-1 pt-1 opacity-40 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -974,35 +969,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
-            {QUICK_ACTIONS.map((action) => (
-              <Button
-                key={action.label}
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAction(action)}
-                disabled={isLoading}
-                className="rounded-full text-sm border-slate-300 dark:border-slate-600"
-                data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                {action.label}
-              </Button>
-            ))}
-          </div>
-
-          {/* Status Footer */}
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          {/* Consolidated Footer */}
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="font-medium">TaskMaster Agent Online</span>
-            <span className="text-slate-400 dark:text-slate-600">|</span>
-            <span className="italic">Helping you focus on what matters: your students.</span>
+            <span>Online</span>
+            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <span data-testid="text-disclaimer">AI tool - double check facts</span>
           </div>
-
-          {/* Disclaimer */}
-          <p className="text-xs text-muted-foreground text-center" data-testid="text-disclaimer">
-            Disclaimer: TaskMaster is an AI tool and can make errors. Double check facts.
-          </p>
         </div>
       </main>
       
