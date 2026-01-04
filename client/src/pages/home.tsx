@@ -599,12 +599,12 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-50/50 to-white dark:from-slate-900 dark:to-slate-950">
       {/* Header */}
       <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+          <div className="flex items-center justify-center w-full md:w-auto">
             <img 
               src="/logo.png" 
               alt="TaskMaster" 
-              className="h-16 md:h-20 object-contain drop-shadow-sm"
+              className="h-20 md:h-24 object-contain drop-shadow-sm"
               data-testid="img-logo"
             />
           </div>
@@ -781,8 +781,8 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
-          /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
+          /* Landing View - reduced top spacing */
+          <div className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-8 text-center space-y-4">
             {/* Hero Text - Simplified */}
             <div className="space-y-2 max-w-xl">
               <h2 className="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400">
