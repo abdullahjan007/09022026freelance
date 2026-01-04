@@ -792,7 +792,7 @@ export default function Home() {
 
             {/* Quick Actions - Inline Prompts */}
             <div className="w-full max-w-2xl space-y-3">
-              <p className="text-sm text-muted-foreground">Use one of these prompts. Or edit them as you like:</p>
+              <p className="text-sm text-muted-foreground">Use or edit one of these prompts. Or use your own.</p>
               <div className="grid grid-cols-2 gap-3">
                 {QUICK_ACTIONS.map((action) => (
                   <Button
