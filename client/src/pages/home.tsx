@@ -604,7 +604,7 @@ export default function Home() {
             <img 
               src="/logo.png" 
               alt="TaskMaster" 
-              className="h-14 object-contain"
+              className="h-16 md:h-20 object-contain drop-shadow-sm"
               data-testid="img-logo"
             />
           </div>
@@ -779,10 +779,10 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
           /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
             {/* Hero Text - Simplified */}
             <div className="space-y-2 max-w-xl">
               <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">
