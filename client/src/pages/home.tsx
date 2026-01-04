@@ -809,10 +809,44 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Chat Input - Inside Landing View */}
+            <div className="w-full max-w-2xl pt-2">
+              <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
+                <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="e.g., 'My problem is... I need help to...'"
+                  className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
+                  rows={1}
+                  data-testid="input-chat-message-landing"
+                />
+                <Button
+                  onClick={() => handleSubmit()}
+                  disabled={!input.trim() || isLoading}
+                  className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
+                  data-testid="button-send-message-landing"
+                >
+                  <Send className="h-4 w-4 mr-1" />
+                  Send
+                </Button>
+              </div>
+            </div>
+
             {/* Two-step hint */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground bg-indigo-50 dark:bg-indigo-900/20 px-4 py-2 rounded-full">
               <Zap className="h-4 w-4 text-indigo-500" />
               <span>Get the help you need in 2 direct steps 1: Suggestions and 2: Execution</span>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span>Online</span>
+              <span className="text-slate-300 dark:text-slate-600">|</span>
+              <span>AI tool - double check facts</span>
             </div>
           </div>
         ) : (
@@ -972,42 +1006,44 @@ export default function Home() {
           </div>
         )}
 
-        {/* Input Area */}
-        <div className="pt-4 pb-4 space-y-2">
-          {/* Chat Input */}
-          <div className="relative">
-            <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
-              <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="e.g., 'My problem is... I need help to...'"
-                className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
-                rows={1}
-                data-testid="input-chat-message"
-              />
-              <Button
-                onClick={() => handleSubmit()}
-                disabled={!input.trim() || isLoading}
-                className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
-                data-testid="button-send-message"
-              >
-                <Send className="h-4 w-4 mr-1" />
-                Send
-              </Button>
+        {/* Input Area - Only show in chat view */}
+        {messages.length > 0 && (
+          <div className="pt-4 pb-4 space-y-2">
+            {/* Chat Input */}
+            <div className="relative">
+              <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
+                <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="e.g., 'My problem is... I need help to...'"
+                  className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
+                  rows={1}
+                  data-testid="input-chat-message"
+                />
+                <Button
+                  onClick={() => handleSubmit()}
+                  disabled={!input.trim() || isLoading}
+                  className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
+                  data-testid="button-send-message"
+                >
+                  <Send className="h-4 w-4 mr-1" />
+                  Send
+                </Button>
+              </div>
+            </div>
+
+            {/* Consolidated Footer */}
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span>Online</span>
+              <span className="text-slate-300 dark:text-slate-600">|</span>
+              <span data-testid="text-disclaimer">AI tool - double check facts</span>
             </div>
           </div>
-
-          {/* Consolidated Footer */}
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span>Online</span>
-            <span className="text-slate-300 dark:text-slate-600">|</span>
-            <span data-testid="text-disclaimer">AI tool - double check facts</span>
-          </div>
-        </div>
+        )}
       </main>
       
       {/* TM Buddy Navigation Helper */}
