@@ -601,7 +601,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img 
-              src="/logo.jpg" 
+              src="/logo.png" 
               alt="TaskMaster" 
               className="h-10 object-contain"
               data-testid="img-logo"
