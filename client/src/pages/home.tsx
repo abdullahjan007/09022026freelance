@@ -603,7 +603,7 @@ export default function Home() {
             <img 
               src="/logo.png" 
               alt="TaskMaster" 
-              className="h-10 object-contain"
+              className="h-14 object-contain"
               data-testid="img-logo"
             />
           </div>
