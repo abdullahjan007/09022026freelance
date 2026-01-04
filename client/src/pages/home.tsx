@@ -369,7 +369,8 @@ export default function Home() {
   };
 
   const handleQuickAction = (action: typeof QUICK_ACTIONS[0]) => {
-    sendMessage(action.prompt);
+    setInput(action.prompt);
+    inputRef.current?.focus();
   };
 
   const handleExecute = () => {
