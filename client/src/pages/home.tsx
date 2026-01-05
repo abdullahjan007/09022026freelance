@@ -596,57 +596,55 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-50/50 to-white dark:from-slate-900 dark:to-slate-950">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
       {/* Header */}
-      <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-          <div className="flex items-center justify-center w-full md:w-auto">
-            <img 
-              src="/logo.png" 
-              alt="TaskMaster" 
-              className="h-28 md:h-32 object-contain drop-shadow-sm"
-              data-testid="img-logo"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+      <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-3">
+          {/* Logo */}
+          <img 
+            src="/logo.png" 
+            alt="TaskMaster" 
+            className="h-20 md:h-24 object-contain"
+            data-testid="img-logo"
+          />
+          
+          {/* Tagline */}
+          <p className="text-sm md:text-base font-semibold tracking-wide text-orange-500 dark:text-orange-400 uppercase">
+            Intelligent Research for Today's Educator
+          </p>
+          
+          {/* Navigation */}
+          <nav className="flex items-center gap-4 md:gap-8 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <button 
               onClick={() => setShowFormula(!showFormula)}
-              className="text-slate-600 dark:text-slate-400"
+              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
               data-testid="button-formula"
             >
-              <Lightbulb className="h-4 w-4 mr-1" />
               How It Works
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            </button>
+            <button 
               onClick={() => setShowHistory(!showHistory)}
-              className="text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
               data-testid="button-history"
             >
-              <History className="h-4 w-4 mr-1" />
-              History
-              {conversationHistory.length > 0 && (
-                <Badge variant="secondary" className="ml-1 text-xs">
-                  {conversationHistory.length}
-                </Badge>
-              )}
-            </Button>
+              Your Search History
+            </button>
+            <button 
+              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+              data-testid="button-signin"
+            >
+              Sign Up / Sign In
+            </button>
             {messages.length > 0 && (
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <button 
                 onClick={handleNewChat}
-                className="text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800"
+                className="text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 transition-colors"
                 data-testid="button-new-chat"
               >
-                <RotateCcw className="h-4 w-4 mr-1" />
                 New Chat
-              </Button>
+              </button>
             )}
-          </div>
+          </nav>
         </div>
       </header>
 
@@ -655,7 +653,7 @@ export default function Home() {
         <div className="border-b bg-slate-50 dark:bg-slate-900/50 shadow-sm">
           <div className="max-w-2xl mx-auto px-4 py-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-indigo-600 dark:text-indigo-400 text-center flex-1">
+              <h3 className="text-lg font-bold text-orange-500 dark:text-orange-400 text-center flex-1">
                 Two Easy Steps to Benefit from TaskMaster
               </h3>
               <Button
@@ -672,7 +670,7 @@ export default function Home() {
             <div className="flex flex-col items-center space-y-3">
               {/* Step 1 Box */}
               <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
-                <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">STEP 1</p>
+                <p className="font-bold text-orange-500 dark:text-orange-400 mb-1">STEP 1</p>
                 <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You explain the problem + the solution you need</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: My problem is that students don't understand my feedback. I need help to write my feedback more simply.</p>
               </div>
@@ -696,7 +694,7 @@ export default function Home() {
               
               {/* Step 2 Box */}
               <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
-                <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">STEP 2</p>
+                <p className="font-bold text-orange-500 dark:text-orange-400 mb-1">STEP 2</p>
                 <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You ask TaskMaster to execute</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Instead of telling you what to do, you can instruct the app to complete the task</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Rewrite this feedback in student-friendly language.</p>
@@ -781,73 +779,48 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
-          /* Landing View - reduced top spacing */
-          <div className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-8 text-center space-y-4">
-            {/* Hero Text - Simplified */}
-            <div className="space-y-2 max-w-xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-                Hi busy teacher, what help do you need?
-              </h2>
-            </div>
-
-            {/* Quick Actions - Inline Prompts */}
-            <div className="w-full max-w-2xl space-y-3">
-              <p className="text-sm text-muted-foreground">Use or edit one of these prompts. Or use your own.</p>
-              <div className="grid grid-cols-2 gap-3">
-                {QUICK_ACTIONS.map((action) => (
-                  <Button
-                    key={action.label}
-                    variant="outline"
-                    onClick={() => handleQuickAction(action)}
-                    disabled={isLoading}
-                    className="h-auto py-3 px-4 text-left justify-start border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600"
-                    data-testid={`button-quick-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
-                  >
-                    <span className="text-sm">{action.label}</span>
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Chat Input - Inside Landing View */}
-            <div className="w-full max-w-2xl pt-2">
-              <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
-                <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
+          /* Landing View - Two input fields layout */
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8">
+            {/* Input Field 1: Enter Prompt */}
+            <div className="w-full max-w-xl flex items-center gap-4">
+              <label className="text-orange-500 dark:text-orange-400 font-medium text-sm whitespace-nowrap">
+                1: Enter Prompt
+              </label>
+              <div className="flex-1">
                 <textarea
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder=""
-                  className="flex-1 py-4 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none resize-none min-h-[67px] max-h-[200px] text-slate-800 dark:text-slate-200 placeholder:text-muted-foreground"
+                  className="w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-slate-800 dark:border-slate-300 rounded-full focus:ring-0 focus:outline-none resize-none min-h-[48px] max-h-[120px] text-slate-800 dark:text-slate-200"
                   rows={1}
                   data-testid="input-chat-message-landing"
                 />
-                <Button
-                  onClick={() => handleSubmit()}
-                  disabled={!input.trim() || isLoading}
-                  className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
-                  data-testid="button-send-message-landing"
-                >
-                  <Send className="h-4 w-4 mr-1" />
-                  Send
-                </Button>
               </div>
             </div>
 
-            {/* Two-step hint */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground bg-indigo-50 dark:bg-indigo-900/20 px-4 py-2 rounded-full">
-              <Zap className="h-4 w-4 text-indigo-500" />
-              <span>Get the help you need in 2 direct steps 1: Suggestions and 2: Execution</span>
+            {/* Input Field 2: Execute */}
+            <div className="w-full max-w-xl flex items-center gap-4">
+              <label className="text-orange-500 dark:text-orange-400 font-medium text-sm whitespace-nowrap">
+                2: Execute
+              </label>
+              <div className="flex-1">
+                <button
+                  onClick={() => handleSubmit()}
+                  disabled={!input.trim() || isLoading}
+                  className="w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-slate-800 dark:border-slate-300 rounded-full text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-left"
+                  data-testid="button-execute-landing"
+                >
+                  {isLoading ? "Working..." : "Click to execute your prompt"}
+                </button>
+              </div>
             </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>Online</span>
-              <span className="text-slate-300 dark:text-slate-600">|</span>
-              <span>AI tool - double check facts</span>
-            </div>
+            {/* Disclaimer */}
+            <p className="text-orange-500 dark:text-orange-400 text-sm">
+              TaskMaster can make mistakes. Always double check.
+            </p>
           </div>
         ) : (
           /* Chat View */
@@ -980,10 +953,10 @@ export default function Home() {
             })}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
-                <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border border-indigo-200 dark:border-indigo-700 rounded-2xl px-5 py-3">
+                <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border border-orange-200 dark:border-orange-700 rounded-2xl px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <Loader2 className="h-5 w-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
-                    <span className="text-indigo-700 dark:text-indigo-300 font-medium">Working for You...</span>
+                    <Loader2 className="h-5 w-5 text-orange-600 dark:text-orange-400 animate-spin" />
+                    <span className="text-orange-700 dark:text-orange-300 font-medium">Working for You...</span>
                   </div>
                 </div>
               </div>
@@ -997,7 +970,7 @@ export default function Home() {
           <div className="mb-4 flex justify-center">
             <Button
               onClick={handleExecute}
-              className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg px-6 py-3 text-lg gap-2"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg px-6 py-3 text-lg gap-2"
               data-testid="button-execute"
             >
               <Zap className="h-5 w-5" />
@@ -1026,7 +999,7 @@ export default function Home() {
                 <Button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim() || isLoading}
-                  className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-4"
+                  className="mr-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl px-4"
                   data-testid="button-send-message"
                 >
                   <Send className="h-4 w-4 mr-1" />
@@ -1045,6 +1018,26 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t bg-white dark:bg-slate-900 py-6">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
+          {/* Footer Links */}
+          <nav className="flex items-center gap-6 text-sm text-orange-500 dark:text-orange-400">
+            <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
+            <a href="#" className="hover:underline" data-testid="link-terms">Terms and Privacy</a>
+            <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
+          </nav>
+          
+          {/* Footer Logo */}
+          <img 
+            src="/logo.png" 
+            alt="TaskMaster" 
+            className="h-12 object-contain opacity-80"
+            data-testid="img-footer-logo"
+          />
+        </div>
+      </footer>
       
       {/* TM Buddy Navigation Helper */}
       <TMBuddy />
