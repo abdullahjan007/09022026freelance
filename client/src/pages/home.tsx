@@ -609,8 +609,8 @@ export default function Home() {
           />
           
           {/* Tagline */}
-          <p className="text-sm md:text-base font-semibold tracking-wide text-orange-500 dark:text-orange-400 uppercase">
-            Intelligent Research for Today's Educator
+          <p className="text-sm md:text-base font-semibold tracking-wide uppercase" style={{ color: '#E07850' }}>
+            INTELLIGENT RESEARCH FOR TODAY'S EDUCATOR
           </p>
           
           {/* Navigation */}
