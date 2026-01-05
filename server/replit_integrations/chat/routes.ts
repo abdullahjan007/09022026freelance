@@ -93,7 +93,27 @@ Common areas you help with:
 - Behavior tracking and classroom management
 - Grading rubrics and assessment
 - Time management and organization
-- Student engagement strategies`;
+- Student engagement strategies
+
+## DIAGRAM CREATION:
+When a teacher asks for a diagram, flowchart, visual, mind map, or any visual representation:
+- Output the diagram using Mermaid syntax inside a code block with language "mermaid"
+- The frontend will automatically render this as a visual diagram
+- Use appropriate Mermaid diagram types:
+  - flowchart TD (top-down) or LR (left-right) for process flows
+  - mindmap for mind maps and brainstorming
+  - graph for relationships
+  
+Example format:
+\`\`\`mermaid
+flowchart TD
+    A[Step 1: Identify the Issue] --> B[Step 2: Research Solutions]
+    B --> C[Step 3: Implement Strategy]
+    C --> D[Step 4: Monitor Progress]
+    D --> E[Step 5: Adjust as Needed]
+\`\`\`
+
+Keep diagram text concise. Use short phrases, not long sentences. Maximum 5-8 words per node.`;
 
 export function registerChatRoutes(app: Express): void {
   // Get all conversations

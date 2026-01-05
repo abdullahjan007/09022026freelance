@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 import { TMBuddy } from "@/components/tm-buddy";
+import { MermaidDiagram } from "@/components/mermaid-diagram";
 
 interface Message {
   role: "user" | "assistant";
@@ -492,6 +493,40 @@ export default function Home() {
     return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker, structured, hasStructuredContent };
   };
 
+  const renderContentWithMermaid = (content: string) => {
+    const mermaidRegex = /```mermaid\n([\s\S]*?)```/g;
+    const parts: (string | { type: 'mermaid'; code: string })[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = mermaidRegex.exec(content)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(content.slice(lastIndex, match.index));
+      }
+      parts.push({ type: 'mermaid', code: match[1].trim() });
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < content.length) {
+      parts.push(content.slice(lastIndex));
+    }
+
+    if (parts.length === 0) {
+      return content;
+    }
+
+    return (
+      <>
+        {parts.map((part, i) => {
+          if (typeof part === 'string') {
+            return <span key={i}>{part}</span>;
+          }
+          return <MermaidDiagram key={i} code={part.code} />;
+        })}
+      </>
+    );
+  };
+
   const renderStructuredContent = (structured: ReturnType<typeof parseStructuredContent>, isExecution: boolean, remainingContent: string) => {
     return (
       <div className="space-y-4">
@@ -568,7 +603,7 @@ export default function Home() {
                   {section.title}
                 </h4>
                 <div className="text-slate-600 dark:text-slate-300 whitespace-pre-wrap pl-2">
-                  {section.content}
+                  {renderContentWithMermaid(section.content)}
                 </div>
               </div>
             ))}
@@ -577,7 +612,7 @@ export default function Home() {
 
         {remainingContent && !structured.title && !structured.steps.length && (
           <div className="whitespace-pre-wrap text-slate-700 dark:text-slate-300">
-            {remainingContent}
+            {renderContentWithMermaid(remainingContent)}
           </div>
         )}
       </div>
