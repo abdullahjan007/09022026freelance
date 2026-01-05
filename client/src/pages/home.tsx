@@ -599,7 +599,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
       {/* Header */}
       <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-1">
           {/* Logo */}
           <img 
             src="/logo.png" 
