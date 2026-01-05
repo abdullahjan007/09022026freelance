@@ -614,7 +614,7 @@ export default function Home() {
           </p>
           
           {/* Navigation */}
-          <nav className="flex items-center gap-4 md:gap-8 text-sm font-medium text-slate-700 dark:text-slate-300 mt-4">
+          <nav className="flex items-center gap-4 md:gap-8 text-sm font-medium text-slate-700 dark:text-slate-300 mt-6">
             <button 
               onClick={() => setShowFormula(!showFormula)}
               className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
