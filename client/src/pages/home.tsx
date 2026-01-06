@@ -639,7 +639,7 @@ export default function Home() {
           <img 
             src="/logo.png" 
             alt="TaskMaster" 
-            className="h-20 md:h-24 object-contain"
+            className="h-12 object-contain"
             data-testid="img-logo"
           />
           
