@@ -644,7 +644,7 @@ export default function Home() {
           />
           
           {/* Tagline */}
-          <p className="text-sm md:text-base font-semibold tracking-wide -mt-2" style={{ color: '#7C3AED' }}>
+          <p className="text-xs font-semibold tracking-wide -mt-1" style={{ color: '#7C3AED' }}>
             The Teacher's Digital Assistant
           </p>
           
