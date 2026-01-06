@@ -853,7 +853,7 @@ export default function Home() {
             </div>
 
             {/* Disclaimer */}
-            <p className="text-sm italic" style={{ color: '#7C3AED' }}>
+            <p className="text-sm italic font-bold" style={{ color: '#7C3AED' }}>
               TaskMaster can make mistakes. Always double check.
             </p>
           </div>
