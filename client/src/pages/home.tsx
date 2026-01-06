@@ -818,7 +818,7 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8">
             {/* Input Field 1: Enter Prompt */}
             <div className="w-full max-w-xl flex items-center gap-4">
-              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap">
+              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap w-32 text-left">
                 1: Enter Prompt
               </label>
               <div className="flex-1">
@@ -837,7 +837,7 @@ export default function Home() {
 
             {/* Input Field 2: Execute */}
             <div className="w-full max-w-xl flex items-center gap-4">
-              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap">
+              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap w-32 text-left">
                 2: Execute
               </label>
               <div className="flex-1">
