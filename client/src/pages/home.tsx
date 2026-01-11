@@ -638,15 +638,10 @@ export default function Home() {
           {/* Logo */}
           <img 
             src="/logo.png" 
-            alt="TaskMaster" 
-            className="h-12 object-contain"
+            alt="TeacherBuddy" 
+            className="h-20 object-contain"
             data-testid="img-logo"
           />
-          
-          {/* Tagline */}
-          <p className="text-xs font-semibold tracking-wide -mt-1" style={{ color: '#7C3AED' }}>
-            The Teacher's Digital Assistant
-          </p>
           
           {/* Navigation */}
           <nav className="flex items-center gap-4 md:gap-8 text-sm font-bold text-slate-700 dark:text-slate-300 mt-6">
@@ -1067,8 +1062,8 @@ export default function Home() {
           {/* Footer Logo */}
           <img 
             src="/logo.png" 
-            alt="TaskMaster" 
-            className="h-12 object-contain opacity-80"
+            alt="TeacherBuddy" 
+            className="h-16 object-contain opacity-80"
             data-testid="img-footer-logo"
           />
         </div>
