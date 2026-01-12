@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2 } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -809,47 +809,81 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
-          /* Landing View - Two input fields layout */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8">
-            {/* Input Field 1: Enter Prompt */}
-            <div className="w-full max-w-xl flex items-center gap-4">
-              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap w-32 text-left">
-                1: Enter Prompt
-              </label>
-              <div className="flex-1">
+          /* Landing View */
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
+            {/* Large Centered Logo */}
+            <img 
+              src="/logo.png" 
+              alt="TeacherBuddy" 
+              className="h-32 md:h-40 object-contain"
+              data-testid="img-landing-logo"
+            />
+            
+            {/* Main Heading */}
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
+              How can I support you today?
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-slate-600 dark:text-slate-400 max-w-lg">
+              Your AI-powered teaching assistant for lesson plans, communication, and classroom support.
+            </p>
+            
+            {/* Input Field with Arrow Button */}
+            <div className="w-full max-w-xl">
+              <div className="relative flex items-center">
                 <textarea
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder=""
-                  className="w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-slate-800 dark:border-slate-300 rounded-full focus:ring-0 focus:outline-none resize-none min-h-[48px] max-h-[120px] text-slate-800 dark:text-slate-200"
+                  placeholder="How can TeacherBuddy help you today?"
+                  className="w-full py-4 px-5 pr-14 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[120px] text-slate-800 dark:text-slate-200"
                   rows={1}
                   data-testid="input-chat-message-landing"
                 />
-              </div>
-            </div>
-
-            {/* Input Field 2: Execute */}
-            <div className="w-full max-w-xl flex items-center gap-4">
-              <label className="text-slate-900 dark:text-slate-100 font-medium text-sm whitespace-nowrap w-32 text-left">
-                2: Execute
-              </label>
-              <div className="flex-1">
                 <button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim() || isLoading}
-                  className="w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-slate-800 dark:border-slate-300 rounded-full text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-left"
+                  className="absolute right-2 p-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-lg"
                   data-testid="button-execute-landing"
                 >
-                  {isLoading ? "Working..." : "Click to execute your prompt"}
+                  <ArrowRight className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                 </button>
+              </div>
+            </div>
+            
+            {/* Popular Teacher Tasks */}
+            <div className="space-y-3 pt-4">
+              <p className="text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+                Popular Teacher Tasks
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {[
+                  { label: "Lesson Planning", prompt: "Help me create an engaging lesson plan" },
+                  { label: "Email Drafting", prompt: "Help me write a professional email to parents" },
+                  { label: "Grading Rubrics", prompt: "Help me create a grading rubric" },
+                  { label: "Behavior Tracking", prompt: "Help me set up a behavior tracking system" },
+                  { label: "Visual Diagrams", prompt: "Create a visual diagram or flowchart" }
+                ].map((chip) => (
+                  <button
+                    key={chip.label}
+                    onClick={() => {
+                      setInput(chip.prompt);
+                      inputRef.current?.focus();
+                    }}
+                    className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    data-testid={`chip-${chip.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {chip.label}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Disclaimer */}
-            <p className="text-sm italic font-bold" style={{ color: '#7C3AED' }}>
-              TaskMaster can make mistakes. Always double check.
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-lg pt-4">
+              TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom. Verify the accuracy of AI-generated content by TeacherBuddy.
             </p>
           </div>
         ) : (
