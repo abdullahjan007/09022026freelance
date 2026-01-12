@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,6 +68,7 @@ function extractTitle(messages: Message[]): string {
 }
 
 export default function Home() {
+  const { user, isLoading: authLoading, logout } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -652,12 +654,30 @@ export default function Home() {
             >
               Your Search History
             </button>
-            <button 
-              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-              data-testid="button-signin"
-            >
-              Sign Up / Sign In
-            </button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-slate-600 dark:text-slate-400 font-normal flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  {user.firstName || user.email || "User"}
+                </span>
+                <button 
+                  onClick={() => logout()}
+                  className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors flex items-center gap-1"
+                  data-testid="button-logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <a 
+                href="/api/login"
+                className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+                data-testid="button-signin"
+              >
+                Sign Up / Sign In
+              </a>
+            )}
             {messages.length > 0 && (
               <button 
                 onClick={handleNewChat}

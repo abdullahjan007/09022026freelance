@@ -19,15 +19,17 @@ The design follows a clean, teal/green aesthetic with hero messaging focused on 
 - Two-step interaction flow: Guidance first, then Execution with permission
   - Step 1: AI provides tips and strategies (Guidance badge)
   - Step 2: AI creates ready-to-use materials after user confirms (Execute button)
-- "The TaskMaster Formula" guide (toggle to show/hide)
 - Streaming AI responses with teacher-focused system prompt
-- Quick action chips that send prompts directly to the AI
+- Quick action chips that send prompts directly to the AI (Popular Teacher Tasks)
 - New Chat button to start fresh conversations
 - Your Activity History - view, resume, and delete past conversations (localStorage)
 - Copy to clipboard: Copy AI response content with visual feedback
 - Download as PDF: Export entire conversations as formatted PDF documents
 - Dark/light theme support
 - Responsive design
+- **Replit Auth integration**: Email/password and social login (Google, GitHub, Apple)
+- User authentication with Sign Up / Sign In functionality
+- Password reset handled automatically via Replit Auth
 
 ## User Preferences
 
