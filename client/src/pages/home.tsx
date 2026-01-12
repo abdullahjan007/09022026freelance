@@ -646,13 +646,6 @@ export default function Home() {
           {/* Navigation */}
           <nav className="flex items-center gap-4 md:gap-8 text-sm font-bold text-slate-700 dark:text-slate-300 mt-6">
             <button 
-              onClick={() => setShowFormula(!showFormula)}
-              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-              data-testid="button-formula"
-            >
-              How It Works
-            </button>
-            <button 
               onClick={() => setShowHistory(!showHistory)}
               className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
               data-testid="button-history"
@@ -677,74 +670,6 @@ export default function Home() {
           </nav>
         </div>
       </header>
-
-      {/* How It Works Panel */}
-      {showFormula && (
-        <div className="border-b bg-slate-50 dark:bg-slate-900/50 shadow-sm">
-          <div className="max-w-2xl mx-auto px-4 py-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-orange-500 dark:text-orange-400 text-center flex-1">
-                Two Easy Steps to Benefit from TaskMaster
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowFormula(false)}
-                data-testid="button-close-formula"
-              >
-                <ChevronUp className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            {/* Step 1 Flow */}
-            <div className="flex flex-col items-center space-y-3">
-              {/* Step 1 Box */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
-                <p className="font-bold text-orange-500 dark:text-orange-400 mb-1">STEP 1</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You explain the problem + the solution you need</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: My problem is that students don't understand my feedback. I need help to write my feedback more simply.</p>
-              </div>
-              
-              {/* Arrow Down */}
-              <div className="text-slate-400 dark:text-slate-500">
-                <ChevronUp className="h-5 w-5 rotate-180" />
-              </div>
-              
-              {/* Response 1 Box */}
-              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-xl p-4 border-2 border-teal-200 dark:border-teal-700 w-full max-w-md text-center">
-                <p className="font-bold text-teal-600 dark:text-teal-400 mb-1">Response</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">TaskMaster gives you the response. This includes relevant websites</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Here are the recommended steps you can follow including relevant websites for more information.</p>
-              </div>
-              
-              {/* Optional Divider */}
-              <div className="w-full max-w-md border-t-2 border-dashed border-slate-300 dark:border-slate-600 my-2 relative">
-                <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-50 dark:bg-slate-900/50 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Step 2 is Optional</span>
-              </div>
-              
-              {/* Step 2 Box */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-600 w-full max-w-md text-center">
-                <p className="font-bold text-orange-500 dark:text-orange-400 mb-1">STEP 2</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">You ask TaskMaster to execute</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Instead of telling you what to do, you can instruct the app to complete the task</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Rewrite this feedback in student-friendly language.</p>
-              </div>
-              
-              {/* Arrow Down */}
-              <div className="text-slate-400 dark:text-slate-500">
-                <ChevronUp className="h-5 w-5 rotate-180" />
-              </div>
-              
-              {/* Response 2 Box */}
-              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-xl p-4 border-2 border-teal-200 dark:border-teal-700 w-full max-w-md text-center">
-                <p className="font-bold text-teal-600 dark:text-teal-400 mb-1">Response</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm mb-2">TaskMaster quickly executes and you download</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 italic">Example: Here is the feedback written in student-friendly language.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Activity History Panel */}
       {showHistory && (
