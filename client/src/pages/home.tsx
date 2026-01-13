@@ -1026,7 +1026,9 @@ export default function Home() {
             <Link href="/our-story">
               <span className="hover:underline cursor-pointer" data-testid="link-our-story">Our Story</span>
             </Link>
-            <a href="#" className="hover:underline" data-testid="link-terms">Terms and Privacy</a>
+            <Link href="/terms">
+              <span className="hover:underline cursor-pointer" data-testid="link-terms">Terms and Privacy</span>
+            </Link>
             <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
           </nav>
           

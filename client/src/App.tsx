@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Home from "@/pages/home";
 import FeedbackAssistant from "@/pages/feedback-assistant";
 import OurStory from "@/pages/our-story";
+import Terms from "@/pages/terms";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/feedback" component={FeedbackAssistant} />
       <Route path="/our-story" component={OurStory} />
+      <Route path="/terms" component={Terms} />
       <Route component={NotFound} />
     </Switch>
   );
