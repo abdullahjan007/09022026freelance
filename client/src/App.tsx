@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import FeedbackAssistant from "@/pages/feedback-assistant";
 import OurStory from "@/pages/our-story";
 import Terms from "@/pages/terms";
+import ReportAbuse from "@/pages/report-abuse";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/feedback" component={FeedbackAssistant} />
       <Route path="/our-story" component={OurStory} />
       <Route path="/terms" component={Terms} />
+      <Route path="/report-abuse" component={ReportAbuse} />
       <Route component={NotFound} />
     </Switch>
   );

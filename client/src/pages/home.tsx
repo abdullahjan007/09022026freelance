@@ -1029,7 +1029,9 @@ export default function Home() {
             <Link href="/terms">
               <span className="hover:underline cursor-pointer" data-testid="link-terms">Terms and Privacy</span>
             </Link>
-            <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
+            <Link href="/report-abuse">
+              <span className="hover:underline cursor-pointer" data-testid="link-report">Report Abuse</span>
+            </Link>
           </nav>
           
           {/* Footer Logo */}
