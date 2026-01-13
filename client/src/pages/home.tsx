@@ -631,9 +631,19 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
-      {/* Header */}
-      <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4 md:p-8">
+      {/* Phone Frame */}
+      <div className="relative w-full max-w-[380px] h-[800px] bg-slate-900 rounded-[3rem] p-2 shadow-2xl">
+        {/* Phone Bezel */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-900 rounded-b-2xl z-20 flex items-center justify-center">
+          {/* Notch with camera */}
+          <div className="w-3 h-3 bg-slate-700 rounded-full" />
+        </div>
+        
+        {/* Phone Screen */}
+        <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[2.5rem] overflow-hidden flex flex-col">
+          {/* Header */}
+          <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50 pt-6">
         <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-1">
           {/* Logo */}
           <img 
@@ -1002,25 +1012,30 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t bg-white dark:bg-slate-900 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
-          {/* Footer Links */}
-          <nav className="flex items-center gap-6 text-sm text-orange-500 dark:text-orange-400">
-            <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
-            <a href="#" className="hover:underline" data-testid="link-terms">Terms and Privacy</a>
-            <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
-          </nav>
-          
-          {/* Footer Logo */}
-          <img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-16 object-contain opacity-80"
-            data-testid="img-footer-logo"
-          />
+          {/* Footer */}
+          <footer className="border-t bg-white dark:bg-slate-900 py-4 pb-8">
+            <div className="px-4 flex flex-col items-center gap-3">
+              {/* Footer Links */}
+              <nav className="flex items-center gap-4 text-xs text-orange-500 dark:text-orange-400">
+                <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
+                <a href="#" className="hover:underline" data-testid="link-terms">Terms</a>
+                <a href="#" className="hover:underline" data-testid="link-report">Report</a>
+              </nav>
+              
+              {/* Footer Logo */}
+              <img 
+                src="/logo.png" 
+                alt="TeacherBuddy" 
+                className="h-10 object-contain opacity-80"
+                data-testid="img-footer-logo"
+              />
+            </div>
+          </footer>
         </div>
-      </footer>
+        
+        {/* Home Indicator */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-slate-600 rounded-full" />
+      </div>
       
       {/* TM Buddy Navigation Helper */}
       <TMBuddy />
