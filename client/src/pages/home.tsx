@@ -752,7 +752,7 @@ export default function Home() {
             />
             
             {/* Main Heading */}
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
               How can I support you today?
             </h1>
             
