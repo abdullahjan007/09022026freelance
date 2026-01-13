@@ -637,12 +637,20 @@ export default function Home() {
       {/* Header */}
       <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-1">
-          {/* Logo */}
-          <img 
+          {/* Logo with Breathing Animation */}
+          <motion.img 
             src="/logo.png" 
             alt="TeacherBuddy" 
             className="h-20 object-contain"
             data-testid="img-logo"
+            animate={{ 
+              scale: [1, 1.02, 1],
+            }}
+            transition={{ 
+              duration: 3,
+              ease: "easeInOut",
+              repeat: Infinity,
+            }}
           />
           
           {/* Navigation */}
