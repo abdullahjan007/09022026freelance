@@ -6,10 +6,10 @@ export default function OurStory() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
       <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-5xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-center relative">
             <Link href="/">
-              <Button variant="ghost" size="sm" data-testid="button-back">
+              <Button variant="ghost" size="sm" className="absolute left-0" data-testid="button-back">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
@@ -17,7 +17,7 @@ export default function OurStory() {
             <img 
               src="/logo.png" 
               alt="TeacherBuddy" 
-              className="h-10 object-contain"
+              className="h-16 object-contain"
               data-testid="img-logo"
             />
           </div>
