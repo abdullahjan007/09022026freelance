@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import OpenAI from "openai";
 import { chatStorage } from "./storage";
+import { generateFeedback } from "./feedback";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -116,6 +117,9 @@ flowchart TD
 Keep diagram text concise. Use short phrases, not long sentences. Maximum 5-8 words per node.`;
 
 export function registerChatRoutes(app: Express): void {
+  // Feedback Assistant endpoint
+  app.post("/api/feedback", generateFeedback);
+
   // Get all conversations
   app.get("/api/conversations", async (req: Request, res: Response) => {
     try {

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -652,6 +653,12 @@ export default function Home() {
             >
               Your Search History
             </button>
+            <Link href="/feedback">
+              <span className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer flex items-center gap-1" data-testid="link-feedback-assistant">
+                <ClipboardCheck className="h-4 w-4" />
+                Feedback Assistant
+              </span>
+            </Link>
             {messages.length > 0 && (
               <button 
                 onClick={handleNewChat}
@@ -797,6 +804,15 @@ export default function Home() {
                     {chip.label}
                   </button>
                 ))}
+                <Link href="/feedback">
+                  <span
+                    className="px-4 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-full text-sm text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors cursor-pointer flex items-center gap-1"
+                    data-testid="chip-feedback-assistant"
+                  >
+                    <ClipboardCheck className="h-4 w-4" />
+                    Feedback Assistant
+                  </span>
+                </Link>
               </div>
             </div>
 
