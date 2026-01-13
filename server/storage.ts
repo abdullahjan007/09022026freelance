@@ -9,6 +9,8 @@ import {
   type InsertClass,
   type Template,
   type InsertTemplate,
+  type CalendarEvent,
+  type InsertCalendarEvent,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -45,6 +47,14 @@ export interface IStorage {
   createTemplate(template: InsertTemplate): Promise<Template>;
   updateTemplate(id: string, template: Partial<InsertTemplate>): Promise<Template | undefined>;
   deleteTemplate(id: string): Promise<boolean>;
+
+  // Calendar Events
+  getCalendarEvents(): Promise<CalendarEvent[]>;
+  getCalendarEvent(id: string): Promise<CalendarEvent | undefined>;
+  getCalendarEventsByDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]>;
+  createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent>;
+  updateCalendarEvent(id: string, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined>;
+  deleteCalendarEvent(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -53,6 +63,7 @@ export class MemStorage implements IStorage {
   private tasks: Map<string, Task>;
   private classes: Map<string, Class>;
   private templates: Map<string, Template>;
+  private calendarEvents: Map<string, CalendarEvent>;
 
   constructor() {
     this.users = new Map();
@@ -60,6 +71,7 @@ export class MemStorage implements IStorage {
     this.tasks = new Map();
     this.classes = new Map();
     this.templates = new Map();
+    this.calendarEvents = new Map();
 
     // Add some sample data
     this.initializeSampleData();
@@ -403,6 +415,51 @@ Thank you,
 
   async deleteTemplate(id: string): Promise<boolean> {
     return this.templates.delete(id);
+  }
+
+  // Calendar Event methods
+  async getCalendarEvents(): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values());
+  }
+
+  async getCalendarEvent(id: string): Promise<CalendarEvent | undefined> {
+    return this.calendarEvents.get(id);
+  }
+
+  async getCalendarEventsByDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values()).filter(event => {
+      return event.date >= startDate && event.date <= endDate;
+    });
+  }
+
+  async createCalendarEvent(insertEvent: InsertCalendarEvent): Promise<CalendarEvent> {
+    const id = randomUUID();
+    const event: CalendarEvent = {
+      ...insertEvent,
+      id,
+      description: insertEvent.description || null,
+      startTime: insertEvent.startTime || null,
+      endTime: insertEvent.endTime || null,
+      eventType: insertEvent.eventType || "event",
+      color: insertEvent.color || "#7C3AED",
+    };
+    this.calendarEvents.set(id, event);
+    return event;
+  }
+
+  async updateCalendarEvent(
+    id: string,
+    updates: Partial<InsertCalendarEvent>
+  ): Promise<CalendarEvent | undefined> {
+    const event = this.calendarEvents.get(id);
+    if (!event) return undefined;
+    const updated = { ...event, ...updates };
+    this.calendarEvents.set(id, updated);
+    return updated;
+  }
+
+  async deleteCalendarEvent(id: string): Promise<boolean> {
+    return this.calendarEvents.delete(id);
   }
 }
 

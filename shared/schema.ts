@@ -83,3 +83,19 @@ export const feedbackResponseSchema = z.object({
 });
 
 export type FeedbackResponse = z.infer<typeof feedbackResponseSchema>;
+
+// Calendar events for Personal Planner
+export const calendarEvents = pgTable("calendar_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description"),
+  date: text("date").notNull(), // ISO date string YYYY-MM-DD
+  startTime: text("start_time"), // HH:MM format
+  endTime: text("end_time"), // HH:MM format
+  eventType: text("event_type").notNull().default("event"), // event, meeting, reminder, deadline
+  color: text("color").default("#7C3AED"), // hex color for visual distinction
+});
+
+export const insertCalendarEventSchema = createInsertSchema(calendarEvents).omit({ id: true });
+export type InsertCalendarEvent = z.infer<typeof insertCalendarEventSchema>;
+export type CalendarEvent = typeof calendarEvents.$inferSelect;
