@@ -644,10 +644,10 @@ export default function Home() {
             className="h-20 object-contain"
             data-testid="img-logo"
             animate={{ 
-              scale: [1, 1.02, 1],
+              scale: [1, 1.06, 1],
             }}
             transition={{ 
-              duration: 3,
+              duration: 2,
               ease: "easeInOut",
               repeat: Infinity,
             }}
