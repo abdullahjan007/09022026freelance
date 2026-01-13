@@ -64,3 +64,22 @@ export const templates = pgTable("templates", {
 export const insertTemplateSchema = createInsertSchema(templates).omit({ id: true });
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
+
+// Feedback Assistant schemas
+export const feedbackRequestSchema = z.object({
+  studentWork: z.string().optional(),
+  learningFocus: z.string().optional(),
+  rubric: z.string().optional(),
+  mustInclude: z.string().optional(),
+  mustAvoid: z.string().optional(),
+});
+
+export type FeedbackRequest = z.infer<typeof feedbackRequestSchema>;
+
+export const feedbackResponseSchema = z.object({
+  strengths: z.array(z.string()),
+  growthOpportunities: z.array(z.string()),
+  nextSteps: z.string(),
+});
+
+export type FeedbackResponse = z.infer<typeof feedbackResponseSchema>;
