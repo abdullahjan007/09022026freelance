@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -743,12 +744,27 @@ export default function Home() {
         {messages.length === 0 ? (
           /* Landing View */
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
-            {/* Large Centered Logo */}
-            <img 
+            {/* Large Centered Logo with Animation */}
+            <motion.img 
               src="/logo.png" 
               alt="TeacherBuddy" 
               className="h-32 md:h-40 object-contain"
               data-testid="img-landing-logo"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 0.5, 
+                ease: "easeOut",
+              }}
+              whileInView={{
+                scale: [1, 1.03, 1],
+                transition: { 
+                  duration: 2,
+                  ease: "easeInOut",
+                  times: [0, 0.5, 1],
+                  repeat: 0
+                }
+              }}
             />
             
             {/* Main Heading */}
