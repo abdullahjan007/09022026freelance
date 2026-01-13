@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -657,6 +657,12 @@ export default function Home() {
               <span className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer flex items-center gap-1" data-testid="link-feedback-assistant">
                 <ClipboardCheck className="h-4 w-4" />
                 Feedback Assistant
+              </span>
+            </Link>
+            <Link href="/planner">
+              <span className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer flex items-center gap-1" data-testid="link-planner">
+                <Calendar className="h-4 w-4" />
+                Personal Planner
               </span>
             </Link>
             {messages.length > 0 && (
