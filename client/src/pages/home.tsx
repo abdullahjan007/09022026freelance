@@ -1023,7 +1023,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
           {/* Footer Links */}
           <nav className="flex items-center gap-6 text-sm text-orange-500 dark:text-orange-400">
-            <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
+            <Link href="/our-story">
+              <span className="hover:underline cursor-pointer" data-testid="link-our-story">Our Story</span>
+            </Link>
             <a href="#" className="hover:underline" data-testid="link-terms">Terms and Privacy</a>
             <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
           </nav>
