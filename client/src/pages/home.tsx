@@ -631,49 +631,39 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4 md:p-8">
-      {/* Phone Frame */}
-      <div className="relative w-full max-w-[380px] h-[800px] bg-slate-900 rounded-[3rem] p-2 shadow-2xl">
-        {/* Phone Bezel */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-900 rounded-b-2xl z-20 flex items-center justify-center">
-          {/* Notch with camera */}
-          <div className="w-3 h-3 bg-slate-700 rounded-full" />
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
+      {/* Header */}
+      <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-1">
+          {/* Logo */}
+          <img 
+            src="/logo.png" 
+            alt="TeacherBuddy" 
+            className="h-20 object-contain"
+            data-testid="img-logo"
+          />
+          
+          {/* Navigation */}
+          <nav className="flex items-center gap-4 md:gap-8 text-sm font-bold text-slate-700 dark:text-slate-300 mt-6">
+            <button 
+              onClick={() => setShowHistory(!showHistory)}
+              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+              data-testid="button-history"
+            >
+              Your Search History
+            </button>
+            {messages.length > 0 && (
+              <button 
+                onClick={handleNewChat}
+                className="text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 transition-colors"
+                data-testid="button-new-chat"
+              >
+                New Chat
+              </button>
+            )}
+          </nav>
         </div>
-        
-        {/* Phone Screen */}
-        <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[2.5rem] overflow-y-auto flex flex-col">
-          {/* Header */}
-          <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50 pt-8">
-            <div className="px-3 py-2 flex flex-col items-center gap-1">
-              {/* Logo */}
-              <img 
-                src="/logo.png" 
-                alt="TeacherBuddy" 
-                className="h-10 object-contain"
-                data-testid="img-logo"
-              />
-              
-              {/* Navigation */}
-              <nav className="flex items-center gap-3 text-xs font-bold text-slate-700 dark:text-slate-300 mt-2">
-                <button 
-                  onClick={() => setShowHistory(!showHistory)}
-                  className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-                  data-testid="button-history"
-                >
-                  History
-                </button>
-                {messages.length > 0 && (
-                  <button 
-                    onClick={handleNewChat}
-                    className="text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 transition-colors"
-                    data-testid="button-new-chat"
-                  >
-                    New Chat
-                  </button>
-                )}
-              </nav>
-            </div>
-          </header>
+      </header>
 
       {/* Activity History Panel */}
       {showHistory && (
@@ -736,30 +726,30 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col w-full px-3 py-3">
+      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
           /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-4">
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
             {/* Large Centered Logo */}
             <img 
               src="/logo.png" 
               alt="TeacherBuddy" 
-              className="h-20 object-contain"
+              className="h-32 md:h-40 object-contain"
               data-testid="img-landing-logo"
             />
             
             {/* Main Heading */}
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
               How can I support you today?
             </h1>
             
             {/* Subtitle */}
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-lg px-2">
+            <p className="text-slate-600 dark:text-slate-400 max-w-lg">
               Your AI-powered teaching assistant for lesson plans, communication, and classroom support.
             </p>
             
             {/* Input Field with Arrow Button */}
-            <div className="w-full">
+            <div className="w-full max-w-xl">
               <div className="relative flex items-center">
                 <textarea
                   ref={inputRef}
@@ -767,27 +757,27 @@ export default function Home() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="How can TeacherBuddy help you today?"
-                  className="w-full py-3 px-4 pr-12 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-0 focus:outline-none resize-none min-h-[48px] max-h-[100px] text-sm text-slate-800 dark:text-slate-200"
+                  className="w-full py-4 px-5 pr-14 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[120px] text-slate-800 dark:text-slate-200"
                   rows={1}
                   data-testid="input-chat-message-landing"
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-2 p-1.5 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-lg"
+                  className="absolute right-2 p-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-lg"
                   data-testid="button-execute-landing"
                 >
-                  <ArrowRight className="h-4 w-4 text-slate-700 dark:text-slate-200" />
+                  <ArrowRight className="h-5 w-5 text-slate-700 dark:text-slate-200" />
                 </button>
               </div>
             </div>
             
             {/* Popular Teacher Tasks */}
-            <div className="space-y-2 pt-2">
+            <div className="space-y-3 pt-4">
               <p className="text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
                 Popular Teacher Tasks
               </p>
-              <div className="flex flex-wrap justify-center gap-1.5">
+              <div className="flex flex-wrap justify-center gap-2">
                 {[
                   { label: "Lesson Planning", prompt: "Help me create an engaging lesson plan" },
                   { label: "Email Drafting", prompt: "Help me write a professional email to parents" },
@@ -801,7 +791,7 @@ export default function Home() {
                       setInput(chip.prompt);
                       inputRef.current?.focus();
                     }}
-                    className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                     data-testid={`chip-${chip.label.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     {chip.label}
@@ -811,8 +801,8 @@ export default function Home() {
             </div>
 
             {/* Disclaimer */}
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-lg pt-2 px-2">
-              TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom.
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-lg pt-4">
+              TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom. Verify the accuracy of AI-generated content by TeacherBuddy.
             </p>
           </div>
         ) : (
@@ -1012,30 +1002,25 @@ export default function Home() {
         )}
       </main>
 
-          {/* Footer */}
-          <footer className="border-t bg-white dark:bg-slate-900 py-4 pb-8">
-            <div className="px-4 flex flex-col items-center gap-3">
-              {/* Footer Links */}
-              <nav className="flex items-center gap-4 text-xs text-orange-500 dark:text-orange-400">
-                <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
-                <a href="#" className="hover:underline" data-testid="link-terms">Terms</a>
-                <a href="#" className="hover:underline" data-testid="link-report">Report</a>
-              </nav>
-              
-              {/* Footer Logo */}
-              <img 
-                src="/logo.png" 
-                alt="TeacherBuddy" 
-                className="h-10 object-contain opacity-80"
-                data-testid="img-footer-logo"
-              />
-            </div>
-          </footer>
+      {/* Footer */}
+      <footer className="border-t bg-white dark:bg-slate-900 py-6">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
+          {/* Footer Links */}
+          <nav className="flex items-center gap-6 text-sm text-orange-500 dark:text-orange-400">
+            <a href="#" className="hover:underline" data-testid="link-our-story">Our Story</a>
+            <a href="#" className="hover:underline" data-testid="link-terms">Terms and Privacy</a>
+            <a href="#" className="hover:underline" data-testid="link-report">Report Abuse</a>
+          </nav>
+          
+          {/* Footer Logo */}
+          <img 
+            src="/logo.png" 
+            alt="TeacherBuddy" 
+            className="h-16 object-contain opacity-80"
+            data-testid="img-footer-logo"
+          />
         </div>
-        
-        {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-slate-600 rounded-full" />
-      </div>
+      </footer>
       
       {/* TM Buddy Navigation Helper */}
       <TMBuddy />
