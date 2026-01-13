@@ -810,15 +810,6 @@ export default function Home() {
                     {chip.label}
                   </button>
                 ))}
-                <Link href="/feedback">
-                  <span
-                    className="px-4 py-2 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-full text-sm text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors cursor-pointer flex items-center gap-1"
-                    data-testid="chip-feedback-assistant"
-                  >
-                    <ClipboardCheck className="h-4 w-4" />
-                    Feedback Assistant
-                  </span>
-                </Link>
               </div>
             </div>
 
