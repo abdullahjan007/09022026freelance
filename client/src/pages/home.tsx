@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
-import { TMBuddy } from "@/components/tm-buddy";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
 
 interface Message {
@@ -1065,8 +1064,6 @@ export default function Home() {
         </div>
       </footer>
       
-      {/* TM Buddy Navigation Helper */}
-      <TMBuddy />
     </div>
   );
 }
