@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
+import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 interface Message {
   role: "user" | "assistant";
@@ -768,15 +769,20 @@ export default function Home() {
         {messages.length === 0 ? (
           /* Landing View */
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8 px-4">
-            {/* Robot Icon */}
+            {/* Logo */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="w-20 h-20 rounded-full bg-[#6C4EE3]/10 flex items-center justify-center"
-              data-testid="icon-robot-container"
+              className="flex items-center justify-center"
+              data-testid="logo-container"
             >
-              <Bot className="w-10 h-10 text-[#6C4EE3]" />
+              <img 
+                src={teacherBuddyLogo} 
+                alt="TeacherBuddy - Busy Teacher's Best Friend" 
+                className="w-48 h-auto md:w-64"
+                data-testid="img-logo"
+              />
             </motion.div>
             
             {/* Main Heading */}
