@@ -755,7 +755,7 @@ export default function Home() {
             <motion.img 
               src="/logo.png" 
               alt="TeacherBuddy" 
-              className="h-32 md:h-40 object-contain"
+              className="h-48 md:h-60 object-contain"
               data-testid="img-landing-logo"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
