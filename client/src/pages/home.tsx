@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -80,7 +80,8 @@ export default function Home() {
   const [likedMessages, setLikedMessages] = useState<Set<number>>(new Set());
   const [dislikedMessages, setDislikedMessages] = useState<Set<number>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const chatInputRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
   const handleLike = (index: number) => {
@@ -631,59 +632,75 @@ export default function Home() {
     return date.toLocaleDateString();
   };
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
-      {/* Header */}
-      <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col items-center gap-1">
-          {/* Logo with Continuous Rotation Animation */}
-          <motion.img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-20 object-contain"
-            data-testid="img-logo"
-            animate={{ 
-              rotateY: [0, 180, 360],
-            }}
-            transition={{ 
-              duration: 4,
-              ease: "easeInOut",
-              repeat: Infinity,
-            }}
-          />
+      {/* Mobile-First Top Navigation */}
+      <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between">
+          {/* Left: Logo Text */}
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
+          </div>
           
-          {/* Navigation */}
-          <nav className="flex items-center gap-4 md:gap-8 text-sm font-bold text-slate-700 dark:text-slate-300 mt-6">
+          {/* Right: Hamburger Menu */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            data-testid="button-menu-toggle"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6 text-slate-700 dark:text-slate-300" />
+            ) : (
+              <Menu className="h-6 w-6 text-slate-700 dark:text-slate-300" />
+            )}
+          </button>
+        </div>
+        
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
             <button 
-              onClick={() => setShowHistory(!showHistory)}
-              className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+              onClick={() => { setShowHistory(!showHistory); setMobileMenuOpen(false); }}
+              className="w-full text-left px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
               data-testid="button-history"
             >
+              <History className="h-4 w-4" />
               Your Search History
             </button>
             <Link href="/feedback">
-              <span className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer flex items-center gap-1" data-testid="link-feedback-assistant">
+              <span 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 cursor-pointer" 
+                data-testid="link-feedback-assistant"
+              >
                 <ClipboardCheck className="h-4 w-4" />
                 Feedback Assistant
               </span>
             </Link>
             <Link href="/planner">
-              <span className="hover:text-orange-500 dark:hover:text-orange-400 transition-colors cursor-pointer flex items-center gap-1" data-testid="link-planner">
+              <span 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 cursor-pointer" 
+                data-testid="link-planner"
+              >
                 <Calendar className="h-4 w-4" />
                 Personal Planner
               </span>
             </Link>
             {messages.length > 0 && (
               <button 
-                onClick={handleNewChat}
-                className="text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 transition-colors"
+                onClick={() => { handleNewChat(); setMobileMenuOpen(false); }}
+                className="w-full text-left px-3 py-2 rounded-lg text-[#6C4EE3] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
                 data-testid="button-new-chat"
               >
+                <RefreshCw className="h-4 w-4" />
                 New Chat
               </button>
             )}
           </nav>
-        </div>
+        )}
       </header>
 
       {/* Activity History Panel */}
@@ -750,67 +767,75 @@ export default function Home() {
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
           /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8">
-            {/* Large Centered Logo with Animation */}
-            <motion.img 
-              src="/logo.png" 
-              alt="TeacherBuddy" 
-              className="h-72 md:h-96 object-contain"
-              data-testid="img-landing-logo"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 0.5, 
-                ease: "easeOut",
-              }}
-              whileInView={{
-                scale: [1, 1.03, 1],
-                transition: { 
-                  duration: 2,
-                  ease: "easeInOut",
-                  times: [0, 0.5, 1],
-                  repeat: 0
-                }
-              }}
-            />
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8 px-4">
+            {/* Robot Icon */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="w-20 h-20 rounded-full bg-[#6C4EE3]/10 flex items-center justify-center"
+              data-testid="icon-robot-container"
+            >
+              <Bot className="w-10 h-10 text-[#6C4EE3]" />
+            </motion.div>
             
             {/* Main Heading */}
-            <h1 className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <motion.h1 
+              className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               How can I support you today?
-            </h1>
+            </motion.h1>
             
             {/* Subtitle */}
-            <p className="text-slate-600 dark:text-slate-400 max-w-lg">
-              Your AI-powered teaching assistant for lesson plans, communication, and classroom support.
-            </p>
+            <motion.p 
+              className="text-slate-500 dark:text-slate-400 max-w-md text-base"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Your AI teaching companion — from lesson planning to parent communication.
+            </motion.p>
             
-            {/* Input Field with Arrow Button */}
-            <div className="w-full max-w-xl">
+            {/* Input Field with Purple Arrow Button */}
+            <motion.div 
+              className="w-full max-w-xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               <div className="relative flex items-center">
-                <textarea
+                <input
                   ref={inputRef}
+                  type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="How can TeacherBuddy help you today?"
-                  className="w-full py-4 px-5 pr-14 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-0 focus:outline-none resize-none min-h-[56px] max-h-[120px] text-slate-800 dark:text-slate-200"
-                  rows={1}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
+                  placeholder="Ask TeacherBuddy anything…"
+                  className="w-full py-4 px-5 pr-14 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#6C4EE3]/30 focus:border-[#6C4EE3] focus:outline-none text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
                   data-testid="input-chat-message-landing"
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-2 p-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-lg"
+                  className="absolute right-2 p-2.5 bg-[#6C4EE3] hover:bg-[#5B3FD1] disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-xl"
                   data-testid="button-execute-landing"
                 >
-                  <ArrowRight className="h-5 w-5 text-slate-700 dark:text-slate-200" />
+                  <ArrowRight className="h-5 w-5 text-white" />
                 </button>
               </div>
-            </div>
+            </motion.div>
             
             {/* Popular Teacher Tasks */}
-            <div className="space-y-3 pt-4">
-              <p className="text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+            <motion.div 
+              className="space-y-3 pt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
                 Popular Teacher Tasks
               </p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -827,18 +852,18 @@ export default function Home() {
                       setInput(chip.prompt);
                       inputRef.current?.focus();
                     }}
-                    className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-600 dark:text-slate-300 hover:border-[#6C4EE3] hover:text-[#6C4EE3] transition-colors"
                     data-testid={`chip-${chip.label.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     {chip.label}
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Disclaimer */}
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-lg pt-4">
-              TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom. Verify the accuracy of AI-generated content by TeacherBuddy.
+            <p className="text-xs text-slate-400 max-w-lg pt-6">
+              TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom.
             </p>
           </div>
         ) : (
@@ -1006,7 +1031,7 @@ export default function Home() {
               <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden">
                 <MessageCircle className="h-5 w-5 text-muted-foreground ml-4 flex-shrink-0" />
                 <textarea
-                  ref={inputRef}
+                  ref={chatInputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
