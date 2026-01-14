@@ -10,8 +10,8 @@ interface BuddyMessage {
 }
 
 const BUDDY_RESPONSES: { [key: string]: string } = {
-  default: "Hi there! I'm TM Buddy, your guide to TeacherBuddy. I can help you understand how to use this app. Try asking me about lesson plans, parent emails, behavior tracking, or grading rubrics!",
-  greeting: "Hello! I'm TM Buddy. I'm here to help you navigate TeacherBuddy. What would you like to know?",
+  default: "Hi there! I'm TeacherBuddy, your AI-powered teaching assistant. I can help you with lesson planning, parent emails, behavior tracking, grading rubrics, and more! Just ask me anything.",
+  greeting: "Hello! I'm TeacherBuddy, your AI teaching assistant. I'm here to help you with everyday classroom challenges. What would you like to know?",
   lesson: "To get help with lesson planning, simply type your request in the main chat. For example: 'Help me create a lesson plan for teaching fractions to 4th graders.' TeacherBuddy will first give you tips, then offer to create a complete lesson plan for you!",
   parent: "Need help with parent communications? Just describe the situation in the main chat. For example: 'Help me write an email to a parent about their child's behavior.' You'll get diplomatic suggestions first, then a ready-to-use email!",
   behavior: "For behavior tracking help, describe what you're dealing with. For example: 'Help me create a behavior tracking system for my classroom.' TeacherBuddy will provide strategies and can create tracking sheets for you!",
@@ -152,8 +152,8 @@ export function TMBuddy() {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-sm">TM Buddy</h3>
-              <p className="text-indigo-200 text-xs">Your navigation helper</p>
+              <h3 className="text-white font-semibold text-sm">TeacherBuddy</h3>
+              <p className="text-indigo-200 text-xs">Your AI teaching assistant</p>
             </div>
           </div>
 
