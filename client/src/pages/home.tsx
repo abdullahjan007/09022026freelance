@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
+import { useAuth } from "@/hooks/use-auth";
 import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 interface Message {
