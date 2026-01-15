@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +70,7 @@ function extractTitle(messages: Message[]): string {
 }
 
 export default function Home() {
+  const { user, isLoading: authLoading } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -641,8 +642,30 @@ export default function Home() {
       {/* Mobile-First Top Navigation */}
       <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          {/* Left spacer for centering on landing, empty on chat */}
-          <div className="w-10" />
+          {/* Left: Sign In / User */}
+          <div className="w-24">
+            {authLoading ? (
+              <div className="w-8 h-8" />
+            ) : user ? (
+              <a 
+                href="/api/logout"
+                className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-[#6C4EE3] transition-colors"
+                data-testid="button-logout"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </a>
+            ) : (
+              <a 
+                href="/api/login"
+                className="flex items-center gap-1.5 text-sm font-medium text-[#6C4EE3] hover:text-[#5B3FD1] transition-colors"
+                data-testid="button-login"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Sign In</span>
+              </a>
+            )}
+          </div>
           
           {/* Logo Text - always centered via flex justify-between */}
           <div className="flex items-center gap-2">
