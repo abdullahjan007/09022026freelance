@@ -1,8 +1,8 @@
-# TaskMaster - AI-Powered Teacher Support Agent
+# TeacherBuddy - AI-Powered Teacher Support Agent
 
 ## Overview
 
-TaskMaster is an AI-powered support agent built specifically for teachers and educators. It provides a conversational chat interface where teachers can describe their biggest challenges and receive practical, actionable solutions.
+TeacherBuddy is an AI-powered support agent built specifically for teachers and educators. It provides a conversational chat interface where teachers can describe their biggest challenges and receive practical, actionable solutions.
 
 The application helps with:
 - **Lesson Planning**: Create engaging, interactive lesson plans
@@ -10,7 +10,7 @@ The application helps with:
 - **Behavior Tracking**: Implement effective classroom behavior management systems
 - **Grading Rubrics**: Develop fair, comprehensive grading rubrics
 
-The design follows a clean, teal/green aesthetic with hero messaging focused on relieving teacher pressure.
+The design follows a clean, modern aesthetic with purple (#6C4EE3) as the primary accent color.
 
 ## Current Status
 
@@ -27,9 +27,7 @@ The design follows a clean, teal/green aesthetic with hero messaging focused on 
 - Download as PDF: Export entire conversations as formatted PDF documents
 - Dark/light theme support
 - Responsive design
-- **Replit Auth integration**: Email/password and social login (Google, GitHub, Apple)
-- User authentication with Sign Up / Sign In functionality
-- Password reset handled automatically via Replit Auth
+- **Fully public access**: No sign-in required - anyone can use the app immediately
 
 ## User Preferences
 
