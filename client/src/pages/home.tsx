@@ -835,13 +835,13 @@ export default function Home() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="flex items-center justify-center"
+              className="flex items-center justify-center -mt-8"
               data-testid="logo-container"
             >
               <img 
                 src={teacherBuddyLogo} 
                 alt="TeacherBuddy - Busy Teacher's Best Friend" 
-                className="w-48 h-auto md:w-64"
+                className="w-64 h-auto md:w-80"
                 data-testid="img-logo"
               />
             </motion.div>
