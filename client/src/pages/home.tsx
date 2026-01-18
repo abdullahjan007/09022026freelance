@@ -829,7 +829,7 @@ export default function Home() {
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
         {messages.length === 0 ? (
           /* Landing View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 py-8 px-4">
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8 px-4">
             {/* Logo */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -896,7 +896,7 @@ export default function Home() {
             </motion.div>
 
             {/* Disclaimer */}
-            <p className="text-xs text-slate-400 max-w-lg pt-6">
+            <p className="text-xs text-slate-400 max-w-lg pt-10">
               TeacherBuddy is your assistant. Always review AI-generated materials before using them in the classroom.
             </p>
           </div>
