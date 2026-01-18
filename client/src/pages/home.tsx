@@ -824,7 +824,7 @@ export default function Home() {
             
             {/* Main Heading */}
             <motion.h1 
-              className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100"
+              className="text-2xl md:text-3xl font-bold text-[#6C4EE3]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
