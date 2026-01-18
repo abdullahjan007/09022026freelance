@@ -723,6 +723,34 @@ export default function Home() {
                 Personal Planner
               </span>
             </Link>
+            
+            {/* Quick Tasks Section */}
+            <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+              <p className="px-3 py-2 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                Quick Tasks
+              </p>
+              {[
+                { label: "Lesson Planning", prompt: "Help me create an engaging lesson plan" },
+                { label: "Email Drafting", prompt: "Help me write a professional email to parents" },
+                { label: "Grading Rubrics", prompt: "Help me create a grading rubric" },
+                { label: "Behavior Tracking", prompt: "Help me set up a behavior tracking system" },
+                { label: "Visual Diagrams", prompt: "Create a visual diagram or flowchart" }
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    setInput(item.prompt);
+                    setMobileMenuOpen(false);
+                    inputRef.current?.focus();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#6C4EE3] transition-colors text-sm"
+                  data-testid={`menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            
             {messages.length > 0 && (
               <button 
                 onClick={() => { handleNewChat(); setMobileMenuOpen(false); }}
@@ -864,39 +892,6 @@ export default function Home() {
                 >
                   <ArrowRight className="h-5 w-5 text-white" />
                 </button>
-              </div>
-            </motion.div>
-            
-            {/* Popular Teacher Tasks */}
-            <motion.div 
-              className="space-y-3 pt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                Popular Teacher Tasks
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {[
-                  { label: "Lesson Planning", prompt: "Help me create an engaging lesson plan" },
-                  { label: "Email Drafting", prompt: "Help me write a professional email to parents" },
-                  { label: "Grading Rubrics", prompt: "Help me create a grading rubric" },
-                  { label: "Behavior Tracking", prompt: "Help me set up a behavior tracking system" },
-                  { label: "Visual Diagrams", prompt: "Create a visual diagram or flowchart" }
-                ].map((chip) => (
-                  <button
-                    key={chip.label}
-                    onClick={() => {
-                      setInput(chip.prompt);
-                      inputRef.current?.focus();
-                    }}
-                    className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm text-slate-600 dark:text-slate-300 hover:border-[#6C4EE3] hover:text-[#6C4EE3] transition-colors"
-                    data-testid={`chip-${chip.label.toLowerCase().replace(/\s+/g, '-')}`}
-                  >
-                    {chip.label}
-                  </button>
-                ))}
               </div>
             </motion.div>
 
