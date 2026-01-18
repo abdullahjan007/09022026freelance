@@ -825,7 +825,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              How can I support you today?
+              Busy Teacher; what do you need?
             </motion.h1>
             
             {/* Subtitle */}
@@ -835,7 +835,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Your AI teaching companion — from lesson planning to parent communication.
+              This digital teaching assistant helps with planning lessons, grading, communicating with parents etc. Save hours every week.
             </motion.p>
             
             {/* Input Field with Purple Arrow Button */}
