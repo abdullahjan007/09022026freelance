@@ -612,7 +612,7 @@ export default function Planner() {
 
       {/* Calendar Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-4">
-        <Card className="h-[calc(100vh-280px)] overflow-hidden">
+        <Card className="h-[calc(100vh-280px)] overflow-auto">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
