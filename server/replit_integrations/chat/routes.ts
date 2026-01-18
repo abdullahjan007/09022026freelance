@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import OpenAI from "openai";
 import { chatStorage } from "./storage";
 import { generateFeedback } from "./feedback";
+import { isAuthenticated } from "../auth/replitAuth";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -247,7 +248,8 @@ export function registerChatRoutes(app: Express): void {
   });
 
   // Simple one-shot chat for the main interface (no conversation tracking)
-  app.post("/api/chat", async (req: Request, res: Response) => {
+  // Requires authentication
+  app.post("/api/chat", isAuthenticated, async (req: Request, res: Response) => {
     try {
       const { message, history = [] } = req.body;
 

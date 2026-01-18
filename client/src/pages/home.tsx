@@ -827,8 +827,90 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
-        {messages.length === 0 ? (
-          /* Landing View */
+        {!user && !authLoading ? (
+          /* Sign In Required View */
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8 px-4">
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex items-center justify-center -mt-8"
+              data-testid="logo-container"
+            >
+              <img 
+                src={teacherBuddyLogo} 
+                alt="TeacherBuddy - Busy Teacher's Best Friend" 
+                className="w-64 h-auto md:w-80"
+                data-testid="img-logo"
+              />
+            </motion.div>
+            
+            {/* Main Heading */}
+            <motion.h1 
+              className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Welcome to TeacherBuddy
+            </motion.h1>
+            
+            {/* Subtitle */}
+            <motion.p 
+              className="text-slate-500 dark:text-slate-400 max-w-md text-base"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Your AI-powered teaching assistant. Sign in to get help with lesson planning, grading, parent communication, and more.
+            </motion.p>
+            
+            {/* Sign In Button */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <a 
+                href="/api/login"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#6C4EE3] hover:bg-[#5B3FD1] text-white font-semibold rounded-2xl transition-colors text-lg"
+                data-testid="button-signin-main"
+              >
+                <LogIn className="h-5 w-5" />
+                Sign In to Get Started
+              </a>
+            </motion.div>
+
+            {/* Features Preview */}
+            <motion.div 
+              className="grid grid-cols-2 gap-4 max-w-md pt-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              {[
+                "Lesson Planning",
+                "Email Drafting", 
+                "Grading Rubrics",
+                "Behavior Tracking"
+              ].map((feature) => (
+                <div 
+                  key={feature}
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm text-slate-600 dark:text-slate-400"
+                >
+                  {feature}
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Disclaimer */}
+            <p className="text-xs text-slate-400 max-w-lg pt-6">
+              Sign in with Google, GitHub, or Apple. No password needed.
+            </p>
+          </div>
+        ) : messages.length === 0 ? (
+          /* Landing View - Authenticated */
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8 px-4">
             {/* Logo */}
             <motion.div
