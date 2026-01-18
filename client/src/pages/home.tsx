@@ -202,6 +202,7 @@ export default function Home() {
     const cleanContent = content
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
+      .replace(/---EXECUTION_COMPLETE---/g, "")
       .replace(/\[TITLE\]/g, "")
       .replace(/\[\/TITLE\]/g, "")
       .replace(/\[INTRO\]/g, "")
@@ -214,11 +215,16 @@ export default function Home() {
       .replace(/\[\/SECTION\]/g, "")
       .replace(/\*/g, "")
       .replace(/#/g, "")
+      .replace(/Let me know if there's anything else[^.]*[.!]?/gi, "")
+      .replace(/Let me know if I can help[^.]*[.!]?/gi, "")
+      .replace(/Feel free to ask[^.]*[.!]?/gi, "")
+      .replace(/Is there anything else[^.]*[.!?]?/gi, "")
+      .replace(/\n{3,}/g, "\n\n")
       .trim();
 
     doc.setFontSize(18);
-    doc.setTextColor(20, 184, 166);
-    doc.text("TaskMaster Response", margin, yPosition);
+    doc.setTextColor(108, 78, 227);
+    doc.text("TeacherBuddy", margin, yPosition);
     yPosition += 15;
 
     doc.setFontSize(10);
@@ -239,7 +245,7 @@ export default function Home() {
       yPosition += 5;
     }
 
-    doc.save("taskmaster-response.pdf");
+    doc.save("teacherbuddy-response.pdf");
     toast({
       title: "Downloaded!",
       description: "Response saved as PDF",
