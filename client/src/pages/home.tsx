@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, LogIn, LogOut, User } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
-import { useAuth } from "@/hooks/use-auth";
 import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 interface Message {
@@ -70,7 +69,6 @@ function extractTitle(messages: Message[]): string {
 }
 
 export default function Home() {
-  const { user, isLoading: authLoading } = useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -648,30 +646,8 @@ export default function Home() {
       {/* Mobile-First Top Navigation */}
       <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          {/* Left: Sign In / User */}
-          <div className="w-24">
-            {authLoading ? (
-              <div className="w-8 h-8" />
-            ) : user ? (
-              <a 
-                href="/api/logout"
-                className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-[#6C4EE3] transition-colors"
-                data-testid="button-logout"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </a>
-            ) : (
-              <a 
-                href="/api/login"
-                className="flex items-center gap-1.5 text-sm font-medium text-[#6C4EE3] hover:text-[#5B3FD1] transition-colors"
-                data-testid="button-login"
-              >
-                <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
-              </a>
-            )}
-          </div>
+          {/* Left: Spacer for balance */}
+          <div className="w-24" />
           
           {/* Logo Text - always centered via flex justify-between */}
           <div className="flex items-center gap-2">
@@ -827,90 +803,8 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-4">
-        {!user && !authLoading ? (
-          /* Sign In Required View */
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8 px-4">
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="flex items-center justify-center -mt-8"
-              data-testid="logo-container"
-            >
-              <img 
-                src={teacherBuddyLogo} 
-                alt="TeacherBuddy - Busy Teacher's Best Friend" 
-                className="w-64 h-auto md:w-80"
-                data-testid="img-logo"
-              />
-            </motion.div>
-            
-            {/* Main Heading */}
-            <motion.h1 
-              className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              Welcome to TeacherBuddy
-            </motion.h1>
-            
-            {/* Subtitle */}
-            <motion.p 
-              className="text-slate-500 dark:text-slate-400 max-w-md text-base"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Your AI-powered teaching assistant. Sign in to get help with lesson planning, grading, parent communication, and more.
-            </motion.p>
-            
-            {/* Sign In Button */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <a 
-                href="/api/login"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#6C4EE3] hover:bg-[#5B3FD1] text-white font-semibold rounded-2xl transition-colors text-lg"
-                data-testid="button-signin-main"
-              >
-                <LogIn className="h-5 w-5" />
-                Sign In to Get Started
-              </a>
-            </motion.div>
-
-            {/* Features Preview */}
-            <motion.div 
-              className="grid grid-cols-2 gap-4 max-w-md pt-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              {[
-                "Lesson Planning",
-                "Email Drafting", 
-                "Grading Rubrics",
-                "Behavior Tracking"
-              ].map((feature) => (
-                <div 
-                  key={feature}
-                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm text-slate-600 dark:text-slate-400"
-                >
-                  {feature}
-                </div>
-              ))}
-            </motion.div>
-
-            {/* Disclaimer */}
-            <p className="text-xs text-slate-400 max-w-lg pt-6">
-              Sign in with Google, GitHub, or Apple. No password needed.
-            </p>
-          </div>
-        ) : messages.length === 0 ? (
-          /* Landing View - Authenticated */
+        {messages.length === 0 ? (
+          /* Landing View */
           <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-8 px-4">
             {/* Logo */}
             <motion.div
