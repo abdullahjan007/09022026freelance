@@ -425,9 +425,11 @@ export default function Home() {
 
   const parseStructuredContent = (content: string) => {
     const titleMatch = content.match(/\[TITLE\]([\s\S]*?)\[\/TITLE\]/);
+    const tldrMatch = content.match(/\[TLDR\]([\s\S]*?)\[\/TLDR\]/);
     const introMatch = content.match(/\[INTRO\]([\s\S]*?)\[\/INTRO\]/);
     const stepsMatch = content.match(/\[STEPS\]([\s\S]*?)\[\/STEPS\]/);
     const websitesMatch = content.match(/\[WEBSITES\]([\s\S]*?)\[\/WEBSITES\]/);
+    const relatedMatch = content.match(/\[RELATED\]([\s\S]*?)\[\/RELATED\]/);
     
     const steps: string[] = [];
     if (stepsMatch) {
@@ -450,6 +452,15 @@ export default function Home() {
           websites.push({ name: parts[0].trim(), url: parts[1].trim() });
         }
       }
+    }
+
+    const relatedTopics: string[] = [];
+    if (relatedMatch) {
+      const topics = relatedMatch[1].trim().split('|');
+      topics.forEach(topic => {
+        const trimmed = topic.trim();
+        if (trimmed) relatedTopics.push(trimmed);
+      });
     }
 
     const sections: { title: string; content: string }[] = [];
@@ -475,9 +486,11 @@ export default function Home() {
 
     return {
       title: titleMatch ? titleMatch[1].trim() : null,
+      tldr: tldrMatch ? tldrMatch[1].trim() : null,
       intro: introMatch ? introMatch[1].trim() : null,
       steps,
       websites,
+      relatedTopics,
       sections
     };
   };
@@ -490,14 +503,16 @@ export default function Home() {
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
       .replace(/\[TITLE\][\s\S]*?\[\/TITLE\]/g, "")
+      .replace(/\[TLDR\][\s\S]*?\[\/TLDR\]/g, "")
       .replace(/\[INTRO\][\s\S]*?\[\/INTRO\]/g, "")
       .replace(/\[STEPS\][\s\S]*?\[\/STEPS\]/g, "")
       .replace(/\[WEBSITES\][\s\S]*?\[\/WEBSITES\]/g, "")
+      .replace(/\[RELATED\][\s\S]*?\[\/RELATED\]/g, "")
       .replace(/\[SECTION\][\s\S]*?\[\/SECTION\]/g, "")
       .trim();
 
     const structured = parseStructuredContent(content);
-    const hasStructuredContent = structured.title || structured.intro || structured.steps.length > 0 || structured.websites.length > 0 || structured.sections.length > 0;
+    const hasStructuredContent = structured.title || structured.tldr || structured.intro || structured.steps.length > 0 || structured.websites.length > 0 || structured.relatedTopics.length > 0 || structured.sections.length > 0;
 
     return { cleanContent, isGuidance: hasGuidanceMarker, isExecution: hasExecutionMarker, structured, hasStructuredContent };
   };
@@ -536,6 +551,13 @@ export default function Home() {
     );
   };
 
+  const handleRelatedTopicClick = (topic: string) => {
+    if (chatInputRef.current) {
+      chatInputRef.current.value = `Help me with: ${topic}`;
+      chatInputRef.current.focus();
+    }
+  };
+
   const renderStructuredContent = (structured: ReturnType<typeof parseStructuredContent>, isExecution: boolean, remainingContent: string) => {
     return (
       <div className="space-y-4">
@@ -551,6 +573,18 @@ export default function Home() {
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
               {structured.title}
             </h3>
+          </div>
+        )}
+
+        {structured.tldr && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+            <div className="flex items-start gap-2">
+              <Zap className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">Quick Start</span>
+                <p className="text-sm text-amber-800 dark:text-amber-200 mt-1">{structured.tldr}</p>
+              </div>
+            </div>
           </div>
         )}
         
@@ -599,6 +633,27 @@ export default function Home() {
                   {website.name}
                   <ExternalLink className="h-3 w-3" />
                 </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {structured.relatedTopics.length > 0 && (
+          <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700 mt-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 pt-2">
+              You might also want help with
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {structured.relatedTopics.map((topic, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleRelatedTopicClick(topic)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded-md text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                  data-testid={`button-related-topic-${i}`}
+                >
+                  {topic}
+                  <ArrowRight className="h-3 w-3" />
+                </button>
               ))}
             </div>
           </div>
