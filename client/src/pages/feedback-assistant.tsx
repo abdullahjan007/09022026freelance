@@ -203,13 +203,14 @@ ${nextSteps}`;
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
-              <button
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6C4EE3] text-white text-sm font-medium hover:bg-[#5B3FD1] transition-colors"
+              <Button
+                size="sm"
+                className="rounded-full bg-[#6C4EE3] text-white"
                 data-testid="button-new-chat-header"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
                 New Chat
-              </button>
+              </Button>
             </Link>
             <div className="flex items-center gap-2">
               <img 
@@ -381,7 +382,7 @@ ${nextSteps}`;
                 <Button
                   onClick={handleGenerate}
                   disabled={generateFeedbackMutation.isPending || !studentWork.trim()}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                  className="w-full bg-orange-500 text-white"
                   data-testid="button-generate"
                 >
                   {generateFeedbackMutation.isPending ? (
@@ -409,7 +410,7 @@ ${nextSteps}`;
                   <Button
                     onClick={handleCopyFeedback}
                     disabled={!hasGenerated || generateFeedbackMutation.isPending}
-                    className="bg-orange-500 hover:bg-orange-600 text-white"
+                    className="bg-orange-500 text-white"
                     data-testid="button-copy-feedback"
                   >
                     {copied ? (

@@ -145,7 +145,7 @@ export default function ReportAbuse() {
 
           <div className="mt-12 text-center">
             <Link href="/">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white" data-testid="button-back-home">
+              <Button className="bg-orange-500 text-white" data-testid="button-back-home">
                 Back to Home
               </Button>
             </Link>

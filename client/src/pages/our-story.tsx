@@ -112,7 +112,7 @@ export default function OurStory() {
 
           <div className="mt-12 text-center">
             <Link href="/">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white" data-testid="button-get-started">
+              <Button className="bg-orange-500 text-white" data-testid="button-get-started">
                 Start Using TeacherBuddy
               </Button>
             </Link>

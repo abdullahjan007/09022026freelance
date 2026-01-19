@@ -214,7 +214,7 @@ export default function Planner() {
                   {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
                 </div>
                 <div 
-                  className="flex-1 p-1 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                  className="flex-1 p-1 hover-elevate cursor-pointer"
                   onClick={() => openAddDialogForDate(format(currentDate, "yyyy-MM-dd"))}
                 >
                   {hourEvents.map(event => (
@@ -264,7 +264,7 @@ export default function Planner() {
             return (
               <div 
                 key={day.toISOString()} 
-                className="border-r last:border-r-0 p-1 min-h-[200px] hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+                className="border-r last:border-r-0 p-1 min-h-[200px] hover-elevate cursor-pointer"
                 onClick={() => openAddDialogForDate(format(day, "yyyy-MM-dd"))}
               >
                 {dayEvents.slice(0, 5).map(event => (
@@ -317,7 +317,7 @@ export default function Planner() {
               <div
                 key={day.toISOString()}
                 className={`border-r border-b last:border-r-0 p-1 min-h-[80px] cursor-pointer
-                  ${!isCurrentMonth ? "bg-slate-50 dark:bg-slate-900" : "hover:bg-slate-50 dark:hover:bg-slate-800/50"}
+                  ${!isCurrentMonth ? "bg-slate-50 dark:bg-slate-900" : "hover-elevate"}
                   ${isToday(day) ? "bg-orange-50 dark:bg-orange-900/20" : ""}
                 `}
                 onClick={() => openAddDialogForDate(format(day, "yyyy-MM-dd"))}
@@ -522,7 +522,7 @@ export default function Planner() {
               </Button>
               <Button
                 type="submit"
-                className="bg-orange-500 hover:bg-orange-600"
+                className="bg-orange-500"
                 disabled={createEvent.isPending || updateEvent.isPending}
                 data-testid="button-save-event"
               >
@@ -542,13 +542,14 @@ export default function Planner() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <button
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6C4EE3] text-white text-sm font-medium hover:bg-[#5B3FD1] transition-colors"
+              <Button
+                size="sm"
+                className="rounded-full bg-[#6C4EE3] text-white"
                 data-testid="button-new-chat-header"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
                 New Chat
-              </button>
+              </Button>
             </Link>
             <img 
               src="/logo.png" 
@@ -594,7 +595,7 @@ export default function Planner() {
               {(["day", "week", "month", "year"] as ViewType[]).map(v => (
                 <button
                   key={v}
-                  className={`px-3 py-1.5 text-sm capitalize ${view === v ? "bg-orange-500 text-white" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"}`}
+                  className={`px-3 py-1.5 text-sm capitalize ${view === v ? "bg-orange-500 text-white" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover-elevate"}`}
                   onClick={() => setView(v)}
                   data-testid={`button-view-${v}`}
                 >
@@ -603,7 +604,7 @@ export default function Planner() {
               ))}
             </div>
             <Button
-              className="bg-orange-500 hover:bg-orange-600"
+              className="bg-orange-500"
               onClick={() => { resetForm(); setIsAddEventOpen(true); }}
               data-testid="button-add-event"
             >

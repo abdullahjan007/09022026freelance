@@ -10,6 +10,7 @@ import OurStory from "@/pages/our-story";
 import Terms from "@/pages/terms";
 import ReportAbuse from "@/pages/report-abuse";
 import Planner from "@/pages/planner";
+import Library from "@/pages/library";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/report-abuse" component={ReportAbuse} />
       <Route path="/planner" component={Planner} />
+      <Route path="/library" component={Library} />
       <Route component={NotFound} />
     </Switch>
   );
