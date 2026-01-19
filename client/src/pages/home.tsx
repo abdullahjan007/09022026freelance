@@ -197,39 +197,69 @@ export default function Home() {
     const maxWidth = pageWidth - margin * 2;
     let yPosition = 20;
 
-    const cleanContent = content
+    // Extract websites for Works Cited section (MLA9 format)
+    const websitesMatch = content.match(/\[WEBSITES\]([\s\S]*?)\[\/WEBSITES\]/);
+    const websites: { name: string; url: string }[] = [];
+    if (websitesMatch) {
+      const websiteRegex = /\[WEBSITE\]([\s\S]*?)\[\/WEBSITE\]/g;
+      let match;
+      while ((match = websiteRegex.exec(websitesMatch[1])) !== null) {
+        const parts = match[1].trim().split('|');
+        if (parts.length >= 2) {
+          websites.push({ name: parts[0].trim(), url: parts[1].trim() });
+        }
+      }
+    }
+
+    // Clean content - remove all markup tags and chatty AI responses
+    let cleanContent = content
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
       .replace(/---EXECUTION_COMPLETE---/g, "")
-      .replace(/\[TITLE\]/g, "")
-      .replace(/\[\/TITLE\]/g, "")
+      .replace(/\[TITLE\]/g, "\n\n")
+      .replace(/\[\/TITLE\]/g, "\n\n")
+      .replace(/\[TLDR\]/g, "\n\nQuick Summary:\n")
+      .replace(/\[\/TLDR\]/g, "\n")
       .replace(/\[INTRO\]/g, "")
-      .replace(/\[\/INTRO\]/g, "")
+      .replace(/\[\/INTRO\]/g, "\n")
       .replace(/\[STEPS\]/g, "")
       .replace(/\[\/STEPS\]/g, "")
-      .replace(/\[STEP\]/g, "")
+      .replace(/\[STEP\]/g, "\n")
       .replace(/\[\/STEP\]/g, "")
-      .replace(/\[SECTION\]/g, "")
-      .replace(/\[\/SECTION\]/g, "")
+      .replace(/\[SECTION\]/g, "\n\n")
+      .replace(/\[\/SECTION\]/g, "\n")
+      .replace(/\[WEBSITES\][\s\S]*?\[\/WEBSITES\]/g, "")
+      .replace(/\[RELATED\][\s\S]*?\[\/RELATED\]/g, "")
       .replace(/\*/g, "")
       .replace(/#/g, "")
+      // Remove chatty questions and AI follow-up messages
+      .replace(/Would you like me to[^.?!]*[.?!]?/gi, "")
       .replace(/Let me know if there's anything else[^.]*[.!]?/gi, "")
       .replace(/Let me know if I can help[^.]*[.!]?/gi, "")
       .replace(/Feel free to ask[^.]*[.!]?/gi, "")
       .replace(/Is there anything else[^.]*[.!?]?/gi, "")
+      .replace(/Just say "yes"[^.]*[.!]?/gi, "")
+      .replace(/If you need[^.]*[.!]?/gi, "")
+      .replace(/Do you want me to[^.?!]*[.?!]?/gi, "")
+      .replace(/Should I[^.?!]*[.?!]?/gi, "")
+      .replace(/What grade level[^.?!]*[.?!]?/gi, "")
+      .replace(/What subject[^.?!]*[.?!]?/gi, "")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
+    // Header: TeacherBuddy
     doc.setFontSize(18);
     doc.setTextColor(108, 78, 227);
     doc.text("TeacherBuddy", margin, yPosition);
     yPosition += 15;
 
+    // Date
     doc.setFontSize(10);
     doc.setTextColor(128, 128, 128);
     doc.text(new Date().toLocaleDateString(), margin, yPosition);
     yPosition += 15;
 
+    // Main content
     doc.setFontSize(10);
     doc.setTextColor(50, 50, 50);
     const lines = doc.splitTextToSize(cleanContent, maxWidth);
@@ -241,6 +271,39 @@ export default function Home() {
       }
       doc.text(line, margin, yPosition);
       yPosition += 5;
+    }
+
+    // Works Cited section (MLA9 format)
+    if (websites.length > 0) {
+      yPosition += 10;
+      if (yPosition > 260) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(12);
+      doc.setTextColor(50, 50, 50);
+      doc.text("Works Cited", margin, yPosition);
+      yPosition += 8;
+      
+      doc.setFontSize(10);
+      const today = new Date();
+      const accessDate = today.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+      
+      for (const website of websites) {
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        // MLA9 format: "Title." Website Name, URL. Accessed Day Month Year.
+        const citation = `"${website.name}." ${website.url}. Accessed ${accessDate}.`;
+        const citationLines = doc.splitTextToSize(citation, maxWidth);
+        for (const citeLine of citationLines) {
+          doc.text(citeLine, margin, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 2;
+      }
     }
 
     doc.save("teacherbuddy-response.pdf");
