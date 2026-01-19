@@ -849,7 +849,7 @@ export default function Home() {
                 <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                   <History className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
-                <span className="text-xs font-medium text-center">History</span>
+                <span className="text-xs font-medium text-center leading-tight">Chat History</span>
               </button>
               
               <Link href="/feedback">
@@ -861,7 +861,7 @@ export default function Home() {
                   <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                     <ClipboardCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
-                  <span className="text-xs font-medium text-center">Feedback</span>
+                  <span className="text-xs font-medium text-center leading-tight">Students Grader</span>
                 </span>
               </Link>
               
@@ -874,7 +874,7 @@ export default function Home() {
                   <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                     <Calendar className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span className="text-xs font-medium text-center">Calendar</span>
+                  <span className="text-xs font-medium text-center leading-tight">Your Calendar</span>
                 </span>
               </Link>
               
