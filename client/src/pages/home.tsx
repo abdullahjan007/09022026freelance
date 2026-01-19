@@ -779,8 +779,15 @@ export default function Home() {
       {/* Mobile-First Top Navigation */}
       <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between">
-          {/* Left: Spacer for balance */}
-          <div className="w-24" />
+          {/* Left: New Chat Button */}
+          <button
+            onClick={handleNewChat}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6C4EE3] text-white text-sm font-medium hover:bg-[#5B3FD1] transition-colors"
+            data-testid="button-new-chat-header"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            New Chat
+          </button>
           
           {/* Logo Text - always centered via flex justify-between */}
           <div className="flex items-center gap-2">

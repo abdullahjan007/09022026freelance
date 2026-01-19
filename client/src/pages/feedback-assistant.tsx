@@ -15,7 +15,8 @@ import {
   Sparkles,
   Edit3,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  RefreshCw
 } from "lucide-react";
 import type { FeedbackRequest, FeedbackResponse } from "@shared/schema";
 
@@ -202,10 +203,13 @@ ${nextSteps}`;
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
-              <Button variant="ghost" size="sm" data-testid="button-back">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
+              <button
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6C4EE3] text-white text-sm font-medium hover:bg-[#5B3FD1] transition-colors"
+                data-testid="button-new-chat-header"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                New Chat
+              </button>
             </Link>
             <div className="flex items-center gap-2">
               <img 

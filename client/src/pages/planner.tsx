@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, Plus, ChevronLeft, ChevronRight, Calendar, Clock, Trash2, Edit2, X } from "lucide-react";
+import { ArrowLeft, Plus, ChevronLeft, ChevronRight, Calendar, Clock, Trash2, Edit2, X, RefreshCw } from "lucide-react";
 import { format, addDays, addWeeks, addMonths, addYears, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, eachDayOfInterval, isSameDay, isSameMonth, isToday, parseISO } from "date-fns";
 import type { CalendarEvent, InsertCalendarEvent } from "@shared/schema";
 
@@ -540,12 +540,15 @@ export default function Planner() {
       {/* Header */}
       <header className="border-b bg-white dark:bg-slate-900 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-center relative">
+          <div className="flex items-center justify-between">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="absolute left-0" data-testid="button-back">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
+              <button
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6C4EE3] text-white text-sm font-medium hover:bg-[#5B3FD1] transition-colors"
+                data-testid="button-new-chat-header"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                New Chat
+              </button>
             </Link>
             <img 
               src="/logo.png" 
@@ -553,6 +556,7 @@ export default function Planner() {
               className="h-12 object-contain"
               data-testid="img-logo"
             />
+            <div className="w-20" />
           </div>
         </div>
       </header>
