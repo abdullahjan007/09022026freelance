@@ -834,30 +834,33 @@ export default function Home() {
             </Link>
             
             {/* Quick Tasks Section */}
-            <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-              <p className="px-3 py-2 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+            <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
+              <p className="px-3 pb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
                 Quick Tasks
               </p>
-              {[
-                { label: "Lesson Planning", prompt: "Help me create an engaging lesson plan" },
-                { label: "Email Drafting", prompt: "Help me write a professional email to parents" },
-                { label: "Grading Rubrics", prompt: "Help me create a grading rubric" },
-                { label: "Behavior Tracking", prompt: "Help me set up a behavior tracking system" },
-                { label: "Visual Diagrams", prompt: "Create a visual diagram or flowchart" }
-              ].map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => {
-                    setInput(item.prompt);
-                    setMobileMenuOpen(false);
-                    inputRef.current?.focus();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#6C4EE3] transition-colors text-sm"
-                  data-testid={`menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  {item.label}
-                </button>
-              ))}
+              <div className="flex flex-wrap gap-2 px-3">
+                {[
+                  { label: "Lesson Plan", prompt: "Help me create an engaging lesson plan", icon: Lightbulb },
+                  { label: "Parent Email", prompt: "Help me write a professional email to parents", icon: MessageCircle },
+                  { label: "Rubric", prompt: "Help me create a grading rubric", icon: ClipboardCheck },
+                  { label: "Behavior", prompt: "Help me set up a behavior tracking system", icon: Check },
+                  { label: "Diagram", prompt: "Create a visual diagram or flowchart", icon: Sparkles }
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => {
+                      setInput(item.prompt);
+                      setMobileMenuOpen(false);
+                      inputRef.current?.focus();
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-medium hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                    data-testid={`menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <item.icon className="h-3 w-3" />
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
             
             {messages.length > 0 && (
