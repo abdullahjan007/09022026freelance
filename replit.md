@@ -25,6 +25,7 @@ The design follows a clean, modern aesthetic with purple (#6C4EE3) as the primar
 - Your Activity History - view, resume, and delete past conversations (localStorage)
 - Copy to clipboard: Copy AI response content with visual feedback
 - Download as PDF: Export entire conversations as formatted PDF documents
+- **Personal Library**: Save downloaded PDFs to localStorage, view sortable list by name/date, re-download and delete
 - Dark/light theme support
 - Responsive design
 - **Fully public access**: No sign-in required - anyone can use the app immediately
@@ -61,7 +62,13 @@ Preferred communication style: Simple, everyday language.
 │   └── src/
 │       ├── components/   # Reusable UI components
 │       ├── pages/        # Route-level page components
-│       │   └── home.tsx  # Main chat interface
+│       │   ├── home.tsx  # Main chat interface
+│       │   ├── library.tsx # Personal Library (saved PDFs)
+│       │   ├── planner.tsx # Personal Planner (calendar)
+│       │   ├── feedback-assistant.tsx # Feedback Assistant
+│       │   ├── our-story.tsx # About page
+│       │   ├── terms.tsx # Terms of Service
+│       │   └── report-abuse.tsx # Report Abuse page
 │       ├── hooks/        # Custom React hooks
 │       └── lib/          # Utilities and query client
 ├── server/               # Backend Express application
