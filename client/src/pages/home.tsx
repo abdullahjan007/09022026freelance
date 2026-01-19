@@ -236,7 +236,10 @@ export default function Home() {
       .replace(/Would you like me to[^.?!]*[.?!]?/gi, "")
       .replace(/Let me know if there's anything else[^.]*[.!]?/gi, "")
       .replace(/Let me know if I can help[^.]*[.!]?/gi, "")
+      .replace(/Let me know[^.]*[.!]?/gi, "")
       .replace(/Feel free to ask[^.]*[.!]?/gi, "")
+      .replace(/Feel free to print[^.]*[.!]?/gi, "")
+      .replace(/Feel free to[^.]*[.!]?/gi, "")
       .replace(/Is there anything else[^.]*[.!?]?/gi, "")
       .replace(/Just say "yes"[^.]*[.!]?/gi, "")
       .replace(/If you need[^.]*[.!]?/gi, "")
@@ -244,6 +247,11 @@ export default function Home() {
       .replace(/Should I[^.?!]*[.?!]?/gi, "")
       .replace(/What grade level[^.?!]*[.?!]?/gi, "")
       .replace(/What subject[^.?!]*[.?!]?/gi, "")
+      .replace(/Your materials are ready[^.]*[.!]?/gi, "")
+      .replace(/I hope this helps[^.]*[.!]?/gi, "")
+      .replace(/Happy teaching[^.]*[.!]?/gi, "")
+      .replace(/Good luck[^.]*[.!]?/gi, "")
+      .replace(/Best of luck[^.]*[.!]?/gi, "")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
