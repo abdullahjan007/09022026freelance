@@ -567,9 +567,9 @@ export default function Planner() {
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
             <Calendar className="h-8 w-8" />
-            Personal Planner
+            My Calendar
           </h1>
-          <p className="text-white/80 mt-1">Plan your day, week, month, and year</p>
+          <p className="text-white/80 mt-1">Schedule and plan your lessons</p>
         </div>
       </div>
 

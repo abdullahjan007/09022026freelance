@@ -335,7 +335,7 @@ export default function Home() {
 
     doc.save(filename);
 
-    // Save to Personal Library in localStorage
+    // Save to Saved PDFs in localStorage
     const libraryKey = "teacherbuddy_library";
     const existingLibrary = JSON.parse(localStorage.getItem(libraryKey) || "[]");
     const newEntry = {
@@ -351,7 +351,7 @@ export default function Home() {
 
     toast({
       title: "Downloaded & Saved!",
-      description: "PDF added to your Personal Library",
+      description: "PDF added to your Saved PDFs",
     });
   };
 
@@ -841,40 +841,73 @@ export default function Home() {
           <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
             <button 
               onClick={() => { setShowHistory(!showHistory); setMobileMenuOpen(false); }}
-              className="w-full text-left px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2"
+              className="w-full text-left px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors"
               data-testid="button-history"
             >
-              <History className="h-4 w-4" />
-              Your Search History
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <History className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <div className="font-medium">Chat History</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Your past conversations</div>
+                </div>
+              </div>
             </button>
             <Link href="/feedback">
               <span 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer" 
+                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
                 data-testid="link-feedback-assistant"
               >
-                <ClipboardCheck className="h-4 w-4" />
-                Feedback Assistant
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                    <ClipboardCheck className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium">Feedback Assistant</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Write student feedback</div>
+                  </div>
+                </div>
               </span>
             </Link>
+            
+            <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+              <p className="px-3 pb-2 text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">Your Workspace</p>
+            </div>
+            
             <Link href="/planner">
               <span 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer" 
+                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
                 data-testid="link-planner"
               >
-                <Calendar className="h-4 w-4" />
-                Personal Planner
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <Calendar className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium">My Calendar</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Schedule & plan lessons</div>
+                  </div>
+                </div>
               </span>
             </Link>
             <Link href="/library">
               <span 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer" 
+                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
                 data-testid="link-library"
               >
-                <BookOpen className="h-4 w-4" />
-                Personal Library
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                    <BookOpen className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium">Saved PDFs</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Your downloaded materials</div>
+                  </div>
+                </div>
               </span>
             </Link>
             
