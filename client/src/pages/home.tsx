@@ -838,81 +838,62 @@ export default function Home() {
         
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
-          <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-            <button 
-              onClick={() => { setShowHistory(!showHistory); setMobileMenuOpen(false); }}
-              className="w-full text-left px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors"
-              data-testid="button-history"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  <History className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <div className="font-medium">Chat History</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">Your past conversations</div>
-                </div>
-              </div>
-            </button>
-            <Link href="/feedback">
-              <span 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
-                data-testid="link-feedback-assistant"
+          <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+            {/* Main Navigation - Horizontal Grid */}
+            <div className="grid grid-cols-4 gap-2 px-2">
+              <button 
+                onClick={() => { setShowHistory(!showHistory); setMobileMenuOpen(false); }}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors"
+                data-testid="button-history"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <ClipboardCheck className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Feedback Assistant</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">Write student feedback</div>
-                  </div>
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <History className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
-              </span>
-            </Link>
-            
-            <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-              <p className="px-3 pb-2 text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">Your Workspace</p>
+                <span className="text-xs font-medium text-center">History</span>
+              </button>
+              
+              <Link href="/feedback">
+                <span 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  data-testid="link-feedback-assistant"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                    <ClipboardCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-xs font-medium text-center">Feedback</span>
+                </span>
+              </Link>
+              
+              <Link href="/planner">
+                <span 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  data-testid="link-planner"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <Calendar className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="text-xs font-medium text-center">Calendar</span>
+                </span>
+              </Link>
+              
+              <Link href="/library">
+                <span 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  data-testid="link-library"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                    <BookOpen className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <span className="text-xs font-medium text-center">Saved PDFs</span>
+                </span>
+              </Link>
             </div>
             
-            <Link href="/planner">
-              <span 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
-                data-testid="link-planner"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <Calendar className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium">My Calendar</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">Schedule & plan lessons</div>
-                  </div>
-                </div>
-              </span>
-            </Link>
-            <Link href="/library">
-              <span 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
-                data-testid="link-library"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                    <BookOpen className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Saved PDFs</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">Your downloaded materials</div>
-                  </div>
-                </div>
-              </span>
-            </Link>
-            
             {/* Quick Tasks Section */}
-            <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
               <p className="px-3 pb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
                 Quick Tasks
               </p>
@@ -942,14 +923,16 @@ export default function Home() {
             </div>
             
             {messages.length > 0 && (
-              <button 
-                onClick={() => { handleNewChat(); setMobileMenuOpen(false); }}
-                className="w-full text-left px-3 py-2 rounded-lg text-[#6C4EE3] hover-elevate transition-colors flex items-center gap-2"
-                data-testid="button-new-chat"
-              >
-                <RefreshCw className="h-4 w-4" />
-                New Chat
-              </button>
+              <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 px-3 pb-2">
+                <button 
+                  onClick={() => { handleNewChat(); setMobileMenuOpen(false); }}
+                  className="w-full text-center py-2 rounded-lg text-[#6C4EE3] hover-elevate transition-colors flex items-center justify-center gap-2"
+                  data-testid="button-new-chat"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  New Chat
+                </button>
+              </div>
             )}
           </nav>
         )}
