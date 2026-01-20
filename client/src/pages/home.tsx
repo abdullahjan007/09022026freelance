@@ -136,7 +136,7 @@ export default function Home() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "TaskMaster Response",
+          title: "TeacherBuddy Response",
           text: cleanText,
         });
       } catch {
@@ -1226,7 +1226,7 @@ export default function Home() {
               data-testid="button-execute"
             >
               <Zap className="h-5 w-5" />
-              Would You Like TaskMaster to Execute?
+              Would You Like TeacherBuddy to Execute?
             </Button>
           </div>
         )}

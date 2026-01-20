@@ -1,4 +1,4 @@
-# TaskMaster Design Guidelines
+# TeacherBuddy Design Guidelines
 
 ## Design Approach
 **System-Based Productivity Design** inspired by Linear, Notion, and Asana - prioritizing clarity, efficiency, and cognitive ease for time-pressed educators.

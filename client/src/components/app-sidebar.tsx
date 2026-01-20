@@ -60,10 +60,10 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-semibold text-sidebar-foreground">
-              TaskMaster
+              TeacherBuddy
             </span>
             <span className="text-xs text-muted-foreground">
-              For Educators
+              AI Teaching Assistant
             </span>
           </div>
         </Link>
