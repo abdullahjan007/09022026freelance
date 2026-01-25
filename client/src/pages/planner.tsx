@@ -411,129 +411,11 @@ export default function Planner() {
     );
   };
 
-  const EventFormDialog = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{editingEvent ? "Edit Event" : "Add New Event"}</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="title">Title *</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="Event title"
-              data-testid="input-event-title"
-            />
-          </div>
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description || ""}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Event description"
-              data-testid="input-event-description"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="date">Date *</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                data-testid="input-event-date"
-              />
-            </div>
-            <div>
-              <Label htmlFor="eventType">Type</Label>
-              <Select
-                value={formData.eventType}
-                onValueChange={(value) => setFormData({ ...formData, eventType: value })}
-              >
-                <SelectTrigger data-testid="select-event-type">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {EVENT_TYPES.map(type => (
-                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="startTime">Start Time</Label>
-              <Input
-                id="startTime"
-                type="time"
-                value={formData.startTime || ""}
-                onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                data-testid="input-event-start-time"
-              />
-            </div>
-            <div>
-              <Label htmlFor="endTime">End Time</Label>
-              <Input
-                id="endTime"
-                type="time"
-                value={formData.endTime || ""}
-                onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                data-testid="input-event-end-time"
-              />
-            </div>
-          </div>
-          <div>
-            <Label>Color</Label>
-            <div className="flex gap-2 mt-1">
-              {EVENT_COLORS.map(color => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`w-8 h-8 rounded-full border-2 ${formData.color === color ? "border-slate-900 dark:border-white" : "border-transparent"}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setFormData({ ...formData, color })}
-                  data-testid={`color-${color}`}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex justify-between pt-4">
-            {editingEvent && (
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => deleteEvent.mutate(editingEvent.id)}
-                disabled={deleteEvent.isPending}
-                data-testid="button-delete-event"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            )}
-            <div className="flex gap-2 ml-auto">
-              <Button type="button" variant="outline" onClick={onClose} data-testid="button-cancel">
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="bg-orange-500"
-                disabled={createEvent.isPending || updateEvent.isPending}
-                data-testid="button-save-event"
-              >
-                {editingEvent ? "Update" : "Save"}
-              </Button>
-            </div>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+  const closeEventDialog = () => {
+    setIsAddEventOpen(false);
+    setEditingEvent(null);
+    resetForm();
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
@@ -634,10 +516,127 @@ export default function Planner() {
       </main>
 
       {/* Event Form Dialog */}
-      <EventFormDialog 
-        isOpen={isAddEventOpen || !!editingEvent} 
-        onClose={() => { setIsAddEventOpen(false); setEditingEvent(null); resetForm(); }} 
-      />
+      <Dialog open={isAddEventOpen || !!editingEvent} onOpenChange={closeEventDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{editingEvent ? "Edit Event" : "Add New Event"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Event title"
+                data-testid="input-event-title"
+              />
+            </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description || ""}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Event description"
+                data-testid="input-event-description"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="date">Date *</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                  data-testid="input-event-date"
+                />
+              </div>
+              <div>
+                <Label htmlFor="eventType">Type</Label>
+                <Select
+                  value={formData.eventType}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, eventType: value }))}
+                >
+                  <SelectTrigger data-testid="select-event-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EVENT_TYPES.map(type => (
+                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="startTime">Start Time</Label>
+                <Input
+                  id="startTime"
+                  type="time"
+                  value={formData.startTime || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                  data-testid="input-event-start-time"
+                />
+              </div>
+              <div>
+                <Label htmlFor="endTime">End Time</Label>
+                <Input
+                  id="endTime"
+                  type="time"
+                  value={formData.endTime || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                  data-testid="input-event-end-time"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Color</Label>
+              <div className="flex gap-2 mt-1">
+                {EVENT_COLORS.map(color => (
+                  <button
+                    key={color}
+                    type="button"
+                    className={`w-8 h-8 rounded-full border-2 ${formData.color === color ? "border-slate-900 dark:border-white" : "border-transparent"}`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setFormData(prev => ({ ...prev, color }))}
+                    data-testid={`color-${color}`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between pt-4">
+              {editingEvent && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => deleteEvent.mutate(editingEvent.id)}
+                  disabled={deleteEvent.isPending}
+                  data-testid="button-delete-event"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              )}
+              <div className="flex gap-2 ml-auto">
+                <Button type="button" variant="outline" onClick={closeEventDialog} data-testid="button-cancel">
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-orange-500"
+                  disabled={createEvent.isPending || updateEvent.isPending}
+                  data-testid="button-save-event"
+                >
+                  {editingEvent ? "Update" : "Save"}
+                </Button>
+              </div>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="border-t bg-white dark:bg-slate-900 py-4">
