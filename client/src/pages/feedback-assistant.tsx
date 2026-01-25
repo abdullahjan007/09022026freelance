@@ -27,6 +27,7 @@ type Step = 1 | 2 | 3;
 export default function FeedbackAssistant() {
   const { toast } = useToast();
   const rubricFileRef = useRef<HTMLInputElement>(null);
+  const exampleWorkFileRef = useRef<HTMLInputElement>(null);
   
   const [currentStep, setCurrentStep] = useState<Step>(1);
   
@@ -35,6 +36,8 @@ export default function FeedbackAssistant() {
   const [rubricFile, setRubricFile] = useState<File | null>(null);
   const [rubricFilePreview, setRubricFilePreview] = useState<string | null>(null);
   const [exampleWork, setExampleWork] = useState("");
+  const [exampleWorkFile, setExampleWorkFile] = useState<File | null>(null);
+  const [exampleWorkFilePreview, setExampleWorkFilePreview] = useState<string | null>(null);
   
   // Step 2: Train
   const [sampleFeedback, setSampleFeedback] = useState("");
@@ -96,6 +99,59 @@ export default function FeedbackAssistant() {
     setRubricFilePreview(null);
     if (rubricFileRef.current) {
       rubricFileRef.current.value = "";
+    }
+  };
+
+  const handleExampleWorkFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File Too Large",
+          description: "Please upload a file smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text/plain"];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload a PDF, image, or text file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setExampleWorkFile(file);
+      
+      if (file.type.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        setExampleWorkFilePreview(url);
+      } else {
+        setExampleWorkFilePreview(null);
+      }
+      
+      if (file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target?.result as string;
+          setExampleWork(text);
+        };
+        reader.readAsText(file);
+      }
+    }
+  };
+
+  const removeExampleWorkFile = () => {
+    if (exampleWorkFilePreview) {
+      URL.revokeObjectURL(exampleWorkFilePreview);
+    }
+    setExampleWorkFile(null);
+    setExampleWorkFilePreview(null);
+    if (exampleWorkFileRef.current) {
+      exampleWorkFileRef.current.value = "";
     }
   };
 
@@ -173,6 +229,7 @@ export default function FeedbackAssistant() {
     setNewStudentWork("");
     setGeneratedFeedback("");
     removeRubricFile();
+    removeExampleWorkFile();
   };
 
   const canProceedStep1 = rubric.trim().length > 0 && exampleWork.trim().length > 0;
@@ -357,11 +414,75 @@ Example:
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Example Student Work *
                 </label>
+                
+                {/* File Upload Option */}
+                <input
+                  ref={exampleWorkFileRef}
+                  type="file"
+                  accept=".pdf,.txt,image/*"
+                  onChange={handleExampleWorkFileUpload}
+                  className="hidden"
+                  data-testid="input-example-work-file"
+                />
+                
+                {!exampleWorkFile ? (
+                  <div className="mb-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => exampleWorkFileRef.current?.click()}
+                      className="w-full h-16 border-dashed flex items-center justify-center gap-2"
+                      data-testid="button-upload-example-work"
+                    >
+                      <Upload className="h-5 w-5 text-slate-400" />
+                      <span className="text-sm text-slate-500">Upload student work (PDF, image, or text)</span>
+                    </Button>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-1">
+                      Or type/paste below
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-3 border rounded-lg p-3 bg-slate-50 dark:bg-slate-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {exampleWorkFile.type.startsWith("image/") ? (
+                          <ImageIcon className="h-5 w-5 text-blue-500" />
+                        ) : (
+                          <FileText className="h-5 w-5 text-red-500" />
+                        )}
+                        <span className="text-sm truncate max-w-[250px]">{exampleWorkFile.name}</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={removeExampleWorkFile}
+                        data-testid="button-remove-example-work-file"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {exampleWorkFilePreview && (
+                      <img 
+                        src={exampleWorkFilePreview} 
+                        alt="Student work preview" 
+                        className="mt-3 max-h-48 rounded object-contain mx-auto"
+                        data-testid="img-example-work-preview"
+                      />
+                    )}
+                    {exampleWorkFile.type === "application/pdf" && (
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">
+                        PDF uploaded - please also type/paste the work below for AI processing
+                      </p>
+                    )}
+                  </div>
+                )}
+                
                 <Textarea
                   value={exampleWork}
                   onChange={(e) => setExampleWork(e.target.value)}
                   placeholder="Paste an example of student work that you've already graded..."
-                  className="min-h-[150px]"
+                  className="min-h-[120px]"
                   data-testid="input-example-work"
                 />
               </div>
