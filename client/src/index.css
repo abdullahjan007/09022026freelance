@@ -309,3 +309,24 @@
     inset: -1px;
   }
 }
+
+/* Pencil writing animation */
+@keyframes pencil-write {
+  0%, 100% {
+    transform: translateX(0) rotate(-45deg);
+  }
+  25% {
+    transform: translateX(4px) rotate(-42deg);
+  }
+  50% {
+    transform: translateX(8px) rotate(-45deg);
+  }
+  75% {
+    transform: translateX(4px) rotate(-48deg);
+  }
+}
+
+.animate-pencil-write {
+  animation: pencil-write 0.8s ease-in-out infinite;
+  transform-origin: bottom left;
+}

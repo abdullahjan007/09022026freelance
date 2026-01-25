@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, BookOpen } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, BookOpen, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -1207,7 +1207,7 @@ export default function Home() {
               <div className="flex justify-start">
                 <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border border-orange-200 dark:border-orange-700 rounded-2xl px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <Loader2 className="h-5 w-5 text-orange-600 dark:text-orange-400 animate-spin" />
+                    <Pencil className="h-5 w-5 text-orange-600 dark:text-orange-400 animate-pencil-write" />
                     <span className="text-orange-700 dark:text-orange-300 font-medium">Working for You...</span>
                   </div>
                 </div>
