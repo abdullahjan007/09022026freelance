@@ -14,8 +14,10 @@ import {
   BookOpen,
   ClipboardCheck,
   History,
-  Download
+  Download,
+  Search
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface LibraryEntry {
   id: string;
@@ -31,6 +33,7 @@ export default function Library() {
   const [sortBy, setSortBy] = useState<"date" | "name">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadLibrary();
@@ -67,7 +70,14 @@ export default function Library() {
     }
   };
 
-  const sortedEntries = [...entries].sort((a, b) => {
+  const filteredEntries = entries.filter(entry => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return entry.title.toLowerCase().includes(query) || 
+           entry.preview.toLowerCase().includes(query);
+  });
+
+  const sortedEntries = [...filteredEntries].sort((a, b) => {
     if (sortBy === "date") {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
@@ -176,7 +186,7 @@ export default function Library() {
 
       <main className="flex-1 p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="flex items-center justify-between gap-4 mb-4">
             <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2" data-testid="text-page-title">
               <BookOpen className="h-6 w-6 text-[#6C4EE3]" />
               Saved PDFs
@@ -205,6 +215,18 @@ export default function Library() {
                 {sortBy === "date" && (sortOrder === "asc" ? <SortAsc className="h-3 w-3 ml-1" /> : <SortDesc className="h-3 w-3 ml-1" />)}
               </Button>
             </div>
+          </div>
+
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Search saved PDFs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-full border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-base"
+              data-testid="input-search-library"
+            />
           </div>
 
           {entries.length === 0 ? (
