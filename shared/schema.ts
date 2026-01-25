@@ -65,24 +65,21 @@ export const insertTemplateSchema = createInsertSchema(templates).omit({ id: tru
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
 
-// Feedback Assistant schemas
-export const feedbackRequestSchema = z.object({
-  studentWork: z.string().optional(),
-  learningFocus: z.string().optional(),
-  rubric: z.string().optional(),
-  mustInclude: z.string().optional(),
-  mustAvoid: z.string().optional(),
+// Students Grader - 3-step feedback generation
+export const feedbackGenerateSchema = z.object({
+  rubric: z.string(),
+  exampleWork: z.string(),
+  sampleFeedback: z.string(),
+  newStudentWork: z.string(),
 });
 
-export type FeedbackRequest = z.infer<typeof feedbackRequestSchema>;
+export type FeedbackGenerateRequest = z.infer<typeof feedbackGenerateSchema>;
 
-export const feedbackResponseSchema = z.object({
-  strengths: z.array(z.string()),
-  growthOpportunities: z.array(z.string()),
-  nextSteps: z.string(),
+export const feedbackGenerateResponseSchema = z.object({
+  feedback: z.string(),
 });
 
-export type FeedbackResponse = z.infer<typeof feedbackResponseSchema>;
+export type FeedbackGenerateResponse = z.infer<typeof feedbackGenerateResponseSchema>;
 
 // Calendar events for Personal Planner
 export const calendarEvents = pgTable("calendar_events", {

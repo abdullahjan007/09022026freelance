@@ -18,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/feedback" component={FeedbackAssistant} />
+      <Route path="/feedback-assistant" component={FeedbackAssistant} />
       <Route path="/our-story" component={OurStory} />
       <Route path="/terms" component={Terms} />
       <Route path="/report-abuse" component={ReportAbuse} />
