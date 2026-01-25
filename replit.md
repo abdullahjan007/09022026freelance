@@ -26,6 +26,10 @@ The design follows a clean, modern aesthetic with purple (#6C4EE3) as the primar
 - Copy to clipboard: Copy AI response content with visual feedback
 - Download as PDF: Export entire conversations as formatted PDF documents
 - **Personal Library**: Save downloaded PDFs to localStorage, view sortable list by name/date, re-download and delete
+- **Students Grader**: 3-step AI feedback assistant that learns teacher's feedback style
+  - Step 1 (Setup): Teacher uploads rubric + example student work
+  - Step 2 (Train): Teacher writes sample feedback for example work (AI learns their style)
+  - Step 3 (Generate): Teacher pastes new student work, AI generates feedback matching their voice
 - Dark/light theme support
 - Responsive design
 - **Fully public access**: No sign-in required - anyone can use the app immediately
