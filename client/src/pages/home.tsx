@@ -1205,10 +1205,10 @@ export default function Home() {
             })}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border border-orange-200 dark:border-orange-700 rounded-2xl px-5 py-3">
+                <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border border-green-200 dark:border-green-700 rounded-2xl px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <Pencil className="h-5 w-5 text-orange-600 dark:text-orange-400 animate-pencil-write" />
-                    <span className="text-orange-700 dark:text-orange-300 font-medium">Working for You...</span>
+                    <Pencil className="h-5 w-5 text-green-600 dark:text-green-400 animate-pencil-write" />
+                    <span className="text-green-700 dark:text-green-300 font-medium">Working for You...</span>
                   </div>
                 </div>
               </div>
