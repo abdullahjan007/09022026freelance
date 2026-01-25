@@ -178,7 +178,7 @@ export default function Library() {
               data-testid="link-library-active"
             >
               <BookOpen className="h-4 w-4" />
-              Saved PDFs
+              Your Saved PDFs
             </span>
           </nav>
         )}
@@ -189,7 +189,7 @@ export default function Library() {
           <div className="flex items-center justify-between gap-4 mb-4">
             <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2" data-testid="text-page-title">
               <BookOpen className="h-6 w-6 text-[#6C4EE3]" />
-              Saved PDFs
+              Your Saved PDFs
             </h1>
             <div className="flex items-center gap-2">
               <Button
