@@ -887,7 +887,7 @@ export default function Home() {
                   <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                     <BookOpen className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <span className="text-xs font-medium text-center">Saved PDFs</span>
+                  <span className="text-xs font-medium text-center leading-tight">Your Saved PDFs</span>
                 </span>
               </Link>
             </div>
