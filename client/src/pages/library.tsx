@@ -233,16 +233,11 @@ export default function Library() {
             <Card className="p-8 text-center" data-testid="card-empty-state">
               <BookOpen className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2" data-testid="text-empty-title">
-                Your library is empty
+                Your Personal Library
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 mb-4" data-testid="text-empty-description">
-                Download AI responses as PDFs to build your personal collection of teaching resources.
+              <p className="text-slate-500 dark:text-slate-400" data-testid="text-empty-description">
+                All PDFs you download in TeacherBuddy, are also saved here. Convenience to let you find your resources quickly and easily.
               </p>
-              <Link href="/">
-                <Button className="bg-[#6C4EE3]" data-testid="button-start-chat">
-                  Start a Chat
-                </Button>
-              </Link>
             </Card>
           ) : (
             <div className="space-y-3">
