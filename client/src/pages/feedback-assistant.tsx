@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -16,18 +16,24 @@ import {
   RefreshCw,
   CheckCircle2,
   Circle,
-  Pencil
+  Pencil,
+  Upload,
+  X,
+  Image as ImageIcon
 } from "lucide-react";
 
 type Step = 1 | 2 | 3;
 
 export default function FeedbackAssistant() {
   const { toast } = useToast();
+  const rubricFileRef = useRef<HTMLInputElement>(null);
   
   const [currentStep, setCurrentStep] = useState<Step>(1);
   
   // Step 1: Setup
   const [rubric, setRubric] = useState("");
+  const [rubricFile, setRubricFile] = useState<File | null>(null);
+  const [rubricFilePreview, setRubricFilePreview] = useState<string | null>(null);
   const [exampleWork, setExampleWork] = useState("");
   
   // Step 2: Train
@@ -39,6 +45,59 @@ export default function FeedbackAssistant() {
   
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleRubricFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File Too Large",
+          description: "Please upload a file smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text/plain"];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload a PDF, image, or text file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setRubricFile(file);
+      
+      if (file.type.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        setRubricFilePreview(url);
+      } else {
+        setRubricFilePreview(null);
+      }
+      
+      if (file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target?.result as string;
+          setRubric(text);
+        };
+        reader.readAsText(file);
+      }
+    }
+  };
+
+  const removeRubricFile = () => {
+    if (rubricFilePreview) {
+      URL.revokeObjectURL(rubricFilePreview);
+    }
+    setRubricFile(null);
+    setRubricFilePreview(null);
+    if (rubricFileRef.current) {
+      rubricFileRef.current.value = "";
+    }
+  };
 
   const generateFeedbackMutation = useMutation({
     mutationFn: async () => {
@@ -113,6 +172,7 @@ export default function FeedbackAssistant() {
     setSampleFeedback("");
     setNewStudentWork("");
     setGeneratedFeedback("");
+    removeRubricFile();
   };
 
   const canProceedStep1 = rubric.trim().length > 0 && exampleWork.trim().length > 0;
@@ -214,6 +274,70 @@ export default function FeedbackAssistant() {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Rubric / Grading Criteria *
                 </label>
+                
+                {/* File Upload Option */}
+                <input
+                  ref={rubricFileRef}
+                  type="file"
+                  accept=".pdf,.txt,image/*"
+                  onChange={handleRubricFileUpload}
+                  className="hidden"
+                  data-testid="input-rubric-file"
+                />
+                
+                {!rubricFile ? (
+                  <div className="mb-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => rubricFileRef.current?.click()}
+                      className="w-full h-16 border-dashed flex items-center justify-center gap-2"
+                      data-testid="button-upload-rubric"
+                    >
+                      <Upload className="h-5 w-5 text-slate-400" />
+                      <span className="text-sm text-slate-500">Upload rubric file (PDF, image, or text)</span>
+                    </Button>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-1">
+                      Or type/paste below
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-3 border rounded-lg p-3 bg-slate-50 dark:bg-slate-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {rubricFile.type.startsWith("image/") ? (
+                          <ImageIcon className="h-5 w-5 text-blue-500" />
+                        ) : (
+                          <FileText className="h-5 w-5 text-red-500" />
+                        )}
+                        <span className="text-sm truncate max-w-[250px]">{rubricFile.name}</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={removeRubricFile}
+                        data-testid="button-remove-rubric-file"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {rubricFilePreview && (
+                      <img 
+                        src={rubricFilePreview} 
+                        alt="Rubric preview" 
+                        className="mt-3 max-h-48 rounded object-contain mx-auto"
+                        data-testid="img-rubric-preview"
+                      />
+                    )}
+                    {rubricFile.type === "application/pdf" && (
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">
+                        PDF uploaded - please also type key criteria below for AI processing
+                      </p>
+                    )}
+                  </div>
+                )}
+                
                 <Textarea
                   value={rubric}
                   onChange={(e) => setRubric(e.target.value)}
@@ -224,7 +348,7 @@ Example:
 - Supporting evidence (30%)
 - Organization and flow (25%)
 - Grammar and mechanics (25%)"
-                  className="min-h-[150px]"
+                  className="min-h-[120px]"
                   data-testid="input-rubric"
                 />
               </div>
