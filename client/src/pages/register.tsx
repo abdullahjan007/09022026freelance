@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -25,6 +25,7 @@ const CURRICULUM_OPTIONS = [
 
 export default function Register() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   const [userName, setUserName] = useState("");
   const [schoolName, setSchoolName] = useState("");
@@ -57,20 +58,17 @@ export default function Register() {
     setIsSubmitting(true);
     
     // Simulate registration (would connect to backend in production)
-    setTimeout(() => {
-      toast({
-        title: "Registration Successful!",
-        description: "Welcome to TeacherBuddy. You can now start using all features.",
-      });
-      setIsSubmitting(false);
-      // Reset form
-      setUserName("");
-      setSchoolName("");
-      setEmail("");
-      setCurriculum("");
-      setAcceptTerms(false);
-      setAcceptPrivacy(false);
-    }, 1500);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    toast({
+      title: "Registration Successful!",
+      description: "Welcome to TeacherBuddy. You can now start using all features.",
+    });
+    
+    setIsSubmitting(false);
+    
+    // Redirect to home after successful registration
+    setLocation("/");
   };
 
   return (
