@@ -11,6 +11,7 @@ import Terms from "@/pages/terms";
 import ReportAbuse from "@/pages/report-abuse";
 import Planner from "@/pages/planner";
 import Library from "@/pages/library";
+import Register from "@/pages/register";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/report-abuse" component={ReportAbuse} />
       <Route path="/planner" component={Planner} />
       <Route path="/library" component={Library} />
+      <Route path="/register" component={Register} />
       <Route component={NotFound} />
     </Switch>
   );

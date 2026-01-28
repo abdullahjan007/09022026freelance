@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, Plus, ChevronLeft, ChevronRight, Calendar, Clock, Trash2, Edit2, X, RefreshCw } from "lucide-react";
+import { ArrowLeft, Plus, ChevronLeft, ChevronRight, Calendar, Clock, Trash2, Edit2, X, RefreshCw, UserPlus } from "lucide-react";
 import { format, addDays, addWeeks, addMonths, addYears, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, eachDayOfInterval, isSameDay, isSameMonth, isToday, parseISO } from "date-fns";
 import type { CalendarEvent, InsertCalendarEvent } from "@shared/schema";
 
@@ -439,7 +439,16 @@ export default function Planner() {
               className="h-12 object-contain"
               data-testid="img-logo"
             />
-            <div className="w-20" />
+            <Link href="/register">
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#6C4EE3] text-[#6C4EE3]"
+                data-testid="button-register-header"
+              >
+                Register
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

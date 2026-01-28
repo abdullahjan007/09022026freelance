@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, BookOpen, Pencil } from "lucide-react";
+import { Send, Info, Sparkles, Check, MessageCircle, Eye, EyeOff, RotateCcw, Zap, Lightbulb, Package, History, ChevronUp, Trash2, Copy, Download, CheckCircle, ThumbsUp, ThumbsDown, Share2, RefreshCw, MoreHorizontal, ExternalLink, Loader2, ArrowRight, ClipboardCheck, Calendar, X, Bot, Menu, BookOpen, Pencil, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -822,18 +822,30 @@ export default function Home() {
             <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
           </div>
           
-          {/* Right: Hamburger Menu */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg hover-elevate transition-colors"
-            data-testid="button-menu-toggle"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6 text-slate-700 dark:text-slate-300" />
-            ) : (
-              <Menu className="h-6 w-6 text-slate-700 dark:text-slate-300" />
-            )}
-          </button>
+          {/* Right: Register Button + Hamburger Menu */}
+          <div className="flex items-center gap-2">
+            <Link href="/register">
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#6C4EE3] text-[#6C4EE3]"
+                data-testid="button-register-header"
+              >
+                Register
+              </Button>
+            </Link>
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg hover-elevate transition-colors"
+              data-testid="button-menu-toggle"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6 text-slate-700 dark:text-slate-300" />
+              ) : (
+                <Menu className="h-6 w-6 text-slate-700 dark:text-slate-300" />
+              )}
+            </button>
+          </div>
         </div>
         
         {/* Mobile Menu Dropdown */}
@@ -888,6 +900,19 @@ export default function Home() {
                     <BookOpen className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <span className="text-xs font-medium text-center leading-tight">Your Saved PDFs</span>
+                </span>
+              </Link>
+              
+              <Link href="/register">
+                <span 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  data-testid="link-register"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <UserPlus className="h-5 w-5 text-[#6C4EE3]" />
+                  </div>
+                  <span className="text-xs font-medium text-center leading-tight">Register</span>
                 </span>
               </Link>
             </div>

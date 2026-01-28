@@ -15,7 +15,8 @@ import {
   ClipboardCheck,
   History,
   Download,
-  Search
+  Search,
+  UserPlus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -127,18 +128,30 @@ export default function Library() {
             <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
           </div>
           
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            data-testid="button-menu-toggle"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link href="/register">
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#6C4EE3] text-[#6C4EE3]"
+                data-testid="button-register-header"
+              >
+                Register
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              data-testid="button-menu-toggle"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </Button>
+          </div>
         </div>
         
         {mobileMenuOpen && (

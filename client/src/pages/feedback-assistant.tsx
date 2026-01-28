@@ -19,7 +19,8 @@ import {
   Pencil,
   Upload,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  UserPlus
 } from "lucide-react";
 
 type Step = 1 | 2 | 3;
@@ -292,14 +293,26 @@ export default function FeedbackAssistant() {
               </span>
             </div>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={clearAll}
-            data-testid="button-clear"
-          >
-            Start Over
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link href="/register">
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#6C4EE3] text-[#6C4EE3]"
+                data-testid="button-register-header"
+              >
+                Register
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={clearAll}
+              data-testid="button-clear"
+            >
+              Start Over
+            </Button>
+          </div>
         </div>
       </header>
 
