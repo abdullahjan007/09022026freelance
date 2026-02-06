@@ -1,0 +1,12 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+dist/
+build/
+*.mp4
+*.avi
+*.mov
+.DS_Store
+*.log
+attached_assets/
