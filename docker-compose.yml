@@ -1,0 +1,34 @@
+services:
+  # Teacher-Buddy Application Service
+  # Uses external Neon PostgreSQL database
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: teacher-buddy-app
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-5000}
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      ISSUER_URL: ${ISSUER_URL:-https://replit.com/oidc}
+      REPL_ID: ${REPL_ID:-local-docker}
+    ports:
+      - "${APP_PORT:-5000}:5000"
+    volumes:
+      - ./migrations:/app/migrations
+    networks:
+      - teacher-buddy-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  teacher-buddy-network:
+    driver: bridge
