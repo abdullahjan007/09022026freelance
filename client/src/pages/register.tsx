@@ -2,50 +2,39 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, UserPlus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-const CURRICULUM_OPTIONS = [
-  { value: "ib", label: "International Baccalaureate (IB)" },
-  { value: "igcse", label: "Cambridge IGCSE" },
-  { value: "american", label: "American Curriculum" },
-  { value: "british", label: "British National Curriculum" },
-  { value: "cbse", label: "CBSE (India)" },
-  { value: "other", label: "Other" },
-];
+import { ArrowLeft, UserPlus, Eye, EyeOff, Loader2, Gift } from "lucide-react";
+import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 export default function Register() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  
-  const [userName, setUserName] = useState("");
-  const [schoolName, setSchoolName] = useState("");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [curriculum, setCurriculum] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isFormValid = 
-    userName.trim().length > 0 && 
-    schoolName.trim().length > 0 && 
-    email.trim().length > 0 && 
-    curriculum.length > 0 &&
-    acceptTerms && 
+  const isFormValid =
+    firstName.trim().length > 0 &&
+    email.trim().length > 0 &&
+    password.length >= 8 &&
+    password === confirmPassword &&
+    acceptTerms &&
     acceptPrivacy;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isFormValid) {
       toast({
         title: "Please Complete All Fields",
@@ -55,119 +44,175 @@ export default function Register() {
       return;
     }
 
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please make sure your passwords match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Simulate registration (would connect to backend in production)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Registration Successful!",
-      description: "Welcome to TeacherBuddy. You can now start using all features.",
-    });
-    
-    setIsSubmitting(false);
-    
-    // Redirect to home after successful registration
-    setLocation("/");
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName,
+          lastName: lastName || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+
+      toast({
+        title: "Registration Successful!",
+        description: "Welcome to TeacherBuddy! You have 1 month free trial to explore all features.",
+      });
+
+      // Redirect to home after successful registration
+      setLocation("/");
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-        <div className="flex items-center justify-between max-w-lg mx-auto">
-          <Link href="/">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2"
-              data-testid="button-back-home"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-          </Link>
-          <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
-          <div className="w-20" />
-        </div>
-      </header>
-
-      {/* Registration Form */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md p-6 md:p-8 shadow-lg">
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 mb-4">
-              <UserPlus className="h-8 w-8 text-[#6C4EE3]" />
-            </div>
-            <h1 className="text-2xl font-bold text-[#6C4EE3] mb-2">Register</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
+      <Card className="w-full max-w-lg shadow-2xl">
+        <CardHeader className="space-y-4 text-center">
+          <div className="flex justify-center">
+            <img src={teacherBuddyLogo} alt="TeacherBuddy" className="h-16 w-auto" />
+          </div>
+          <div>
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              Create Your Account
+            </CardTitle>
+            <CardDescription className="text-base mt-2">
               Join TeacherBuddy and unlock powerful teaching tools
-            </p>
+            </CardDescription>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* User Name */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                User Name
-              </label>
-              <Input
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Your full name"
-                className="w-full"
-                data-testid="input-user-name"
-              />
+          {/* Free Trial Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full border border-purple-200 dark:border-purple-800">
+            <Gift className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+              1 Month Free Trial Included!
+            </span>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="John"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Doe"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
 
-            {/* School Name */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                School Name
-              </label>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
               <Input
-                type="text"
-                value={schoolName}
-                onChange={(e) => setSchoolName(e.target.value)}
-                placeholder="Your school or institution"
-                className="w-full"
-                data-testid="input-school-name"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Email Address
-              </label>
-              <Input
+                id="email"
                 type="email"
+                placeholder="teacher@school.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@school.edu"
-                className="w-full"
-                data-testid="input-email"
+                required
+                disabled={isSubmitting}
               />
             </div>
 
-            {/* Curriculum */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Curriculum
-              </label>
-              <Select value={curriculum} onValueChange={setCurriculum}>
-                <SelectTrigger className="w-full" data-testid="select-curriculum">
-                  <SelectValue placeholder="Select your curriculum" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRICULUM_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password *</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Must be at least 8 characters
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password *</Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Terms & Privacy Checkboxes */}
@@ -177,53 +222,61 @@ export default function Register() {
                   id="accept-terms"
                   checked={acceptTerms}
                   onCheckedChange={(checked) => setAcceptTerms(checked === true)}
-                  data-testid="checkbox-terms"
                 />
                 <label htmlFor="accept-terms" className="text-sm text-slate-600 dark:text-slate-400 leading-tight cursor-pointer">
                   I Accept{" "}
-                  <Link href="/terms" className="text-[#6C4EE3] hover:underline">
+                  <Link href="/terms" className="text-purple-600 hover:underline dark:text-purple-400">
                     Terms and Conditions
                   </Link>
                 </label>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <Checkbox
                   id="accept-privacy"
                   checked={acceptPrivacy}
                   onCheckedChange={(checked) => setAcceptPrivacy(checked === true)}
-                  data-testid="checkbox-privacy"
                 />
                 <label htmlFor="accept-privacy" className="text-sm text-slate-600 dark:text-slate-400 leading-tight cursor-pointer">
                   I Accept{" "}
-                  <Link href="/terms" className="text-[#6C4EE3] hover:underline">
+                  <Link href="/terms" className="text-purple-600 hover:underline dark:text-purple-400">
                     Data Privacy Policy
                   </Link>
                 </label>
               </div>
             </div>
 
-            {/* Register Button */}
             <Button
               type="submit"
-              size="lg"
+              className="w-full h-11 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold"
               disabled={!isFormValid || isSubmitting}
-              className="w-full bg-[#6C4EE3] text-white mt-4"
-              data-testid="button-register-submit"
             >
-              {isSubmitting ? "Registering..." : "Register"}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Create Account
+                </>
+              )}
             </Button>
-          </form>
 
-          {/* Already Registered Link */}
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
-            Already registered?{" "}
-            <Link href="/" className="text-[#6C4EE3] font-medium hover:underline">
-              Go to Home
-            </Link>
-          </p>
-        </Card>
-      </main>
+            <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => setLocation("/login")}
+                className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-semibold"
+              >
+                Sign in
+              </button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

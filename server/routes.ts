@@ -5,6 +5,9 @@ import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 import { storage } from "./storage";
 import { insertCalendarEventSchema, feedbackGenerateSchema } from "@shared/schema";
 import OpenAI from "openai";
+import { registerAuthRoutes as registerEmailAuthRoutes } from "./auth/routes";
+import { registerStripeRoutes } from "./stripe/routes";
+import { requireAuth, requireFeature } from "./auth/middleware";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -13,12 +16,18 @@ export async function registerRoutes(
   // Setup authentication (must be before other routes)
   await setupAuth(app);
   registerAuthRoutes(app);
-  
-  // Register AI chat routes
+
+  // Register email/password authentication routes
+  registerEmailAuthRoutes(app);
+
+  // Register Stripe subscription routes
+  registerStripeRoutes(app);
+
+  // Register AI chat routes (protected by search feature)
   registerChatRoutes(app);
 
-  // Calendar Events API
-  app.get("/api/events", async (req, res) => {
+  // Calendar Events API - Protected by planner feature
+  app.get("/api/events", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
       const { startDate, endDate } = req.query;
       let events;
@@ -36,7 +45,7 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/events/:id", async (req, res) => {
+  app.get("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
       const event = await storage.getCalendarEvent(req.params.id);
       if (!event) {
@@ -48,7 +57,7 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/events", async (req, res) => {
+  app.post("/api/events", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
       const parsed = insertCalendarEventSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -61,7 +70,7 @@ export async function registerRoutes(
     }
   });
 
-  app.patch("/api/events/:id", async (req, res) => {
+  app.patch("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
       const event = await storage.updateCalendarEvent(req.params.id, req.body);
       if (!event) {
@@ -73,7 +82,7 @@ export async function registerRoutes(
     }
   });
 
-  app.delete("/api/events/:id", async (req, res) => {
+  app.delete("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
       const deleted = await storage.deleteCalendarEvent(req.params.id);
       if (!deleted) {
@@ -85,8 +94,8 @@ export async function registerRoutes(
     }
   });
 
-  // Students Grader - Feedback Generation API
-  app.post("/api/feedback/generate", async (req, res) => {
+  // Students Grader - Feedback Generation API - Protected by grader feature
+  app.post("/api/feedback/generate", requireAuth, requireFeature("grader"), async (req, res) => {
     try {
       const parsed = feedbackGenerateSchema.safeParse(req.body);
       if (!parsed.success) {
@@ -99,7 +108,7 @@ export async function registerRoutes(
         apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
         baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
       });
-      
+
       const systemPrompt = `You are a helpful teaching assistant that generates student feedback. 
 Your task is to write feedback for new student work that matches the teacher's personal style and voice.
 
@@ -146,7 +155,7 @@ Write feedback for this new student work, matching the teacher's style exactly:`
       });
 
       const feedback = response.choices[0]?.message?.content || "Unable to generate feedback.";
-      
+
       res.json({ feedback });
     } catch (error) {
       console.error("Feedback generation error:", error);
@@ -156,3 +165,4 @@ Write feedback for this new student work, matching the teacher's style exactly:`
 
   return httpServer;
 }
+
