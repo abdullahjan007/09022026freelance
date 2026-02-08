@@ -6,12 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import { ArrowLeft, UserPlus, Eye, EyeOff, Loader2, Gift } from "lucide-react";
 import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 export default function Register() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { register } = useAuth();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -56,22 +58,12 @@ export default function Register() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password,
-          firstName,
-          lastName: lastName || undefined,
-        }),
+      await register({
+        email,
+        password,
+        firstName,
+        lastName: lastName || undefined,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
-      }
 
       toast({
         title: "Registration Successful!",

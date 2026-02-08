@@ -7,7 +7,10 @@ import { insertCalendarEventSchema, feedbackGenerateSchema } from "@shared/schem
 import OpenAI from "openai";
 import { registerAuthRoutes as registerEmailAuthRoutes } from "./auth/routes";
 import { registerStripeRoutes } from "./stripe/routes";
-import { requireAuth, requireFeature } from "./auth/middleware";
+import { requireAuth, requireFeature, requireAdmin } from "./auth/middleware";
+import { db } from "./db";
+import { users } from "@shared/schema";
+import { desc } from "drizzle-orm";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -25,6 +28,26 @@ export async function registerRoutes(
 
   // Register AI chat routes (protected by search feature)
   registerChatRoutes(app);
+
+  // Admin Routes
+  app.get("/api/admin/users", requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const allUsers = await db.query.users.findMany({
+        orderBy: [desc(users.createdAt)],
+      });
+
+      // Remove passwords before sending
+      const usersWithoutPasswords = allUsers.map(user => {
+        const { password, ...rest } = user;
+        return rest;
+      });
+
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      console.error("Admin fetch users error:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
 
   // Calendar Events API - Protected by planner feature
   app.get("/api/events", requireAuth, requireFeature("planner"), async (req, res) => {

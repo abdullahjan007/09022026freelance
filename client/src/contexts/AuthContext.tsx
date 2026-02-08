@@ -9,6 +9,7 @@ interface User {
     subscriptionStatus: string | null;
     subscriptionTier: string | null;
     trialEndDate: string | null;
+    isAdmin: boolean;
 }
 
 interface AuthContextType {
@@ -16,6 +17,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
+    register: (data: any) => Promise<void>;
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
 }
@@ -60,6 +62,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(data.user);
     };
 
+    const register = async (data: any) => {
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Registration failed");
+        }
+
+        const responseData = await response.json();
+        setUser(responseData.user);
+    };
+
     const logout = async () => {
         try {
             await fetch("/api/auth/logout", { method: "POST" });
@@ -81,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isAuthenticated: !!user,
                 isLoading,
                 login,
+                register,
                 logout,
                 checkAuth,
             }}

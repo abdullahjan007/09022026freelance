@@ -16,6 +16,9 @@ COPY . .
 # Build the project (client and server)
 RUN npm run build
 
+# Prune devDependencies to keep the image small and speed up the second stage
+RUN npm prune --production
+
 # Verify build output exists
 RUN test -f dist/index.cjs || (echo "Build failed: dist/index.cjs not found" && exit 1)
 
@@ -27,13 +30,9 @@ WORKDIR /app
 # Install dumb-init to handle signals properly
 RUN apk add --no-cache dumb-init
 
-# Copy package files from builder
-COPY package*.json ./
-
-# Install only production dependencies
-RUN npm ci --only=production && \
-    npm cache clean --force
-
+# Copy package files and node_modules from builder
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
 

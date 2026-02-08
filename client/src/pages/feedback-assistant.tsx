@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowLeft, 
+import {
+  ArrowLeft,
   ArrowRight,
-  FileText, 
-  Copy, 
-  Check, 
+  FileText,
+  Copy,
+  Check,
   Sparkles,
   Edit3,
   RefreshCw,
@@ -29,9 +29,9 @@ export default function FeedbackAssistant() {
   const { toast } = useToast();
   const rubricFileRef = useRef<HTMLInputElement>(null);
   const exampleWorkFileRef = useRef<HTMLInputElement>(null);
-  
+
   const [currentStep, setCurrentStep] = useState<Step>(1);
-  
+
   // Step 1: Setup
   const [rubric, setRubric] = useState("");
   const [rubricFile, setRubricFile] = useState<File | null>(null);
@@ -39,14 +39,14 @@ export default function FeedbackAssistant() {
   const [exampleWork, setExampleWork] = useState("");
   const [exampleWorkFile, setExampleWorkFile] = useState<File | null>(null);
   const [exampleWorkFilePreview, setExampleWorkFilePreview] = useState<string | null>(null);
-  
+
   // Step 2: Train
   const [sampleFeedback, setSampleFeedback] = useState("");
-  
+
   // Step 3: Generate
   const [newStudentWork, setNewStudentWork] = useState("");
   const [generatedFeedback, setGeneratedFeedback] = useState("");
-  
+
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -61,7 +61,7 @@ export default function FeedbackAssistant() {
         });
         return;
       }
-      
+
       const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text/plain"];
       if (!allowedTypes.includes(file.type)) {
         toast({
@@ -71,16 +71,16 @@ export default function FeedbackAssistant() {
         });
         return;
       }
-      
+
       setRubricFile(file);
-      
+
       if (file.type.startsWith("image/")) {
         const url = URL.createObjectURL(file);
         setRubricFilePreview(url);
       } else {
         setRubricFilePreview(null);
       }
-      
+
       if (file.type === "text/plain") {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -114,7 +114,7 @@ export default function FeedbackAssistant() {
         });
         return;
       }
-      
+
       const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text/plain"];
       if (!allowedTypes.includes(file.type)) {
         toast({
@@ -124,16 +124,16 @@ export default function FeedbackAssistant() {
         });
         return;
       }
-      
+
       setExampleWorkFile(file);
-      
+
       if (file.type.startsWith("image/")) {
         const url = URL.createObjectURL(file);
         setExampleWorkFilePreview(url);
       } else {
         setExampleWorkFilePreview(null);
       }
-      
+
       if (file.type === "text/plain") {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -239,12 +239,11 @@ export default function FeedbackAssistant() {
   const StepIndicator = ({ step, label }: { step: Step; label: string }) => {
     const isCompleted = currentStep > step;
     const isCurrent = currentStep === step;
-    
+
     return (
-      <div 
-        className={`flex items-center gap-2 cursor-pointer transition-opacity ${
-          isCurrent ? "opacity-100" : "opacity-60"
-        }`}
+      <div
+        className={`flex items-center gap-2 cursor-pointer transition-opacity ${isCurrent ? "opacity-100" : "opacity-60"
+          }`}
         onClick={() => {
           if (step < currentStep) setCurrentStep(step);
         }}
@@ -272,26 +271,18 @@ export default function FeedbackAssistant() {
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
-              <Button
-                size="sm"
-                className="rounded-full bg-[#6C4EE3] text-white"
-                data-testid="button-new-chat-header"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                New Chat
-              </Button>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <img
+                  src="/logo.png"
+                  alt="TeacherBuddy"
+                  className="h-10 object-contain"
+                  data-testid="img-logo"
+                />
+                <span className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                  Students Grader
+                </span>
+              </div>
             </Link>
-            <div className="flex items-center gap-2">
-              <img 
-                src="/logo.png" 
-                alt="TeacherBuddy" 
-                className="h-10 object-contain"
-                data-testid="img-logo"
-              />
-              <span className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-                Students Grader
-              </span>
-            </div>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/register">
@@ -304,9 +295,9 @@ export default function FeedbackAssistant() {
                 Register
               </Button>
             </Link>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={clearAll}
               data-testid="button-clear"
             >
@@ -344,7 +335,7 @@ export default function FeedbackAssistant() {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Rubric / Grading Criteria *
                 </label>
-                
+
                 {/* File Upload Option */}
                 <input
                   ref={rubricFileRef}
@@ -354,7 +345,7 @@ export default function FeedbackAssistant() {
                   className="hidden"
                   data-testid="input-rubric-file"
                 />
-                
+
                 {!rubricFile ? (
                   <div className="mb-3">
                     <Button
@@ -393,9 +384,9 @@ export default function FeedbackAssistant() {
                       </Button>
                     </div>
                     {rubricFilePreview && (
-                      <img 
-                        src={rubricFilePreview} 
-                        alt="Rubric preview" 
+                      <img
+                        src={rubricFilePreview}
+                        alt="Rubric preview"
                         className="mt-3 max-h-48 rounded object-contain mx-auto"
                         data-testid="img-rubric-preview"
                       />
@@ -407,7 +398,7 @@ export default function FeedbackAssistant() {
                     )}
                   </div>
                 )}
-                
+
                 <Textarea
                   value={rubric}
                   onChange={(e) => setRubric(e.target.value)}
@@ -427,7 +418,7 @@ Example:
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Example Student Work *
                 </label>
-                
+
                 {/* File Upload Option */}
                 <input
                   ref={exampleWorkFileRef}
@@ -437,7 +428,7 @@ Example:
                   className="hidden"
                   data-testid="input-example-work-file"
                 />
-                
+
                 {!exampleWorkFile ? (
                   <div className="mb-3">
                     <Button
@@ -476,9 +467,9 @@ Example:
                       </Button>
                     </div>
                     {exampleWorkFilePreview && (
-                      <img 
-                        src={exampleWorkFilePreview} 
-                        alt="Student work preview" 
+                      <img
+                        src={exampleWorkFilePreview}
+                        alt="Student work preview"
                         className="mt-3 max-h-48 rounded object-contain mx-auto"
                         data-testid="img-example-work-preview"
                       />
@@ -490,7 +481,7 @@ Example:
                     )}
                   </div>
                 )}
-                
+
                 <Textarea
                   value={exampleWork}
                   onChange={(e) => setExampleWork(e.target.value)}

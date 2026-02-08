@@ -35,7 +35,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: false, // Changed from true to false for local development/Docker HTTP
       maxAge: sessionTtl,
     },
   });

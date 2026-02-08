@@ -213,7 +213,7 @@ export default function Planner() {
                 <div className="w-16 p-2 text-xs text-slate-500 dark:text-slate-400 border-r">
                   {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
                 </div>
-                <div 
+                <div
                   className="flex-1 p-1 hover-elevate cursor-pointer"
                   onClick={() => openAddDialogForDate(format(currentDate, "yyyy-MM-dd"))}
                 >
@@ -247,8 +247,8 @@ export default function Planner() {
       <div className="flex flex-col h-full overflow-auto">
         <div className="grid grid-cols-7 border-b">
           {weekDays.map(day => (
-            <div 
-              key={day.toISOString()} 
+            <div
+              key={day.toISOString()}
               className={`p-2 text-center border-r last:border-r-0 ${isToday(day) ? "bg-orange-50 dark:bg-orange-900/20" : ""}`}
             >
               <div className="text-xs text-slate-500 dark:text-slate-400">{format(day, "EEE")}</div>
@@ -262,8 +262,8 @@ export default function Planner() {
           {weekDays.map(day => {
             const dayEvents = getEventsForDate(day);
             return (
-              <div 
-                key={day.toISOString()} 
+              <div
+                key={day.toISOString()}
                 className="border-r last:border-r-0 p-1 min-h-[200px] hover-elevate cursor-pointer"
                 onClick={() => openAddDialogForDate(format(day, "yyyy-MM-dd"))}
               >
@@ -424,21 +424,15 @@ export default function Planner() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <Button
-                size="sm"
-                className="rounded-full bg-[#6C4EE3] text-white"
-                data-testid="button-new-chat-header"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                New Chat
-              </Button>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <img
+                  src="/logo.png"
+                  alt="TeacherBuddy"
+                  className="h-12 object-contain"
+                  data-testid="img-logo"
+                />
+              </div>
             </Link>
-            <img 
-              src="/logo.png" 
-              alt="TeacherBuddy" 
-              className="h-12 object-contain"
-              data-testid="img-logo"
-            />
             <Link href="/register">
               <Button
                 size="sm"

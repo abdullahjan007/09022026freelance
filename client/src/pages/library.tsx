@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { 
-  RefreshCw, 
-  FileText, 
-  Calendar, 
-  SortAsc, 
-  SortDesc, 
-  Trash2, 
-  Menu, 
+import {
+  RefreshCw,
+  FileText,
+  Calendar,
+  SortAsc,
+  SortDesc,
+  Trash2,
+  Menu,
   X,
   BookOpen,
   ClipboardCheck,
@@ -74,8 +74,8 @@ export default function Library() {
   const filteredEntries = entries.filter(entry => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
-    return entry.title.toLowerCase().includes(query) || 
-           entry.preview.toLowerCase().includes(query);
+    return entry.title.toLowerCase().includes(query) ||
+      entry.preview.toLowerCase().includes(query);
   });
 
   const sortedEntries = [...filteredEntries].sort((a, b) => {
@@ -91,9 +91,9 @@ export default function Library() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -114,20 +114,11 @@ export default function Library() {
       <header className="bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 py-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between gap-2">
           <Link href="/">
-            <Button
-              size="sm"
-              className="bg-[#6C4EE3]"
-              data-testid="button-new-chat-header"
-            >
-              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-              New Chat
-            </Button>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
+            </div>
           </Link>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
-          </div>
-          
+
           <div className="flex items-center gap-2">
             <Link href="/register">
               <Button
@@ -139,7 +130,7 @@ export default function Library() {
                 Register
               </Button>
             </Link>
-            <Button 
+            <Button
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -153,11 +144,11 @@ export default function Library() {
             </Button>
           </div>
         </div>
-        
+
         {mobileMenuOpen && (
           <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
             <Link href="/">
-              <span 
+              <span
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer"
                 data-testid="link-ai-chat"
@@ -167,7 +158,7 @@ export default function Library() {
               </span>
             </Link>
             <Link href="/feedback">
-              <span 
+              <span
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer"
                 data-testid="link-feedback-assistant"
@@ -177,7 +168,7 @@ export default function Library() {
               </span>
             </Link>
             <Link href="/planner">
-              <span 
+              <span
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover-elevate transition-colors flex items-center gap-2 cursor-pointer"
                 data-testid="link-planner"
@@ -186,7 +177,7 @@ export default function Library() {
                 My Calendar
               </span>
             </Link>
-            <span 
+            <span
               className="block px-3 py-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-[#6C4EE3] flex items-center gap-2"
               data-testid="link-library-active"
             >
@@ -255,8 +246,8 @@ export default function Library() {
           ) : (
             <div className="space-y-3">
               {sortedEntries.map((entry) => (
-                <Card 
-                  key={entry.id} 
+                <Card
+                  key={entry.id}
                   className="p-4 hover-elevate"
                   data-testid={`card-library-${entry.id}`}
                 >
