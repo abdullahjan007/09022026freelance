@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Check, Loader2, Crown, Sparkles, ArrowLeft, Calendar } from "lucide-react";
+import { Check, Loader2, Crown, Sparkles, ArrowLeft, Calendar, Rocket } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
 
 interface SubscriptionInfo {
     status: string;
@@ -21,6 +29,8 @@ export default function Subscription() {
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+    const [showComingSoon, setShowComingSoon] = useState(false);
+    const [selectedTier, setSelectedTier] = useState<string>("");
 
     useEffect(() => {
         fetchSubscriptionInfo();
@@ -41,6 +51,13 @@ export default function Subscription() {
     };
 
     const handleSubscribe = async (tier: "tier1" | "tier2") => {
+        // Since Stripe credentials are not provided yet, show Coming Soon dialog
+        setSelectedTier(tier === "tier1" ? "Tier 1" : "Tier 2");
+        setShowComingSoon(true);
+        return;
+
+        // Original logic preserved but bypassed for now
+        /*
         setCheckoutLoading(tier);
         try {
             const response = await fetch("/api/stripe/create-checkout-session", {
@@ -55,7 +72,6 @@ export default function Subscription() {
                 throw new Error(data.error || "Failed to create checkout session");
             }
 
-            // Redirect to Stripe Checkout
             window.location.href = data.url;
         } catch (error: any) {
             toast({
@@ -65,6 +81,7 @@ export default function Subscription() {
             });
             setCheckoutLoading(null);
         }
+        */
     };
 
     const handleManageBilling = async () => {
@@ -349,6 +366,41 @@ export default function Subscription() {
                     </div>
                 </div>
             </div>
+
+            {/* Coming Soon Dialog */}
+            <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+                <DialogContent className="sm:max-w-md border-none bg-white dark:bg-gray-900 shadow-2xl">
+                    <DialogHeader className="pt-8">
+                        <div className="mx-auto w-16 h-16 bg-purple-100 dark:bg-purple-900/40 rounded-full flex items-center justify-center mb-4">
+                            <Rocket className="h-8 w-8 text-purple-600 dark:text-purple-400 animate-bounce" />
+                        </div>
+                        <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                            Coming Soon!
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-base mt-2">
+                            The <span className="font-bold text-purple-600">{selectedTier}</span> subscription plan is almost ready for you.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="p-6 text-center space-y-4">
+                        <p className="text-gray-600 dark:text-gray-400">
+                            We are currently putting the finishing touches on our secure payment system to ensure the best experience for our teachers.
+                        </p>
+                        <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800">
+                            <p className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                                Thank you for your patience and for being part of the TeacherBuddy community!
+                            </p>
+                        </div>
+                    </div>
+                    <DialogFooter className="sm:justify-center pb-8 px-6">
+                        <Button
+                            className="w-full h-11 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold transition-all"
+                            onClick={() => setShowComingSoon(false)}
+                        >
+                            Got it, thanks!
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
