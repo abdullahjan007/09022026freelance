@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import jsPDF from "jspdf";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
+import { Footer } from "@/components/footer";
 import teacherBuddyLogo from "@assets/ATeacherBuddy_logo_on_smartphone_outline-3_1768414106629.png";
 
 interface Message {
@@ -172,7 +173,7 @@ export default function Home() {
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
       .trim();
-    
+
     try {
       await navigator.clipboard.writeText(cleanText);
       setCopiedIndex(index);
@@ -281,7 +282,7 @@ export default function Home() {
     doc.setFontSize(10);
     doc.setTextColor(50, 50, 50);
     const lines = doc.splitTextToSize(cleanContent, maxWidth);
-    
+
     for (const line of lines) {
       if (yPosition > 280) {
         doc.addPage();
@@ -298,16 +299,16 @@ export default function Home() {
         doc.addPage();
         yPosition = 20;
       }
-      
+
       doc.setFontSize(12);
       doc.setTextColor(50, 50, 50);
       doc.text("Works Cited", margin, yPosition);
       yPosition += 8;
-      
+
       doc.setFontSize(10);
       const today = new Date();
       const accessDate = today.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-      
+
       for (const website of websites) {
         if (yPosition > 280) {
           doc.addPage();
@@ -381,7 +382,7 @@ export default function Home() {
       setConversationHistory(prevHistory => {
         const existingIndex = prevHistory.findIndex(c => c.id === currentConversationId);
         let updatedHistory: Conversation[];
-        
+
         if (existingIndex >= 0) {
           updatedHistory = [...prevHistory];
           updatedHistory[existingIndex] = {
@@ -397,7 +398,7 @@ export default function Home() {
             createdAt: new Date().toISOString(),
           }, ...prevHistory];
         }
-        
+
         saveToStorage(updatedHistory);
         return updatedHistory;
       });
@@ -535,7 +536,7 @@ export default function Home() {
     const stepsMatch = content.match(/\[STEPS\]([\s\S]*?)\[\/STEPS\]/);
     const websitesMatch = content.match(/\[WEBSITES\]([\s\S]*?)\[\/WEBSITES\]/);
     const relatedMatch = content.match(/\[RELATED\]([\s\S]*?)\[\/RELATED\]/);
-    
+
     const steps: string[] = [];
     if (stepsMatch) {
       const stepsContent = stepsMatch[1];
@@ -572,15 +573,15 @@ export default function Home() {
     const sectionRegex = /\[SECTION\]([\s\S]*?)\[\/SECTION\]/g;
     let sectionMatch;
     const sectionTitles: { title: string; index: number }[] = [];
-    
+
     while ((sectionMatch = sectionRegex.exec(content)) !== null) {
       sectionTitles.push({ title: sectionMatch[1].trim(), index: sectionMatch.index + sectionMatch[0].length });
     }
-    
+
     for (let i = 0; i < sectionTitles.length; i++) {
       const start = sectionTitles[i].index;
-      const end = i + 1 < sectionTitles.length 
-        ? content.indexOf('[SECTION]', start) 
+      const end = i + 1 < sectionTitles.length
+        ? content.indexOf('[SECTION]', start)
         : content.length;
       const sectionContent = content.slice(start, end === -1 ? undefined : end).trim();
       sections.push({
@@ -603,7 +604,7 @@ export default function Home() {
   const formatMessage = (content: string) => {
     const hasGuidanceMarker = content.includes("---GUIDANCE_COMPLETE---");
     const hasExecutionMarker = content.includes("---EXECUTION_START---");
-    
+
     let cleanContent = content
       .replace(/---GUIDANCE_COMPLETE---/g, "")
       .replace(/---EXECUTION_START---/g, "")
@@ -692,13 +693,13 @@ export default function Home() {
             </div>
           </div>
         )}
-        
+
         {structured.intro && (
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
             {structured.intro}
           </p>
         )}
-        
+
         {structured.steps.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
@@ -792,7 +793,7 @@ export default function Home() {
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return "Today";
     if (diffDays === 1) return "Yesterday";
     if (diffDays < 7) return `${diffDays} days ago`;
@@ -816,12 +817,12 @@ export default function Home() {
             <RefreshCw className="h-3.5 w-3.5" />
             New Chat
           </Button>
-          
+
           {/* Logo Text - always centered via flex justify-between */}
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold text-[#6C4EE3]" data-testid="text-logo">TeacherBuddy</span>
           </div>
-          
+
           {/* Right: Register Button + Hamburger Menu */}
           <div className="flex items-center gap-2">
             <Link href="/register">
@@ -834,7 +835,7 @@ export default function Home() {
                 Register
               </Button>
             </Link>
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg hover-elevate transition-colors"
               data-testid="button-menu-toggle"
@@ -847,13 +848,13 @@ export default function Home() {
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
           <nav className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
             {/* Main Navigation - Horizontal Grid */}
             <div className="grid grid-cols-4 gap-2 px-2">
-              <button 
+              <button
                 onClick={() => { setShowHistory(!showHistory); setMobileMenuOpen(false); }}
                 className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors"
                 data-testid="button-history"
@@ -863,11 +864,11 @@ export default function Home() {
                 </div>
                 <span className="text-xs font-medium text-center leading-tight">Chat History</span>
               </button>
-              
+
               <Link href="/feedback">
-                <span 
+                <span
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer"
                   data-testid="link-feedback-assistant"
                 >
                   <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -876,11 +877,11 @@ export default function Home() {
                   <span className="text-xs font-medium text-center leading-tight">Students Grader</span>
                 </span>
               </Link>
-              
+
               <Link href="/planner">
-                <span 
+                <span
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer"
                   data-testid="link-planner"
                 >
                   <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
@@ -889,11 +890,11 @@ export default function Home() {
                   <span className="text-xs font-medium text-center leading-tight">Your Calendar</span>
                 </span>
               </Link>
-              
+
               <Link href="/library">
-                <span 
+                <span
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer"
                   data-testid="link-library"
                 >
                   <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
@@ -902,11 +903,11 @@ export default function Home() {
                   <span className="text-xs font-medium text-center leading-tight">Your Saved PDFs</span>
                 </span>
               </Link>
-              
+
               <Link href="/register">
-                <span 
+                <span
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer" 
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-slate-700 dark:text-slate-300 hover-elevate transition-colors cursor-pointer"
                   data-testid="link-register"
                 >
                   <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
@@ -916,7 +917,7 @@ export default function Home() {
                 </span>
               </Link>
             </div>
-            
+
             {/* Quick Tasks Section */}
             <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
               <p className="px-3 pb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -946,10 +947,10 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            
+
             {messages.length > 0 && (
               <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 px-3 pb-2">
-                <button 
+                <button
                   onClick={() => { handleNewChat(); setMobileMenuOpen(false); }}
                   className="w-full text-center py-2 rounded-lg text-[#6C4EE3] hover-elevate transition-colors flex items-center justify-center gap-2"
                   data-testid="button-new-chat"
@@ -991,11 +992,10 @@ export default function Home() {
                   <div
                     key={conversation.id}
                     onClick={() => handleLoadConversation(conversation)}
-                    className={`flex items-center justify-between gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
-                      currentConversationId === conversation.id
-                        ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800"
-                        : "bg-slate-50 dark:bg-slate-800 hover-elevate"
-                    }`}
+                    className={`flex items-center justify-between gap-2 p-3 rounded-lg cursor-pointer transition-colors ${currentConversationId === conversation.id
+                      ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800"
+                      : "bg-slate-50 dark:bg-slate-800 hover-elevate"
+                      }`}
                     data-testid={`history-item-${conversation.id}`}
                   >
                     <div className="flex-1 min-w-0">
@@ -1036,16 +1036,16 @@ export default function Home() {
               className="flex items-center justify-center -mt-8"
               data-testid="logo-container"
             >
-              <img 
-                src={teacherBuddyLogo} 
-                alt="TeacherBuddy - Busy Teacher's Best Friend" 
+              <img
+                src={teacherBuddyLogo}
+                alt="TeacherBuddy - Busy Teacher's Best Friend"
                 className="w-64 h-auto md:w-80"
                 data-testid="img-logo"
               />
             </motion.div>
-            
+
             {/* Main Heading */}
-            <motion.h1 
+            <motion.h1
               className="text-2xl md:text-3xl font-bold text-[#6C4EE3]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1053,9 +1053,9 @@ export default function Home() {
             >
               Busy Teacher; what do you need?
             </motion.h1>
-            
+
             {/* Subtitle */}
-            <motion.p 
+            <motion.p
               className="text-slate-500 dark:text-slate-400 max-w-md text-base"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1063,9 +1063,9 @@ export default function Home() {
             >
               This digital teaching assistant helps with planning lessons, grading, communicating with parents etc. Save hours every week.
             </motion.p>
-            
+
             {/* Input Field with Purple Arrow Button */}
-            <motion.div 
+            <motion.div
               className="w-full max-w-xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1104,28 +1104,26 @@ export default function Home() {
           <div className="flex-1 overflow-y-auto space-y-4 pb-4">
             {messages.map((message, index) => {
               const { cleanContent, isGuidance, isExecution, structured, hasStructuredContent } = formatMessage(message.content);
-              
+
               return (
                 <div
                   key={index}
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] ${
-                      message.role === "user"
-                        ? "bg-indigo-500 text-white rounded-2xl px-4 py-3"
-                        : ""
-                    }`}
+                    className={`max-w-[85%] ${message.role === "user"
+                      ? "bg-indigo-500 text-white rounded-2xl px-4 py-3"
+                      : ""
+                      }`}
                     data-testid={`message-${message.role}-${index}`}
                   >
                     {message.role === "assistant" ? (
                       <div className="space-y-3 group">
                         {/* Message content card */}
-                        <div className={`rounded-2xl px-5 py-4 ${
-                          isExecution 
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800" 
-                            : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
-                        }`}>
+                        <div className={`rounded-2xl px-5 py-4 ${isExecution
+                          ? "bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800"
+                          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                          }`}>
                           {hasStructuredContent ? (
                             renderStructuredContent(structured, isExecution, cleanContent)
                           ) : (
@@ -1296,32 +1294,8 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t bg-white dark:bg-slate-900 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
-          {/* Footer Links */}
-          <nav className="flex items-center gap-6 text-sm text-orange-500 dark:text-orange-400">
-            <Link href="/our-story">
-              <span className="hover:underline cursor-pointer" data-testid="link-our-story">Our Story</span>
-            </Link>
-            <Link href="/terms">
-              <span className="hover:underline cursor-pointer" data-testid="link-terms">Terms and Privacy</span>
-            </Link>
-            <Link href="/report-abuse">
-              <span className="hover:underline cursor-pointer" data-testid="link-report">Report Abuse</span>
-            </Link>
-          </nav>
-          
-          {/* Footer Logo */}
-          <img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-16 object-contain opacity-80"
-            data-testid="img-footer-logo"
-          />
-        </div>
-      </footer>
-      
+      <Footer />
+
     </div>
   );
 }

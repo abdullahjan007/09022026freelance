@@ -11,6 +11,7 @@ import FeedbackAssistant from "@/pages/feedback-assistant";
 import OurStory from "@/pages/our-story";
 import Terms from "@/pages/terms";
 import ReportAbuse from "@/pages/report-abuse";
+import Contact from "@/pages/contact";
 import Planner from "@/pages/planner";
 import Library from "@/pages/library";
 import Register from "@/pages/register";
@@ -49,6 +50,7 @@ function Router() {
       <Route path="/our-story" component={OurStory} />
       <Route path="/terms" component={Terms} />
       <Route path="/report-abuse" component={ReportAbuse} />
+      <Route path="/contact" component={Contact} />
       <Route path="/planner">
         <ProtectedRoute>
           <Planner />

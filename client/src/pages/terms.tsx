@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function Terms() {
   return (
@@ -14,9 +15,9 @@ export default function Terms() {
                 Back
               </Button>
             </Link>
-            <img 
-              src="/logo.png" 
-              alt="TeacherBuddy" 
+            <img
+              src="/logo.png"
+              alt="TeacherBuddy"
               className="h-16 object-contain"
               data-testid="img-logo"
             />
@@ -55,7 +56,7 @@ export default function Terms() {
 
             <section className="mb-10">
               <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">3. Collection and Use of Personal Data</h2>
-              
+
               <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-3 mt-6">3.1 Data Collected</h3>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">We collect the following categories of personal data:</p>
               <ul className="list-disc pl-6 text-slate-700 dark:text-slate-300 space-y-2 mb-4">
@@ -107,7 +108,7 @@ export default function Terms() {
 
             <section className="mb-10">
               <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">6. Region-Specific Legal Compliance</h2>
-              
+
               <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-3 mt-6">6.1 European Economic Area (GDPR)</h3>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
                 Processing is based on Article 6(1)(b) (performance of a contract) and Article 6(1)(f) (legitimate interests). Data subjects retain rights of access, rectification, erasure, restriction, portability, and objection. Requests shall be submitted to the contact specified in Section 11.
@@ -162,7 +163,7 @@ export default function Terms() {
                 For inquiries regarding this Agreement, data subject requests, or complaints, please contact:
               </p>
               <p className="text-orange-600 dark:text-orange-400 font-medium mt-2">
-                Email: graderelite@gmail.com
+                Email: support@taskmasterforteachers.com
               </p>
             </section>
           </div>
@@ -177,19 +178,7 @@ export default function Terms() {
         </div>
       </main>
 
-      <footer className="border-t bg-white dark:bg-slate-900 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
-          <img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-12 object-contain opacity-80"
-            data-testid="img-footer-logo"
-          />
-          <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
-            Built by teachers, for teachers.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

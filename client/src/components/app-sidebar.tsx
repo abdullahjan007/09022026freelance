@@ -22,7 +22,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, Calendar, Star, ShieldCheck } from "lucide-react";
+import { LogOut, Calendar, Star, ShieldCheck, Mail, AlertCircle } from "lucide-react";
 
 const navigationItems = [
   {
@@ -118,6 +118,38 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Support</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location === "/contact"}
+                  data-testid="nav-contact"
+                >
+                  <Link href="/contact">
+                    <Mail className="h-4 w-4" />
+                    <span>Contact Us</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location === "/report-abuse"}
+                  data-testid="nav-report-abuse"
+                >
+                  <Link href="/report-abuse">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>Report & Abuse</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

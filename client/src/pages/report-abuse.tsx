@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, AlertTriangle, Mail, Shield, FileWarning } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function ReportAbuse() {
   return (
@@ -14,9 +15,9 @@ export default function ReportAbuse() {
                 Back
               </Button>
             </Link>
-            <img 
-              src="/logo.png" 
-              alt="TeacherBuddy" 
+            <img
+              src="/logo.png"
+              alt="TeacherBuddy"
               className="h-16 object-contain"
               data-testid="img-logo"
             />
@@ -69,7 +70,7 @@ export default function ReportAbuse() {
               <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-6 border border-orange-200 dark:border-orange-800 mb-4">
                 <ol className="list-decimal pl-4 text-slate-700 dark:text-slate-300 space-y-3">
                   <li>
-                    Email <span className="text-orange-600 dark:text-orange-400 font-medium">graderelite@gmail.com</span> with the subject line: <em>"Abuse Report – [Brief Description]"</em>
+                    Email <span className="text-orange-600 dark:text-orange-400 font-medium">support@taskmasterforteachers.com</span> with the subject line: <em>"Abuse Report – [Brief Description]"</em>
                   </li>
                   <li>
                     Include:
@@ -133,12 +134,12 @@ export default function ReportAbuse() {
 
             <section className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 text-center">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Contact</h3>
-              <a 
-                href="mailto:graderelite@gmail.com" 
+              <a
+                href="mailto:support@taskmasterforteachers.com"
                 className="text-orange-600 dark:text-orange-400 font-medium text-lg hover:underline"
                 data-testid="link-email"
               >
-                graderelite@gmail.com
+                support@taskmasterforteachers.com
               </a>
             </section>
           </div>
@@ -153,19 +154,7 @@ export default function ReportAbuse() {
         </div>
       </main>
 
-      <footer className="border-t bg-white dark:bg-slate-900 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
-          <img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-12 object-contain opacity-80"
-            data-testid="img-footer-logo"
-          />
-          <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
-            Built by teachers, for teachers.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

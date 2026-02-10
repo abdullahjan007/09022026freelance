@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Heart, Users, Clock, Sparkles } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function OurStory() {
   return (
@@ -14,9 +15,9 @@ export default function OurStory() {
                 Back
               </Button>
             </Link>
-            <img 
-              src="/logo.png" 
-              alt="TeacherBuddy" 
+            <img
+              src="/logo.png"
+              alt="TeacherBuddy"
               className="h-16 object-contain"
               data-testid="img-logo"
             />
@@ -47,7 +48,7 @@ export default function OurStory() {
                 <Heart className="h-5 w-5 text-red-500" />
                 The Crisis Is Real
               </h2>
-              
+
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
@@ -120,19 +121,7 @@ export default function OurStory() {
         </div>
       </main>
 
-      <footer className="border-t bg-white dark:bg-slate-900 py-6">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4">
-          <img 
-            src="/logo.png" 
-            alt="TeacherBuddy" 
-            className="h-12 object-contain opacity-80"
-            data-testid="img-footer-logo"
-          />
-          <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
-            Built by teachers, for teachers.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
