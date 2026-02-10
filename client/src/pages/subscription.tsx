@@ -143,12 +143,25 @@ export default function Subscription() {
 
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-                        Choose Your Plan
-                    </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400">
-                        Select the perfect plan for your teaching needs
-                    </p>
+                    {user?.isAdmin ? (
+                        <>
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                                Admin Access Active
+                            </h1>
+                            <p className="text-lg text-gray-600 dark:text-gray-400">
+                                You have full access to all premium features as an administrator.
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                                Choose Your Plan
+                            </h1>
+                            <p className="text-lg text-gray-600 dark:text-gray-400">
+                                Select the perfect plan for your teaching needs
+                            </p>
+                        </>
+                    )}
 
                     {/* Trial Status */}
                     {isTrial && subscriptionInfo?.trialEnd && (
@@ -230,13 +243,15 @@ export default function Subscription() {
                             <Button
                                 className="w-full h-12 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold"
                                 onClick={() => handleSubscribe("tier1")}
-                                disabled={currentTier === "tier1" || checkoutLoading !== null}
+                                disabled={user?.isAdmin || currentTier === "tier1" || checkoutLoading !== null}
                             >
                                 {checkoutLoading === "tier1" ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Loading...
                                     </>
+                                ) : user?.isAdmin ? (
+                                    "Included in Admin"
                                 ) : currentTier === "tier1" ? (
                                     "Current Plan"
                                 ) : (
@@ -299,13 +314,15 @@ export default function Subscription() {
                             <Button
                                 className="w-full h-12 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold"
                                 onClick={() => handleSubscribe("tier2")}
-                                disabled={currentTier === "tier2" || checkoutLoading !== null}
+                                disabled={user?.isAdmin || currentTier === "tier2" || checkoutLoading !== null}
                             >
                                 {checkoutLoading === "tier2" ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Loading...
                                     </>
+                                ) : user?.isAdmin ? (
+                                    "Included in Admin"
                                 ) : currentTier === "tier2" ? (
                                     "Current Plan"
                                 ) : (

@@ -137,6 +137,7 @@ export function isTrialExpired(user: User): boolean {
  * Check if user has an active subscription (including trial)
  */
 export function hasActiveSubscription(user: User): boolean {
+    if (user.isAdmin) return true;
     if (user.subscriptionStatus === "trial") {
         return !isTrialExpired(user);
     }
@@ -151,6 +152,9 @@ export function hasFeatureAccess(
     user: User,
     feature: "search" | "save_pdfs" | "planner" | "grader"
 ): boolean {
+    // Admins always have access to all features
+    if (user.isAdmin) return true;
+
     // Check if subscription is active
     if (!hasActiveSubscription(user)) {
         return false;

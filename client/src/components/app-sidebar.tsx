@@ -158,7 +158,17 @@ export function AppSidebar() {
         <SidebarGroup className="mt-auto">
           <SidebarGroupLabel>Account Status</SidebarGroupLabel>
           <SidebarGroupContent className="px-3 py-2">
-            {isTrial ? (
+            {user?.isAdmin ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>Admin Access</span>
+                </div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                  Full Feature Access
+                </div>
+              </div>
+            ) : isTrial ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400">
                   <Calendar className="h-4 w-4" />

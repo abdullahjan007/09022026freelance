@@ -95,16 +95,18 @@ export default function AdminDashboard() {
                                     </TableCell>
                                     <TableCell>
                                         <Badge
-                                            variant={user.subscriptionStatus === "active" ? "default" : "secondary"}
+                                            variant={user.isAdmin ? "default" : (user.subscriptionStatus === "active" ? "default" : "secondary")}
                                             className="capitalize"
                                         >
-                                            {user.subscriptionStatus || "New"}
+                                            {user.isAdmin ? "Admin" : (user.subscriptionStatus || "New")}
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
                                         <span className="text-sm">
-                                            {user.subscriptionTier === "tier2" ? "Pro (Tier 2)" :
-                                                user.subscriptionTier === "tier1" ? "Basic (Tier 1)" : "Trial"}
+                                            {user.isAdmin ? "Full Access" : (
+                                                user.subscriptionTier === "tier2" ? "Pro (Tier 2)" :
+                                                    user.subscriptionTier === "tier1" ? "Basic (Tier 1)" : "Trial"
+                                            )}
                                         </span>
                                     </TableCell>
                                     <TableCell>
