@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,24 +37,30 @@ const QUICK_ACTIONS = [
   { label: "Grading rubrics", prompt: "My problem is that my current grading feels inconsistent and students question the fairness. I need help to develop clear, comprehensive rubrics that students can understand." },
 ];
 
-const STORAGE_KEY = "taskmaster_history";
-
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-function getStoredHistory(): Conversation[] {
+function getStorageKey(userId: string) {
+  return `taskmaster_history_${userId}`;
+}
+
+function getLibraryKey(userId: string) {
+  return `teacherbuddy_library_${userId}`;
+}
+
+function getStoredHistory(userId: string): Conversation[] {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(getStorageKey(userId));
     return stored ? JSON.parse(stored) : [];
   } catch {
     return [];
   }
 }
 
-function saveToStorage(conversations: Conversation[]) {
+function saveToStorage(userId: string, conversations: Conversation[]) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+    localStorage.setItem(getStorageKey(userId), JSON.stringify(conversations));
   } catch {
     console.error("Failed to save to localStorage");
   }
@@ -70,6 +77,8 @@ function extractTitle(messages: Message[]): string {
 }
 
 export default function Home() {
+  const { user } = useAuth();
+  const userId = user?.id || "anonymous";
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -337,7 +346,7 @@ export default function Home() {
     doc.save(filename);
 
     // Save to Saved PDFs in localStorage
-    const libraryKey = "teacherbuddy_library";
+    const libraryKey = getLibraryKey(userId);
     const existingLibrary = JSON.parse(localStorage.getItem(libraryKey) || "[]");
     const newEntry = {
       id: Date.now().toString(),
@@ -357,8 +366,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setConversationHistory(getStoredHistory());
-  }, []);
+    setConversationHistory(getStoredHistory(userId));
+  }, [userId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -399,7 +408,7 @@ export default function Home() {
           }, ...prevHistory];
         }
 
-        saveToStorage(updatedHistory);
+        saveToStorage(userId, updatedHistory);
         return updatedHistory;
       });
     }
@@ -523,7 +532,7 @@ export default function Home() {
     e.stopPropagation();
     const updated = conversationHistory.filter(c => c.id !== conversationId);
     setConversationHistory(updated);
-    saveToStorage(updated);
+    saveToStorage(userId, updated);
     if (currentConversationId === conversationId) {
       handleNewChat();
     }

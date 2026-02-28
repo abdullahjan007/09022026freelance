@@ -19,6 +19,7 @@ import {
   UserPlus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LibraryEntry {
   id: string;
@@ -30,6 +31,8 @@ interface LibraryEntry {
 }
 
 export default function Library() {
+  const { user } = useAuth();
+  const userId = user?.id || "anonymous";
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
   const [sortBy, setSortBy] = useState<"date" | "name">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -38,11 +41,11 @@ export default function Library() {
 
   useEffect(() => {
     loadLibrary();
-  }, []);
+  }, [userId]);
 
   const loadLibrary = () => {
     try {
-      const libraryKey = "teacherbuddy_library";
+      const libraryKey = `teacherbuddy_library_${userId}`;
       const stored = localStorage.getItem(libraryKey);
       if (stored) {
         setEntries(JSON.parse(stored));
@@ -54,7 +57,7 @@ export default function Library() {
   };
 
   const deleteEntry = (id: string) => {
-    const libraryKey = "teacherbuddy_library";
+    const libraryKey = `teacherbuddy_library_${userId}`;
     const updated = entries.filter(e => e.id !== id);
     setEntries(updated);
     localStorage.setItem(libraryKey, JSON.stringify(updated));

@@ -33,6 +33,10 @@ export const users = pgTable("users", {
   trialStartDate: timestamp("trial_start_date"),
   trialEndDate: timestamp("trial_end_date"),
 
+  // Reset password fields
+  resetPasswordToken: varchar("reset_password_token"),
+  resetPasswordExpires: timestamp("reset_password_expires"),
+
   // Admin fields
   isAdmin: boolean("is_admin").default(false),
 

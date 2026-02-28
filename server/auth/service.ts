@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { db } from "../db";
 import { users, type User } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, gt } from "drizzle-orm";
 
 const SALT_ROUNDS = 10;
 
@@ -180,4 +181,55 @@ export function hasFeatureAccess(
     }
 
     return false;
+}
+
+/**
+ * Generate a password reset token for a user
+ */
+export async function generateResetToken(email: string): Promise<string | null> {
+    const user = await db.query.users.findFirst({
+        where: eq(users.email, email.toLowerCase()),
+    });
+
+    if (!user) return null;
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 3600000); // 1 hour from now
+
+    await db
+        .update(users)
+        .set({
+            resetPasswordToken: token,
+            resetPasswordExpires: expires,
+        })
+        .where(eq(users.id, user.id));
+
+    return token;
+}
+
+/**
+ * Reset user password with a valid token
+ */
+export async function resetUserPassword(token: string, newPassword: string): Promise<boolean> {
+    const user = await db.query.users.findFirst({
+        where: and(
+            eq(users.resetPasswordToken, token),
+            gt(users.resetPasswordExpires, new Date())
+        ),
+    });
+
+    if (!user) return false;
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    await db
+        .update(users)
+        .set({
+            password: hashedPassword,
+            resetPasswordToken: null,
+            resetPasswordExpires: null,
+        })
+        .where(eq(users.id, user.id));
+
+    return true;
 }

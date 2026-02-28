@@ -48,13 +48,13 @@ export interface IStorage {
   updateTemplate(id: string, template: Partial<InsertTemplate>): Promise<Template | undefined>;
   deleteTemplate(id: string): Promise<boolean>;
 
-  // Calendar Events
-  getCalendarEvents(): Promise<CalendarEvent[]>;
-  getCalendarEvent(id: string): Promise<CalendarEvent | undefined>;
-  getCalendarEventsByDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]>;
+  // Calendar Events - scoped by userId
+  getCalendarEvents(userId: string): Promise<CalendarEvent[]>;
+  getCalendarEvent(id: string, userId: string): Promise<CalendarEvent | undefined>;
+  getCalendarEventsByDateRange(userId: string, startDate: string, endDate: string): Promise<CalendarEvent[]>;
   createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent>;
-  updateCalendarEvent(id: string, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined>;
-  deleteCalendarEvent(id: string): Promise<boolean>;
+  updateCalendarEvent(id: string, userId: string, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined>;
+  deleteCalendarEvent(id: string, userId: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -417,18 +417,22 @@ Thank you,
     return this.templates.delete(id);
   }
 
-  // Calendar Event methods
-  async getCalendarEvents(): Promise<CalendarEvent[]> {
-    return Array.from(this.calendarEvents.values());
+  // Calendar Event methods - scoped by userId
+  async getCalendarEvents(userId: string): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values()).filter(
+      (event) => event.userId === userId
+    );
   }
 
-  async getCalendarEvent(id: string): Promise<CalendarEvent | undefined> {
-    return this.calendarEvents.get(id);
+  async getCalendarEvent(id: string, userId: string): Promise<CalendarEvent | undefined> {
+    const event = this.calendarEvents.get(id);
+    if (!event || event.userId !== userId) return undefined;
+    return event;
   }
 
-  async getCalendarEventsByDateRange(startDate: string, endDate: string): Promise<CalendarEvent[]> {
+  async getCalendarEventsByDateRange(userId: string, startDate: string, endDate: string): Promise<CalendarEvent[]> {
     return Array.from(this.calendarEvents.values()).filter(event => {
-      return event.date >= startDate && event.date <= endDate;
+      return event.userId === userId && event.date >= startDate && event.date <= endDate;
     });
   }
 
@@ -449,16 +453,19 @@ Thank you,
 
   async updateCalendarEvent(
     id: string,
+    userId: string,
     updates: Partial<InsertCalendarEvent>
   ): Promise<CalendarEvent | undefined> {
     const event = this.calendarEvents.get(id);
-    if (!event) return undefined;
+    if (!event || event.userId !== userId) return undefined;
     const updated = { ...event, ...updates };
     this.calendarEvents.set(id, updated);
     return updated;
   }
 
-  async deleteCalendarEvent(id: string): Promise<boolean> {
+  async deleteCalendarEvent(id: string, userId: string): Promise<boolean> {
+    const event = this.calendarEvents.get(id);
+    if (!event || event.userId !== userId) return false;
     return this.calendarEvents.delete(id);
   }
 }

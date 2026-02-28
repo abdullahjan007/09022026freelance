@@ -49,18 +49,20 @@ export async function registerRoutes(
     }
   });
 
-  // Calendar Events API - Protected by planner feature
+  // Calendar Events API - Protected by planner feature, scoped to logged-in user
   app.get("/api/events", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
+      const userId = req.session.userId!;
       const { startDate, endDate } = req.query;
       let events;
       if (startDate && endDate) {
         events = await storage.getCalendarEventsByDateRange(
+          userId,
           startDate as string,
           endDate as string
         );
       } else {
-        events = await storage.getCalendarEvents();
+        events = await storage.getCalendarEvents(userId);
       }
       res.json(events);
     } catch (error) {
@@ -70,7 +72,8 @@ export async function registerRoutes(
 
   app.get("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
-      const event = await storage.getCalendarEvent(req.params.id);
+      const userId = req.session.userId!;
+      const event = await storage.getCalendarEvent(req.params.id, userId);
       if (!event) {
         return res.status(404).json({ error: "Event not found" });
       }
@@ -82,7 +85,11 @@ export async function registerRoutes(
 
   app.post("/api/events", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
-      const parsed = insertCalendarEventSchema.safeParse(req.body);
+      const userId = req.session.userId!;
+      const parsed = insertCalendarEventSchema.safeParse({
+        ...req.body,
+        userId,
+      });
       if (!parsed.success) {
         return res.status(400).json({ error: parsed.error.errors });
       }
@@ -95,7 +102,8 @@ export async function registerRoutes(
 
   app.patch("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
-      const event = await storage.updateCalendarEvent(req.params.id, req.body);
+      const userId = req.session.userId!;
+      const event = await storage.updateCalendarEvent(req.params.id, userId, req.body);
       if (!event) {
         return res.status(404).json({ error: "Event not found" });
       }
@@ -107,7 +115,8 @@ export async function registerRoutes(
 
   app.delete("/api/events/:id", requireAuth, requireFeature("planner"), async (req, res) => {
     try {
-      const deleted = await storage.deleteCalendarEvent(req.params.id);
+      const userId = req.session.userId!;
+      const deleted = await storage.deleteCalendarEvent(req.params.id, userId);
       if (!deleted) {
         return res.status(404).json({ error: "Event not found" });
       }

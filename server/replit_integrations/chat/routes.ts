@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import OpenAI from "openai";
 import { chatStorage } from "./storage";
+import { requireAuth } from "../../auth/middleware";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -172,10 +173,11 @@ flowchart TD
 Keep diagram text concise. Use short phrases, not long sentences. Maximum 5-8 words per node.`;
 
 export function registerChatRoutes(app: Express): void {
-  // Get all conversations
-  app.get("/api/conversations", async (req: Request, res: Response) => {
+  // Get all conversations - scoped to logged-in user
+  app.get("/api/conversations", requireAuth, async (req: Request, res: Response) => {
     try {
-      const conversations = await chatStorage.getAllConversations();
+      const userId = req.session.userId!;
+      const conversations = await chatStorage.getAllConversations(userId);
       res.json(conversations);
     } catch (error) {
       console.error("Error fetching conversations:", error);
@@ -184,10 +186,11 @@ export function registerChatRoutes(app: Express): void {
   });
 
   // Get single conversation with messages
-  app.get("/api/conversations/:id", async (req: Request, res: Response) => {
+  app.get("/api/conversations/:id", requireAuth, async (req: Request, res: Response) => {
     try {
+      const userId = req.session.userId!;
       const id = parseInt(req.params.id);
-      const conversation = await chatStorage.getConversation(id);
+      const conversation = await chatStorage.getConversation(id, userId);
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found" });
       }
@@ -199,10 +202,11 @@ export function registerChatRoutes(app: Express): void {
   });
 
   // Create new conversation
-  app.post("/api/conversations", async (req: Request, res: Response) => {
+  app.post("/api/conversations", requireAuth, async (req: Request, res: Response) => {
     try {
+      const userId = req.session.userId!;
       const { title } = req.body;
-      const conversation = await chatStorage.createConversation(title || "New Chat");
+      const conversation = await chatStorage.createConversation(userId, title || "New Chat");
       res.status(201).json(conversation);
     } catch (error) {
       console.error("Error creating conversation:", error);
@@ -211,10 +215,11 @@ export function registerChatRoutes(app: Express): void {
   });
 
   // Delete conversation
-  app.delete("/api/conversations/:id", async (req: Request, res: Response) => {
+  app.delete("/api/conversations/:id", requireAuth, async (req: Request, res: Response) => {
     try {
+      const userId = req.session.userId!;
       const id = parseInt(req.params.id);
-      await chatStorage.deleteConversation(id);
+      await chatStorage.deleteConversation(id, userId);
       res.status(204).send();
     } catch (error) {
       console.error("Error deleting conversation:", error);
@@ -223,16 +228,17 @@ export function registerChatRoutes(app: Express): void {
   });
 
   // Send message and get AI response (streaming)
-  app.post("/api/conversations/:id/messages", async (req: Request, res: Response) => {
+  app.post("/api/conversations/:id/messages", requireAuth, async (req: Request, res: Response) => {
     try {
+      const userId = req.session.userId!;
       const conversationId = parseInt(req.params.id);
       const { content } = req.body;
 
       // Save user message
-      await chatStorage.createMessage(conversationId, "user", content);
+      await chatStorage.createMessage(conversationId, userId, "user", content);
 
       // Get conversation history for context
-      const messages = await chatStorage.getMessagesByConversation(conversationId);
+      const messages = await chatStorage.getMessagesByConversation(conversationId, userId);
       const chatMessages: OpenAI.ChatCompletionMessageParam[] = [
         { role: "system", content: SYSTEM_PROMPT },
         ...messages.map((m) => ({
@@ -265,7 +271,7 @@ export function registerChatRoutes(app: Express): void {
       }
 
       // Save assistant message
-      await chatStorage.createMessage(conversationId, "assistant", fullResponse);
+      await chatStorage.createMessage(conversationId, userId, "assistant", fullResponse);
 
       res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
       res.end();

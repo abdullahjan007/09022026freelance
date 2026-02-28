@@ -22,6 +22,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import { LogOut, Calendar, Star, ShieldCheck, Mail, AlertCircle } from "lucide-react";
 
 const navigationItems = [
@@ -48,8 +49,13 @@ const navigationItems = [
 ];
 
 export function AppSidebar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user, logout } = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const getDaysRemaining = (trialEnd: string | null) => {
     if (!trialEnd) return 0;
@@ -225,7 +231,7 @@ export function AppSidebar() {
             variant="ghost"
             size="sm"
             className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 gap-2 h-9"
-            onClick={logout}
+            onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>

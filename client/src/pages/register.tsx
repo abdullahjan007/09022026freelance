@@ -66,12 +66,12 @@ export default function Register() {
       });
 
       toast({
-        title: "Registration Successful!",
-        description: "Welcome to TeacherBuddy! You have 1 month free trial to explore all features.",
+        title: "Registration successful.",
+        description: "Your account has been created. Please log in to continue.",
       });
 
-      // Redirect to home after successful registration
-      setLocation("/");
+      // Redirect to login after successful registration
+      setLocation("/login");
     } catch (error: any) {
       toast({
         title: "Registration Failed",

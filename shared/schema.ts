@@ -84,6 +84,7 @@ export type FeedbackGenerateResponse = z.infer<typeof feedbackGenerateResponseSc
 // Calendar events for Personal Planner
 export const calendarEvents = pgTable("calendar_events", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(), // scope events to the user who created them
   title: text("title").notNull(),
   description: text("description"),
   date: text("date").notNull(), // ISO date string YYYY-MM-DD

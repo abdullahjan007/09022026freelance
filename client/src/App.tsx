@@ -16,6 +16,8 @@ import Planner from "@/pages/planner";
 import Library from "@/pages/library";
 import Register from "@/pages/register";
 import Login from "@/pages/login";
+import ForgotPassword from "@/pages/forgot-password";
+import ResetPassword from "@/pages/reset-password";
 import Subscription from "@/pages/subscription";
 import AdminDashboard from "@/pages/admin-dashboard";
 import NotFound from "@/pages/not-found";
@@ -27,6 +29,8 @@ function Router() {
     <Switch>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/subscription">
         <ProtectedRoute requireActiveSubscription={false}>
           <Subscription />

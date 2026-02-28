@@ -1,5 +1,5 @@
 // Simple in-memory chat storage for the AI teacher support agent
-// No database required - just a simple interface for the chat
+// Conversations are scoped per user via userId
 
 export interface ChatMessage {
   id: number;
@@ -10,18 +10,19 @@ export interface ChatMessage {
 
 export interface Conversation {
   id: number;
+  userId: string; // scope conversations to the user who created them
   title: string;
   messages: ChatMessage[];
   createdAt: Date;
 }
 
 export interface IChatStorage {
-  getConversation(id: number): Promise<Conversation | undefined>;
-  getAllConversations(): Promise<Conversation[]>;
-  createConversation(title: string): Promise<Conversation>;
-  deleteConversation(id: number): Promise<void>;
-  getMessagesByConversation(conversationId: number): Promise<ChatMessage[]>;
-  createMessage(conversationId: number, role: "user" | "assistant", content: string): Promise<ChatMessage>;
+  getConversation(id: number, userId: string): Promise<Conversation | undefined>;
+  getAllConversations(userId: string): Promise<Conversation[]>;
+  createConversation(userId: string, title: string): Promise<Conversation>;
+  deleteConversation(id: number, userId: string): Promise<void>;
+  getMessagesByConversation(conversationId: number, userId: string): Promise<ChatMessage[]>;
+  createMessage(conversationId: number, userId: string, role: "user" | "assistant", content: string): Promise<ChatMessage>;
 }
 
 class MemoryChatStorage implements IChatStorage {
@@ -29,19 +30,22 @@ class MemoryChatStorage implements IChatStorage {
   private nextConversationId = 1;
   private nextMessageId = 1;
 
-  async getConversation(id: number): Promise<Conversation | undefined> {
-    return this.conversations.get(id);
+  async getConversation(id: number, userId: string): Promise<Conversation | undefined> {
+    const conversation = this.conversations.get(id);
+    if (!conversation || conversation.userId !== userId) return undefined;
+    return conversation;
   }
 
-  async getAllConversations(): Promise<Conversation[]> {
-    return Array.from(this.conversations.values()).sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-    );
+  async getAllConversations(userId: string): Promise<Conversation[]> {
+    return Array.from(this.conversations.values())
+      .filter((c) => c.userId === userId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  async createConversation(title: string): Promise<Conversation> {
+  async createConversation(userId: string, title: string): Promise<Conversation> {
     const conversation: Conversation = {
       id: this.nextConversationId++,
+      userId,
       title,
       messages: [],
       createdAt: new Date(),
@@ -50,22 +54,27 @@ class MemoryChatStorage implements IChatStorage {
     return conversation;
   }
 
-  async deleteConversation(id: number): Promise<void> {
-    this.conversations.delete(id);
+  async deleteConversation(id: number, userId: string): Promise<void> {
+    const conversation = this.conversations.get(id);
+    if (conversation && conversation.userId === userId) {
+      this.conversations.delete(id);
+    }
   }
 
-  async getMessagesByConversation(conversationId: number): Promise<ChatMessage[]> {
+  async getMessagesByConversation(conversationId: number, userId: string): Promise<ChatMessage[]> {
     const conversation = this.conversations.get(conversationId);
-    return conversation?.messages || [];
+    if (!conversation || conversation.userId !== userId) return [];
+    return conversation.messages;
   }
 
   async createMessage(
     conversationId: number,
+    userId: string,
     role: "user" | "assistant",
     content: string
   ): Promise<ChatMessage> {
     const conversation = this.conversations.get(conversationId);
-    if (!conversation) {
+    if (!conversation || conversation.userId !== userId) {
       throw new Error("Conversation not found");
     }
     const message: ChatMessage = {
