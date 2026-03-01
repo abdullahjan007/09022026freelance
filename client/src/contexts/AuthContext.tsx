@@ -67,7 +67,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         setUser(data.user);
         setWelcomeDialogOpen(true);
-        setTimeout(() => setWelcomeDialogOpen(false), 3000);
+
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                setWelcomeDialogOpen(false);
+                resolve();
+            }, 3000);
+        });
     };
 
     const register = async (data: any) => {
@@ -120,8 +126,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await fetch("/api/auth/logout", { method: "POST" });
             setUser(null);
             setLogoutDialogOpen(true);
-            setTimeout(() => setLogoutDialogOpen(false), 3000);
-            setLocation("/login");
+
+            return new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    setLogoutDialogOpen(false);
+                    setLocation("/login");
+                    resolve();
+                }, 3000);
+            });
         } catch (error) {
             console.error("Logout failed:", error);
         }
